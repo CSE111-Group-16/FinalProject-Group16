@@ -1,0 +1,23 @@
+name: Build Linux
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Tools
+        run: |
+          sudo apt update
+          sudo apt install -y cmake
+          cmake --version
+      - name: Build hello example
+        run: |
+          cd examples
+          mkdir build
+          cd build
+          cmake ..
+          make
+          ./hello

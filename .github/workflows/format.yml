@@ -1,0 +1,19 @@
+name: Verify Formatting
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+jobs:
+  Format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Tools
+        run: |
+          sudo apt update
+          sudo apt install -y clang-format
+          clang-format --version
+      - name: Verify format
+        run: |
+          cd examples
+          make verify-format
