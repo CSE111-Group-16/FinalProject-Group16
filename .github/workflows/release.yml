@@ -1,0 +1,35 @@
+name: Release
+on:
+  push:
+    branches:
+      - main
+permissions:
+  contents: write
+jobs:
+  Release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Create Tag
+        run: |
+          echo "TAG_NAME=$(date +%Y.%m.%d.%H.%M)" >> "$GITHUB_ENV"
+          git tag ${{ env.TAG_NAME }}
+          git push origin ${{ env.TAG_NAME }}
+      - name: Install Tools
+        run: |
+          sudo apt update
+          sudo apt install -y pandoc texlive
+          pandoc --version
+          pdflatex --version
+      - name: Build assignment.pdf
+        run: |
+          make -C docs assignment.pdf
+          mv docs/assignment.pdf hw4_${{ env.TAG_NAME }}.pdf
+      - uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: True
+          omitBody: True
+          tag: ${{ env.TAG_NAME }}
+          artifacts: |
+            hw4_${{ env.TAG_NAME }}.pdf
+          token: ${{ secrets.GITHUB_TOKEN }}
