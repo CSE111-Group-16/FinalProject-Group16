@@ -1,11 +1,10 @@
 #include "src/hardware/memory.h"
 
-#include <fstream>
 #include <iostream>
 
 Memory::Memory() {
-    uint8_t bufSize = 0x7000;
-    contents_ = std::make_unique<uint8_t[]>(bufSize);
+    unsigned int bufSize = 0x7000;
+    contents_ = std::make_unique<unsigned int[]>(bufSize);
 }
 
 const uint8_t* Memory::getData() const {
@@ -26,7 +25,11 @@ uint32_t Memory::ReadBigEndianInt32(const size_t& addr) const {
 }
 
 void Memory::clear() {
-	uint8_t *begin = contents_.get();
+	// using std::fill to fill contents_ with zeroes
+	// i do not know if i got the syntax right
+	// begin and end are supposed to point to the
+	// first and last of the array (which is contents)
+	uint8_t begin = contents_.get();
     uint8_t *end = begin + bufSize;
     std::fill(begin, end, 0);
 }
