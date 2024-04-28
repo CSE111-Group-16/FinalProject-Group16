@@ -1,17 +1,18 @@
 #include <iostream>
 #include <string>
+#include "register.h"
 
-class Register {
+class CPU {
 private:
     // Private member variables
-    long address;
-    std::string registername;
+    register* registerFile;
+    register PC;
 
 public:
     // Constructors
-    Register(); // Default constructor
-    Register(long addrValue, const std::string& strValue); // Parameterized constructor
+    CPU(); // Default constructor
+    CPU(register* registerFile, register PC); // Parameterized constructor
 
     // Destructor
-    ~Register();
+    ~CPU();
 }
