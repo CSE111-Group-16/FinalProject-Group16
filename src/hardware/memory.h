@@ -23,8 +23,6 @@ public:
     uint8_t* getByte(size_t address);
     void setByte(size_t address, uint8_t byte);
     uint8_t readByte(size_t address) const;
-    const unsigned int* getData() const;
-    std::size_t getSize() const;
 	void clearRAM();
     void loadROM(char* contents, size_t size);
     std::string to_string();
