@@ -1,35 +1,121 @@
-#include "src/hardware/memory.h"
+#include "memory.h"
+#include "../processes/os.h"
 
 #include <iostream>
+#include <stdexcept>
+#include <cassert>
+#include <array>
 
-Memory::Memory() {
-    unsigned int bufSize = 0x7000;
-    contents_ = std::make_unique<unsigned int[]>(bufSize);
-}
 
-const uint8_t* Memory::getData() const {
-    return contents_.get();
-}
 
-std::size_t Memory::getSize() const {
-    return bufSize;
-}
-
-uint32_t Memory::ReadBigEndianInt32(const size_t& addr) const {
-    uint32_t out = 0;
-    for (int i = 0; i < 4; i++) {
-        out <<= 8;
-        out |= (uint8_t)contents_[addr + i];
+/// @brief returns a POINTER to the byte stored at address
+/// @param address refers to the FULL address, not adjusted
+/// @return 
+uint8_t* Memory::getByte(size_t address) {
+    // address is in RAM address space
+    if (address < ram_size_) {
+        return &address_space_ram_[adjustAddress(address)];
     }
-    return out;
+    // address is in IO address space
+    else if (address < rom_size_) {
+        return &address_space_io_[adjustAddress(address)];
+    }
+    // address is in ROM address space
+    else if (address < 2*rom_size_) {
+        return &address_space_rom_[adjustAddress(address)];
+    } else {
+        throw std::out_of_range("address out of range");
+    }
 }
 
-void Memory::clear() {
+/// @brief sets the byte at address to 
+/// @param address refers to the FULL address, not adjusted
+/// @param byte uint8_t to set
+void Memory::setByte(size_t address, uint8_t byte) {
+    // address is in RAM address space
+    if (address < ram_size_) {
+        uint8_t* value = &address_space_ram_[adjustAddress(address)];
+        *value = byte; // should set the value correctly
+        assert(readByte(address) == byte);
+    }
+    // address is in IO address space
+    else if (address < rom_size_) {
+        uint8_t* value = &address_space_io_[adjustAddress(address)];
+        *value = byte; // should set the value correctly
+        assert(readByte(address) == byte);
+    }
+    // address is in ROM address space
+    else if (address < 2*rom_size_) {
+        uint8_t* value = &address_space_rom_[adjustAddress(address)];
+        *value = byte; // should set the value correctly
+        assert(readByte(address) == byte);
+    } else {
+        throw std::out_of_range("address out of range");
+    }
+}
+
+/// @brief returns the byte VALUE at address in memory
+/// @param address refers to the FULL address, not adjusted
+uint8_t Memory::readByte(size_t address) const {
+    //std::cout << address << std::endl;
+    // address is in RAM address space
+    if (address < ram_size_) {
+        return address_space_ram_[adjustAddress(address)];
+    }
+    // address is in IO address space
+    else if (address < rom_size_) {
+        return address_space_io_[adjustAddress(address)];
+    }
+    // address is in ROM address space
+    else if (address < 0x10000) {
+        return address_space_rom_[adjustAddress(address)];
+    } else {
+        throw std::out_of_range("address out of range");
+    }
+}
+
+
+/// @brief adjusts full address as needed
+/// @param address 
+/// @return 
+size_t Memory::adjustAddress(size_t address) const {
+    // address is in RAM address space
+    if (address < ram_size_) {
+        return address;
+    }
+    // address is in IO address space
+    else if (address < rom_size_) {
+        return address - ram_size_;
+    }
+    // address is in ROM address space
+    else if (address < 2*rom_size_) {
+        return address - rom_size_;
+    } else {
+        std::cout << address << std::endl;
+        throw std::out_of_range("ayddress out of range");
+    }
+}
+
+void Memory::clearRAM() {
 	// using std::fill to fill contents_ with zeroes
 	// i do not know if i got the syntax right
 	// begin and end are supposed to point to the
 	// first and last of the array (which is contents)
-	uint8_t begin = contents_.get();
-    uint8_t *end = begin + bufSize;
-    std::fill(begin, end, 0);
+	// uint8_t begin = address_space_ram_;
+    // uint8_t* end = begin + ram_size_;
+    // std::fill(begin, end, 0);
+    
+    //std::fill(address_space_ram_, address_space_ram_+ram_size_, 0);
+    for (size_t i=0; i<ram_size_; i++) {
+        address_space_ram_[i] = 0;
+    }
 }
+
+void Memory::loadROM(char* contents, size_t size) {
+    size_t offset = 0x8000;
+    for (size_t i=0; i<size; i++) {
+        setByte(offset+i, (uint8_t)contents[i]);
+    }
+}
+
+// 24027110
