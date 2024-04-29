@@ -5,33 +5,33 @@ class Register {
 private:
     // Private member variables
     long address;
-    std::string registername;
+    std::string registerName;
 
 public:
     // Constructors
     Register(); // Default constructor
-    Register(long addrValue, const std::string& strValue); // Parameterized constructor
+    Register(long address, const std::string& registerName); // Parameterized constructor
 
     // Destructor
     ~Register();
 
     // Public member functions
-    void setAddress(long value); // Function to set privateInt
-    void setName(const std::string& value); // Function to set privateString
+    void setAddress(long address); // Function to set privateInt
+    void setName(const std::string& address); // Function to set privateString
     long getAddress() const; // Function to get privateInt
     const std::string& getName() const; // Function to get privateString
 };
 
-// Default constructor definition
+// Default constructor definition the default reg is x0
 Register::Register() {
     address = 0;
-    registername = "x0";
+    registerName = "x0";
 }
 
 // Parameterized constructor definition
 Register::Register(long addrValue, const std::string& strValue) {
     address = addrValue;
-    registername = strValue;
+    registerName = strValue;
 }
 
 // Destructor definition
