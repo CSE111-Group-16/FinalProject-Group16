@@ -1,9 +1,5 @@
 #include "os.h"
 
-
-
-
-
 void OS::startup(std::string filename) {
     filename_ = filename;
     resetSequence();
@@ -34,6 +30,7 @@ void OS::resetSequence() {
 
     // read rom into rom_contents_ and memory (if possible)
     file.read(read_rom.get(), rom_size_);
+
     // load ROM into memory
     memory.loadROM(read_rom.get(), rom_size_); // put ROM into memory (at address 0x8000);
 
@@ -62,6 +59,17 @@ void OS::resetSequence() {
 
 void OS::setup() {
     std::cout << "setup() starts at: " << address_to_setup << std::endl;
+    
+    // setup() psuedo code for now:
+    /*
+    cpu.PC = 0xfffc; // set PC register to 0xfffc
+    cpu.JAL(address_to_setup); // set CPU to run this instruction
+    size_t i = 1; // start at 1 since above line was first instruction
+    while (cpu.PC != 0x0000) { // when PC reg returns to 0x0000, setup() is finished
+        cpu.runInstruction(address_to_setup+(4*i)); // runs next instruction until PC == 0x0000
+    }
+    */
+    
     // TODO
 }
 

@@ -74,7 +74,6 @@ uint8_t Memory::readByte(size_t address) const {
     }
 }
 
-
 /// @brief adjusts full address as needed
 /// @param address 
 /// @return 
@@ -101,11 +100,7 @@ void Memory::clearRAM() {
 	// i do not know if i got the syntax right
 	// begin and end are supposed to point to the
 	// first and last of the array (which is contents)
-	// uint8_t begin = address_space_ram_;
-    // uint8_t* end = begin + ram_size_;
-    // std::fill(begin, end, 0);
     
-    //std::fill(address_space_ram_, address_space_ram_+ram_size_, 0);
     for (size_t i=0; i<ram_size_; i++) {
         address_space_ram_[i] = 0;
     }
@@ -117,5 +112,3 @@ void Memory::loadROM(char* contents, size_t size) {
         setByte(offset+i, (uint8_t)contents[i]);
     }
 }
-
-// 24027110
