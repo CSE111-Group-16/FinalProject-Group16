@@ -11,13 +11,17 @@ private:
     Register* registerFile; // Pointer to an array of Register objects
     Register PC;
 
+
 public:
     // Constructors
-    CPU(); // Default constructor
-    CPU(Register* registerFile, Register PC); // Parameterized constructor
+    CPU(OS* set_os) : os(set_os) {}; // Default constructor
+    OS* os;
+    //CPU(Register* registerFile, Register PC); // Parameterized constructor
 
     // Destructor
-    ~CPU();
+    //~CPU();
+    void SetUpRegisters(); //names and adds each register to the previously empty register file
+
 };
 
 #endif // CPU_H

@@ -1,30 +1,30 @@
 #include <iostream>
 #include <string>
-#include "register.h"
+#include "CPU.h"
 
-class OS;
-class CPU {
-private:
-    // Private member variables
-    register* registerFile;
-    register PC;
+// class OS;
+// class CPU {
+// private:
+//     // Private member variables
+//     register* registerFile;
+//     register PC;
 
-public:
-    // Constructors
-    CPU(); // Default constructor
-    CPU(register* registerFile, register PC); // Parameterized constructor
-    // Destructor
-    ~CPU();
-    SetUpRegisters(); //names and adds each register to the previously empty register file
-}
+// public:
+//     // Constructors
+//     CPU(); // Default constructor
+//     CPU(register* registerFile, register PC); // Parameterized constructor
+//     // Destructor
+//     ~CPU();
+//     SetUpRegisters(); //names and adds each register to the previously empty register file
+// }
 
-CPU::CPU() {
-    PC = Register(0x400, "PC");
-    register* registerFile[32];
-    SetUpRegisters();
-}
+// CPU::CPU(OS* set_os) : os(set_os) {
+//     PC = Register(0x400, "PC");
+//     Register* registerFile[32];
+//     SetUpRegisters();
+// }
 
-CPU::SetUpRegisters(){
+void CPU::SetUpRegisters(){
     std::string names[32] = {
         "zero", "at", "v0", "v1", "a0", "a1", "a2", "a3",
         "t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7",

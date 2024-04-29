@@ -4,11 +4,16 @@
 #include "../hardware/memory.h"
 #include <string>
 #include <memory>
+#include <fstream>
+#include <iostream>
 
 class OS {
     public:
-    OS();
-    
+    // default constructor
+    OS() : memory(this), cpu(this) {
+        std::cout << "OS constructor" << std::endl;
+    };
+
     // accessable to user
     void startup(std::string ROM_file); 
     void shutDown(); // not sure if needed
@@ -18,7 +23,7 @@ class OS {
     Memory memory;
     
     // ROM contents (might remove if we can get it in memory)
-    std::unique_ptr<char[]> rom_contents_; // maybe remove later if storing ROM in memory
+    // std::unique_ptr<char[]> rom_contents_; // maybe remove later if storing ROM in memory
     
     // values
     uint32_t address_to_setup;
@@ -28,17 +33,15 @@ class OS {
     uint32_t data_size;
 
     // memory accessors (? idk if needed in os)
-    uint32_t readInt32(const std::unique_ptr<char[]> &addressSpace, const size_t& address) const;
-    uint16_t readInt16(const std::unique_ptr<char[]> &addressSpace, const size_t& address) const;
-    uint8_t readInt8(const std::unique_ptr<char[]> &addressSpace, const size_t& address) const;
+    uint32_t readInt32(const size_t& address) const;
+    uint16_t readInt16(const size_t& address) const;
+    uint8_t readInt8(const size_t& address) const;
 
     private:
 
-
     // file info
     std::string filename_;
-    size_t file_size_;
-
+    size_t rom_size_;
 
     // official internal functions
     void resetSequence();
