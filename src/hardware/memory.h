@@ -6,11 +6,11 @@
 
 class Memory {
 private:
-    std::unique_ptr<unsigned int[]> contents_;
-    unsigned int bufSize;
+    std::unique_ptr<char[]> contents_;
+    std::size_t bufSize;
 public:
     Memory();
-    const unsigned int* getData() const;
+    const int getData() const;
     std::size_t getSize() const;
 	uint32_t ReadBigEndianInt32(const size_t& addr) const;
 	void clear();
