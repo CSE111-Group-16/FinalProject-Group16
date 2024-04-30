@@ -44,3 +44,12 @@ void Register::setAddress(long value) {
     address = value;
 }
 
+void Register::getAddress const() {
+    return address;
+}
+
+void Register::getName const() {
+    return name;
+}
+
+
