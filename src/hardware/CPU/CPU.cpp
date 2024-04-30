@@ -16,6 +16,17 @@ public:
     // Destructor
     ~CPU();
     SetUpRegisters(); //names and adds each register to the previously empty register file
+    PerformInstruction();
+    ShiftRightArithmetic(int reg_b, int reg_c, int shift_value);
+    ShiftRightLogical(int reg_b, int reg_c, int shift); 
+    ShiftLeftLogical(int reg_b, int reg_c, int shift);
+    Subtract(int reg_a, int reg_b, int reg_c);
+    Add(int reg_a, int reg_b, int reg_c);
+    SetLessThan(int reg_a, int reg_b, int reg_c);
+    Or_(int reg_a, int reg_b, int reg_c);
+    Nor_(int reg_a, int reg_b, int reg_c);
+    And_(int reg_a, int reg_b, int reg_c);
+    JumpRegister(int reg_a);
 }
 
 CPU::CPU() {
@@ -56,8 +67,7 @@ CPU::PerformInstruction(uint32_t instruction){
         int shift_value = (instruction >> (6) & 0x1F); //get next five bits 0x1f: 00011111
         int function = (instruction & 0x3F) //0x3f looks like so: 00111111
         //hashtable with function pointers
-        
-        instructionList[0]= &ShiftRightArithmetic;//function pointer
+        instructionList[0]= &ShiftRightArithmetic;
         instructionList[3]= &Subtract; 
         instructionList[13] = &Add;
         instructionList[19] = &SetLessThan;
@@ -137,7 +147,7 @@ void Add(int reg_a, int reg_b, int reg_c){
     registerFile[reg_c] = registerFile[reg_a] + registerFile[reg_b];
 }
 
-void SetLessThan(int reg_a, int reg_b, int reg_c,){
+void SetLessThan(int reg_a, int reg_b, int reg_c){
     registerFile[reg_c] = (registerFile[reg_a] < registerFile[reg_b]);
 }
 
@@ -156,16 +166,3 @@ void And_(int reg_a, int reg_b, int reg_c){
 void JumpRegister(int reg_a){
     PC+= R[reg_a];
 }
-
-
-        instructionList[3]= &Subtract; 
-        instructionList[13] = &Add;
-        instructionList[19] = &SetLessThan;
-        instructionList[24] = &Or_;
-        instructionList[25] = &Nor_;
-        instructionList[31] = &And_;
-        instructionList[33] = &JumpRegister;
-        instructionList[35] = &ShiftRightLogical;
-        instructionList[40] = &ShiftLeftLogical;
-
-
