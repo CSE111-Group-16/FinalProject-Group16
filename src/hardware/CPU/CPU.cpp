@@ -35,7 +35,33 @@ void CPU::SetUpRegisters(){
     for (int i = 0; i < 32; i++) {
         registerFile[i] = Register(0x00, names[i]);
     }
-    registerFile[29].setAddress(0x3400);
+    registerFile[29].setAddress(0x3400); //29 is the stack pointer
 
-    
+}
+
+//todo:
+//one function that takes in an instruction
+//and determines the registers it needs, the instruction 
+//based on the opcode
+
+CPU::PerformInstruction(uint32_t instruction){
+    int opcode = (instruction >> (32-6) & 0x3F);
+    int * rtype = { 56, 50, 46, 37, 28, 23, 16,9, 0}
+    if(opcode == 4){
+        //i type instruction
+
+    }
+    else if(opcode ==  56||opcode == 50||opcode == 46||opcode == 37||opcode == 28||opcode == 23||opcode == 16|| opcode == 9||opcode == 0){
+        //r type
+    }
+    else{
+        PC +=4;
+    }
+
+    //todo: separate all of the bits depending on the opcode
+    //if opcode == 4 then i type, and seperate bits based on that
+    //if opcode == 56, 50, 46, 37, 28, 23, 16,9, or 0 r type
+    //else increment the PC by 4
+
+
 }

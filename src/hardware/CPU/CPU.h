@@ -8,7 +8,7 @@ class OS;
 class CPU {
 private:
     // Private member variables
-    Register* registerFile; // Pointer to an array of Register objects
+    std::vector<Register> registerFile; // Pointer to an array of Register objects
     Register PC;
 
 
