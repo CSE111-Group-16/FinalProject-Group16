@@ -82,7 +82,6 @@ CPU::PerformInstruction(uint32_t instruction){
             //"unused variable"
         } else {
             std::cout << "Function not found for choice " << function << std::endl; //for debug
-            PC +=4;  //if opcode is wrong PC+=4
         }
 
     }
@@ -107,12 +106,10 @@ CPU::PerformInstruction(uint32_t instruction){
             instructionList[opcode](reg_a, reg_b reg_c, immediate); // Call the function pointer
         } else {
             std::cout << "Function not found for choice " << opcode << std::endl;
-            PC +=4;  //should never go off
         }
     }
-    else{
-        PC +=4;
-    }
+    PC +=4;
+    
     //todo: separate all of the bits depending on the opcode
     //if opcode == 4 then i type, and seperate bits based on that
     //if opcode == 56, 50, 46, 37, 28, 23, 16,9, or 0 r type
@@ -121,7 +118,15 @@ CPU::PerformInstruction(uint32_t instruction){
 }
 
 void ShiftRightArithmetic(int reg_b, int reg_c, int shift){
-    registerFile[reg_c] = registerFile[reg_b] >> shift_value;
+    registerFile[reg_c] = registerFile[reg_b] >> shift_value; //must be signed
+}//function pointer
+
+void ShiftRightLogical(int reg_b, int reg_c, int shift){
+    registerFile[reg_c] = (uint32_t) registerFile[reg_b] >> shift_value; //must be unsigned
+}//function pointer
+
+void ShiftLeftLogical(int reg_b, int reg_c, int shift){
+    registerFile[reg_c] = registerFile[reg_b] << shift_value;
 }//function pointer
 
 void Subtract(int reg_a, int reg_b, int reg_c){
@@ -151,6 +156,7 @@ void And_(int reg_a, int reg_b, int reg_c){
 void JumpRegister(int reg_a){
     PC+= R[reg_a];
 }
+
 
         instructionList[3]= &Subtract; 
         instructionList[13] = &Add;

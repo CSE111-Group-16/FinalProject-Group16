@@ -4,7 +4,7 @@
 class Register {
 private:
     // Private member variables
-    long address;
+    int32_t address;
     std::string registerName;
 
 public:
