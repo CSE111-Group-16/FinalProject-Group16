@@ -92,7 +92,7 @@ CPU::PerformInstruction(uint32_t instruction){
         int immediate = (instruction & 0xFFFF); //get next 16 bits 0xFFF: 00001111111111111111
         
         //hashtable with function pointers
-        instructionList[0]= &storeWord;//function pointer
+        instructionList[0]= &storeWord;
         instructionList[9]= &addImm; //if opcode is wrong PC+=4
         instructionList[16] = &LoadByteUnsigned;
         instructionList[23] = &Jump;
@@ -112,21 +112,22 @@ CPU::PerformInstruction(uint32_t instruction){
     //todo: separate all of the bits depending on the opcode
     //if opcode == 4 then i type, and seperate bits based on that
     //if opcode == 56, 50, 46, 37, 28, 23, 16,9, or 0 r type
-    //else increment the PC by 4
+    //at the end always the PC by 4
     //this code is not dry at all but i cant really think of a way to make it better
 }
 
+//rtype instructions:
 void ShiftRightArithmetic(int reg_b, int reg_c, int shift){
     registerFile[reg_c] = registerFile[reg_b] >> shift_value; //must be signed
-}//function pointer
+}
 
 void ShiftRightLogical(int reg_b, int reg_c, int shift){
     registerFile[reg_c] = (uint32_t) registerFile[reg_b] >> shift_value; //must be unsigned
-}//function pointer
+}
 
 void ShiftLeftLogical(int reg_b, int reg_c, int shift){
     registerFile[reg_c] = registerFile[reg_b] << shift_value;
-}//function pointer
+}
 
 void Subtract(int reg_a, int reg_b, int reg_c){
     registerFile[reg_c] = registerFile[reg_a] - registerFile[reg_b];
@@ -155,3 +156,5 @@ void And_(int reg_a, int reg_b, int reg_c){
 void JumpRegister(int reg_a){
     PC+= R[reg_a];
 }
+
+
