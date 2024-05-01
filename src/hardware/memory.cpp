@@ -23,7 +23,8 @@ uint8_t* Memory::getByte(size_t address) {
     // address is in ROM address space
     else if (address < 2*rom_size_) {
         return &address_space_rom_[adjustAddress(address)];
-    } else {
+    }
+	else {
         throw std::out_of_range("address out of range");
     }
 }
@@ -49,7 +50,8 @@ void Memory::setByte(size_t address, uint8_t byte) {
         uint8_t* value = &address_space_rom_[adjustAddress(address)];
         *value = byte; // should set the value correctly
         assert(readByte(address) == byte);
-    } else {
+    }
+	else {
         throw std::out_of_range("address out of range");
     }
 }
@@ -69,7 +71,8 @@ uint8_t Memory::readByte(size_t address) const {
     // address is in ROM address space
     else if (address < 0x10000) {
         return address_space_rom_[adjustAddress(address)];
-    } else {
+    }
+	else {
         throw std::out_of_range("address out of range");
     }
 }
@@ -89,18 +92,14 @@ size_t Memory::adjustAddress(size_t address) const {
     // address is in ROM address space
     else if (address < 2*rom_size_) {
         return address - rom_size_;
-    } else {
+    }
+	else {
         std::cout << address << std::endl;
-        throw std::out_of_range("ayddress out of range");
+        throw std::out_of_range("address out of range");
     }
 }
 
 void Memory::clearRAM() {
-	// using std::fill to fill contents_ with zeroes
-	// i do not know if i got the syntax right
-	// begin and end are supposed to point to the
-	// first and last of the array (which is contents)
-    
     for (size_t i=0; i<ram_size_; i++) {
         address_space_ram_[i] = 0;
     }

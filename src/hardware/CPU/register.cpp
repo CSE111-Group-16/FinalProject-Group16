@@ -49,7 +49,7 @@ void Register::getAddress const() {
 }
 
 void Register::getName const() {
-    return name;
+    return registerName;
 }
 
 
