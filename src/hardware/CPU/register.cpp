@@ -4,7 +4,7 @@
 class Register {
 private:
     // Private member variables
-    long address;
+    size_t address;
     std::string registerName;
 
 public:
@@ -43,4 +43,13 @@ Register::~Register() {
 void Register::setAddress(long value) {
     address = value;
 }
+
+void Register::getAddress const() {
+    return address;
+}
+
+void Register::getName const() {
+    return name;
+}
+
 

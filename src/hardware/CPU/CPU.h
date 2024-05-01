@@ -8,7 +8,7 @@ class OS;
 class CPU {
 private:
     // Private member variables
-    Register* registerFile; // Pointer to an array of Register objects
+    std::vector<Register> registerFile; // Pointer to an array of Register objects
     Register PC;
 
 
@@ -19,9 +19,16 @@ public:
     //CPU(Register* registerFile, Register PC); // Parameterized constructor
 
     // Destructor
+<<<<<<< HEAD
     //~CPU();
     void SetUpRegisters(); //names and adds each register to the previously empty register file
 
+=======
+    ~CPU();
+
+    SetUpRegisters()
+    
+>>>>>>> CPU
 };
 
 #endif // CPU_H
