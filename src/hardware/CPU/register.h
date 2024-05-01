@@ -1,12 +1,13 @@
 #ifndef REGISTER_H
 #define REGISTER_H
+#pragma once
 
 #include <string>
 
 class Register {
 private:
     // Private member variables
-    long address;
+    uint16_t address;
     std::string registername;
 
 public:
