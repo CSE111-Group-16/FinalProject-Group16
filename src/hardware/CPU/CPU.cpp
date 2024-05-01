@@ -216,18 +216,18 @@ void LoadByteUnsigned(int16_t reg_a, int16_t reg_b, int16_t immediate){
 }
 
 void Jump(int16_t immediate){
-    PC+= 4+immediate;
+    PC+= 4+immediate/8; 
 }
 
 void BranchNotEqual(int16_t reg_a, int16_t reg_b, int16_t immediate){
    if(registerFile[reg_a]!=registerFile[reg_b]){
-        PC += 4*immediate; //PC is incremented after the instruction anyways
+        PC += 4*(immediate/8); //PC is incremented after the instruction anyways
    }
 }
 
 void BranchEqual(int16_t reg_a, int16_t reg_b, int16_t reg_c){
     if(registerFile[reg_a]==registerFile[reg_b]){
-        PC += 4*immediate; //PC is incremented after the instruction anyways
+        PC += 4*(immediate/8); //PC is incremented after the instruction anyways
    }
 }
 
@@ -238,7 +238,7 @@ void StoreByte(int16_t reg_a, int16_t reg_b, int16_t immediate){
 
 void JumpAndLink(int16_t immediate){
     registerFile[31] = PC + 4;
-    PC += 4* immediate/8;
+    PC += 4* (immediate/8); //immediate is in bits
 }
 
 void LoadWord(int16_t reg_a, int16_t reg_b, int16_t immediate){
