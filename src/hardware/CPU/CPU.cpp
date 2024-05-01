@@ -17,6 +17,8 @@ public:
     ~CPU();
     SetUpRegisters(); //names and adds each register to the previously empty register file
     PerformInstruction();
+
+    //rtype
     ShiftRightArithmetic(int16_t reg_b, int16_t reg_c, int8_t shift);
     ShiftRightLogical(int16_t reg_b, int16_t reg_c, int8_t shift); 
     ShiftLeftLogical(int16_t reg_b, int16_t reg_c, int8_t shift);
@@ -27,15 +29,34 @@ public:
     Nor_(int16_t reg_a, int16_t reg_b, int16_t reg_c);
     And_(int16_t reg_a, int16_t reg_b, int16_t reg_c);
     JumpRegister(int16_t reg_a);
+
+    //itype
+    storeWord(int16_t reg_b, int16_t reg_c, int16_t immediate);
+    addImm(int16_t reg_a, int16_t reg_b, int16_t immediate);
+    LoadByteUnsigned(int16_t reg_a, int16_t reg_b, int16_t immediate);
+    Jump(int16_t immediate);
+    BranchNotEqual(int16_t reg_a, int16_t reg_b, int16_t immediate);
+    BranchEqual(int16_t reg_a, int16_t reg_b, int16_t immediate);
+    StoreByte(int16_t reg_a, int16_t reg_b, int16_t immediate);
+    JumpAndLink(int16_t immediate);
+    LoadWord(int16_t reg_a, int16_t reg_b, int16_t immediate);
+    
 }
 
-CPU::CPU() {
-    PC = Register(0x400, "PC");
-    register* registerFile[32];
-    SetUpRegisters();
+CPU::CPU() : PC(0x400, "PC") {
+    registerFile = new register[32];
+    SetUpRegisters(); // Initialize register names and addresses
 }
 
-CPU::SetUpRegisters(){
+CPU::CPU(register* registerFile, register PC) : PC(PC), registerFile(registerFile) {
+    SetUpRegisters(); // Initialize register names and addresses
+}
+
+CPU::~CPU() {
+    delete[] registerFile; // Free the dynamically allocated registerFile array
+}
+
+void CPU::SetUpRegisters(){
     std::string names[32] = {
         "zero", "at", "v0", "v1", "a0", "a1", "a2", "a3",
         "t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7",
@@ -47,7 +68,6 @@ CPU::SetUpRegisters(){
         registerFile[i] = Register(0x00, names[i]);
     }
     registerFile[29].setAddress(0x3400); //29 is the stack pointer
-
 }
 
 //todo:
@@ -55,7 +75,7 @@ CPU::SetUpRegisters(){
 //and determines the registers it needs, the instruction 
 //based on the opcode
 
-CPU::PerformInstruction(uint32_t instruction){
+void CPU::PerformInstruction(const uint32_t& instruction){
     std::unorderedmap<int, void(*)>instructionList;
     int16_t reg_a, reg_b, reg_c = 0;
     int opcode = (instruction >> (25) & 0x3F);
@@ -114,6 +134,12 @@ CPU::PerformInstruction(uint32_t instruction){
         instructionList[56] = &LoadWord;
         if (instructionList.find(function) != instructionList.end()) {
             instructionList[opcode](reg_a, reg_b reg_c, immediate); // Call the function pointer
+            if(opcode == 23 || opcode == 50){
+                instructionList[opcode](immediate); //for jump
+            }
+            else{
+                instructionList[opcode](reg_a, reg_b, immediate); // Call the function pointer
+            }
         } else {
             std::cout << "Function not found for choice " << opcode << std::endl;
         }
@@ -170,11 +196,11 @@ void JumpRegister(int16_t reg_a){
 //
 //itype
 //
-void storeWord(int16_t reg_b, int16_t reg_c, int immediate){
+void storeWord(int16_t reg_b, int16_t reg_c, int16_t immediate){
     int8_t byte1 = (reg_b >> 8 & 0xFF); 
     int8_t byte2 = reg_b & 0xFF;
-    os.memory.setByte(registerFile[reg_c]+immediate, byte1);
-    os.memory.setByte(registerFile[reg_c]+immediate+1, byte2);
+    os.memory.setByte(registerFile[reg_c]+(immediate/8), byte1);
+    os.memory.setByte(registerFile[reg_c]+(immediate/8)+1, byte2);
 }
 
 void addImm(int16_t reg_a, int16_t reg_b, int16_t immediate){
@@ -187,29 +213,34 @@ void LoadByteUnsigned(int16_t reg_a, int16_t reg_b, int16_t immediate){
     registerFile[reg_b] = os.memory.getByte(registerFile[reg_a]+imm_8);
 }
 
-void Jump(int16_t reg_a, int16_t reg_b, int16_t reg_c){
-    registerFile[reg_c] = registerFile[reg_a] - registerFile[reg_b];
+void Jump(int16_t immediate){
+    PC+= 4+immediate;
 }
 
-void BranchNotEqual(int16_t reg_a, int16_t reg_b, int16_t reg_c){
-    registerFile[reg_c] = registerFile[reg_a] + registerFile[reg_b];
+void BranchNotEqual(int16_t reg_a, int16_t reg_b, int16_t immediate){
+   if(registerFile[reg_a]!=registerFile[reg_b]){
+        PC += 4*immediate; //PC is incremented after the instruction anyways
+   }
 }
 
 void BranchEqual(int16_t reg_a, int16_t reg_b, int16_t reg_c){
-    registerFile[reg_c] = (registerFile[reg_a] < registerFile[reg_b]);
+    if(registerFile[reg_a]==registerFile[reg_b]){
+        PC += 4*immediate; //PC is incremented after the instruction anyways
+   }
 }
 
-void StoreByte(int16_t reg_a, int16_t reg_b, int16_t reg_c){
-    registerFile[reg_c] = registerFile[reg_a] | registerFile[reg_b];
+void StoreByte(int16_t reg_a, int16_t reg_b, int16_t immediate){ 
+    int8_t byte = reg_b & 0xFF;
+    os.memory.setByte(registerFile[reg_c]+(immediate/8), byte);
 }
 
-void JumpAndLink(int16_t reg_a, int16_t reg_b, int16_t reg_c){
-    registerFile[reg_c] = ~(registerFile[reg_a] | registerFile[reg_b]);
+void JumpAndLink(int16_t immediate){
+    registerFile[31] = PC + 4;
+    PC += 4* immediate;
 }
 
-void LoadWord(int16_t reg_a, int16_t reg_b, int16_t reg_c){
-    registerFile[reg_c] = registerFile[reg_a] & registerFile[reg_b];
+void LoadWord(int16_t reg_a, int16_t reg_b, int16_t immediate){
+    uint16_t low_byte = os.memory.getByte(registerFile[reg_a]+immediate/8); // Get the low byte
+    uint16_t high_byte = os.memory.getByte((registerFile[reg_a]+immediate/8)+1); // Get the high byte
+    registerFile[reg_b] = (high_byte << 8) | low_byte; // Combine bytes into a word
 }
-
-
-
