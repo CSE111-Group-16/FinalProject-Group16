@@ -60,7 +60,10 @@ public:
 
 
     //CPU(Register* registerFile, Register PC); // Parameterized constructor
-
+    void resetStackPointer();
+    //void SetUpRegisters(); //names and adds each register to the previously empty register file
+    void PerformInstruction(const uint32_t instruction);
+    void initialJAL(uint32_t address_to_setup);
     // Destructor
 private:
     typedef void (*funcPtr)(void);
@@ -68,11 +71,6 @@ private:
     std::unordered_map<int, void (CPU::*)()>i_type_instructions_;
     int16_t reg_a_, reg_b_, reg_c_, immediate_value_;
     uint8_t shift_value_, function_value_;
-
-    //~CPU();
-    void resetStackPointer();
-    void SetUpRegisters(); //names and adds each register to the previously empty register file
-    void PerformInstruction(const uint32_t instruction);
 
     //rtype
     void ShiftRightArithmetic();

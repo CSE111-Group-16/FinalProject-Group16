@@ -104,6 +104,13 @@ void CPU::PerformInstruction(const uint32_t instruction){
     //this code is not dry at all but i cant really think of a way to make it better
 }
 
+
+void CPU::initialJAL(uint32_t address_to_setup) {
+    PC = 4*(address_to_setup & 0xff);
+    registerFile[31].address = PC+4;
+}
+
+
 //rtype instructions:
 void CPU::ShiftRightArithmetic(){
     registerFile[reg_c_].address =  (int16_t)(((uint16_t)registerFile[reg_b_].getAddress()) >> shift_value_); // Sign extend after the logical shift
@@ -165,33 +172,39 @@ void CPU::LoadByteUnsigned(){
 }
 
 void CPU::Jump(){
-    PC+= 4+immediate_value_/8; 
+    PC+= 4+immediate_value_; // removed /8
 }
 
 void CPU::BranchNotEqual(){
    if(registerFile[reg_a_].getAddress()!=registerFile[reg_b_].getAddress()){
-        PC += 4*(immediate_value_/8); //PC is incremented after the instruction anyways
+        PC += 4*(immediate_value_); //PC is incremented after the instruction anyways
+        // removed /8
    }
 }
 
 void CPU::BranchEqual(){
     if(registerFile[reg_a_].getAddress()==registerFile[reg_b_].getAddress()){
-        PC += 4*(immediate_value_/8); //PC is incremented after the instruction anyways
+        PC += 4*(immediate_value_); //PC is incremented after the instruction anyways
+        // removed /8
    }
 }
 
 void CPU::StoreByte(){ 
     int8_t byte = reg_b_ & 0xFF;
-    (*os).memory.setByte(registerFile[reg_c_].getAddress()+(immediate_value_/8), byte);
+    size_t address = registerFile[reg_c_].getAddress()+(immediate_value_);
+    (*os).memory.setByte(address, byte);
+    if (address == 0x7110) std::cout << byte;
 }
 
 void CPU::JumpAndLink(){
     registerFile[31].address = PC + 4;
-    PC += 4* (immediate_value_/8); //immediate is in bits
+    PC += 4* (immediate_value_); //immediate is in bits
+    // removed /8
 }
 
 void CPU::LoadWord(){
-    uint16_t low_byte = *(*os).memory.getByte(registerFile[reg_a_].getAddress()+immediate_value_/8); // Get the low byte
-    uint16_t high_byte = *(*os).memory.getByte((registerFile[reg_a_].getAddress()+immediate_value_/8)+1); // Get the high byte
+    // removed /8 from both immediate_value
+    uint16_t low_byte = *(*os).memory.getByte(registerFile[reg_a_].getAddress()+immediate_value_); // Get the low byte
+    uint16_t high_byte = *(*os).memory.getByte((registerFile[reg_a_].getAddress()+immediate_value_)+1); // Get the high byte
     registerFile[reg_b_].address = (high_byte << 8) | low_byte; // Combine bytes into a word
 }
