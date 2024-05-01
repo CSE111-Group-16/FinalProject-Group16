@@ -1,37 +1,9 @@
 #include <iostream>
 #include <string>
-<<<<<<< HEAD
-#include "CPU.h"
-=======
 #include <unordered_map>
 #include <any>
 #include "register.h"
->>>>>>> CPU
 
-// class OS;
-// class CPU {
-// private:
-//     // Private member variables
-//     register* registerFile;
-//     register PC;
-
-<<<<<<< HEAD
-// public:
-//     // Constructors
-//     CPU(); // Default constructor
-//     CPU(register* registerFile, register PC); // Parameterized constructor
-//     // Destructor
-//     ~CPU();
-//     SetUpRegisters(); //names and adds each register to the previously empty register file
-// }
-
-// CPU::CPU(OS* set_os) : os(set_os) {
-//     PC = Register(0x400, "PC");
-//     Register* registerFile[32];
-//     SetUpRegisters();
-// }
-
-=======
 public:
     // Constructors
     CPU(); // Default constructor
@@ -79,7 +51,6 @@ CPU::~CPU() {
     delete[] registerFile; // Free the dynamically allocated registerFile array
 }
 
->>>>>>> CPU
 void CPU::SetUpRegisters(){
     std::string names[32] = {
         "zero", "at", "v0", "v1", "a0", "a1", "a2", "a3",
