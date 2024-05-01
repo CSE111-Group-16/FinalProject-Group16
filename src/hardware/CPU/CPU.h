@@ -26,7 +26,7 @@ public:
 =======
     ~CPU();
 
-    SetUpRegisters()
+    SetUpRegisters();
     
 >>>>>>> CPU
 };

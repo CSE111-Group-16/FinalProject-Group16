@@ -2,6 +2,8 @@
 #include <string>
 #include <unordered_map>
 #include <any>
+#include <vector>
+#include "CPU.h"
 #include "register.h"
 
 public:
