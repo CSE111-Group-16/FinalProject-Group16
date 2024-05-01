@@ -1,5 +1,7 @@
 #include <iostream>
 #include <string>
+#include <unordered_map>
+#include <any>
 #include "register.h"
 
 class OS;
@@ -76,7 +78,7 @@ void CPU::SetUpRegisters(){
 //based on the opcode
 
 void CPU::PerformInstruction(const uint32_t& instruction){
-    std::unorderedmap<int, void(*)>instructionList;
+    std::unorderedmap<int, std::any>instructionList;
     int16_t reg_a, reg_b, reg_c = 0;
     int opcode = (instruction >> (25) & 0x3F);
     if(opcode == 4){
@@ -191,7 +193,7 @@ void And_(int16_t reg_a, int16_t reg_b, int16_t reg_c){
 }
 
 void JumpRegister(int16_t reg_a){
-    PC+= R[reg_a];
+    PC+= registerFile[reg_a];
 }
 //
 //itype
@@ -236,7 +238,7 @@ void StoreByte(int16_t reg_a, int16_t reg_b, int16_t immediate){
 
 void JumpAndLink(int16_t immediate){
     registerFile[31] = PC + 4;
-    PC += 4* immediate;
+    PC += 4* immediate/8;
 }
 
 void LoadWord(int16_t reg_a, int16_t reg_b, int16_t immediate){
