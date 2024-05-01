@@ -5,7 +5,7 @@
 #include "hardware/memory.h"
 
 int main() {
-  std::cout << "Hello, World!" << std::endl;
+  //std::cout << "Hello, World!" << std::endl;
   
   Tester tester = Tester();
   return 0;

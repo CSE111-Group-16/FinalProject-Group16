@@ -10,9 +10,7 @@
 class OS {
     public:
     // default constructor
-    OS() : memory(this), cpu(this) {
-        std::cout << "OS constructor" << std::endl;
-    };
+    OS() : memory(this), cpu(this) {};
 
     // accessable to user
     void startup(std::string ROM_file); 

@@ -1,5 +1,4 @@
 #include "os.h"
-#include <iomanip>
 
 void OS::startup(std::string filename) {
     filename_ = filename;
@@ -60,25 +59,20 @@ void OS::resetSequence() {
 }
 
 void OS::setup() {
-    std::cout << "setup() starts at: " << address_to_setup << std::endl;
-    std::cout << "setup() address read to be: " << readInt32(0x81e0) << std::endl;
-    
     // setup() psuedo code for now:
     
     cpu.PC = 0xfffc; // set PC register to 0xfffc
     cpu.initialJAL(address_to_setup); // set CPU to run this instruction
-    size_t i = 0; // start at 1 since above line was first instruction
-    while (cpu.PC != 0x0000) { // when PC reg returns to 0x0000, setup() is finished
-        uint32_t instruction = readInt32(address_to_setup+(4*i));
-        cpu.PerformInstruction(instruction); // runs next instruction until PC == 0x0000
-        std::cout << std::hex << instruction << std::endl;
-        // writing if needed
-        i++;
-        if (i>100) break;
-    }
     
-    std::cout << "finished with setup()" << std::endl;
-    // TODO
+    size_t i = 0; // start at 1 since above line was first instruction
+    while (cpu.PC != 0x0000 || cpu.PC < 0x8000) { // when PC reg returns to 0x0000, setup() is finished
+        //uint32_t instruction = readInt32(address_to_setup+(4*i));
+        cpu.PerformInstruction(readInt32(cpu.PC)); // runs next instruction until PC == 0x0000
+        i++;
+
+        // stopp
+        if (cpu.PC < 0x8000) break;
+    }
 }
 
 

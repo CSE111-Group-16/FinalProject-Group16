@@ -15,10 +15,6 @@ class OS;
 class CPU {
 public:
     // Constructors
-    //CPU(); // Default constructor
-    //CPU(register* registerFile, register PC); // Parameterized constructor
-    // Destructor
-    // ~CPU();
     CPU(OS* set_os) : os(set_os) {
         std::string names[32] = {
             "zero", "at", "v0", "v1", "a0", "a1", "a2", "a3",
@@ -70,7 +66,7 @@ private:
     std::unordered_map<int, void (CPU::*)()>r_type_instructions_;
     std::unordered_map<int, void (CPU::*)()>i_type_instructions_;
     int16_t reg_a_, reg_b_, reg_c_, immediate_value_;
-    uint8_t shift_value_, function_value_;
+    uint16_t shift_value_, function_value_;
 
     //rtype
     void ShiftRightArithmetic();

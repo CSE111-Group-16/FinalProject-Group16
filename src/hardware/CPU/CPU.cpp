@@ -1,97 +1,38 @@
 #include "CPU.h"
 #include "../../processes/os.h"
 
-// CPU::CPU() : PC(0x400, "PC") {
-//     registerFile = new register[32];
-//     SetUpRegisters(); // Initialize register names and addresses
-// }
-
-// CPU::CPU(register* registerFile, register PC) : PC(PC), registerFile(registerFile) {
-//     SetUpRegisters(); // Initialize register names and addresses
-// }
-
-// CPU::~CPU() {
-//     delete[] registerFile; // Free the dynamically allocated registerFile array
-// }
-
-// void CPU::SetUpRegisters(){
-//     std::string names[32] = {
-//         "zero", "at", "v0", "v1", "a0", "a1", "a2", "a3",
-//         "t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7",
-//         "s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7",
-//         "s8", "s9", "k0", "k1", "gp", "sp", "fp", "ra"
-//     };
-//     //initialize all of the register names
-//     for (int i = 0; i < 32; i++) {
-//         registerFile[i] = Register(0x00, names[i]);
-//     }
-//     // registerFile[29].setAddress(0x3400); //29 is the stack pointer
-// }
-
-//todo:
-//one function that takes in an instruction
-//and determines the registers it needs, the instruction 
-//based on the opcode
 void CPU::resetStackPointer() {
     registerFile[29].setAddress(0x3400);
 }
 
 void CPU::PerformInstruction(const uint32_t instruction){
     
-    reg_a_, reg_b_, reg_c_ = 0;
-    uint8_t opcode = (instruction >> (25) & 0x3F);
+    reg_a_, reg_b_, reg_c_, shift_value_, immediate_value_ = 0;
+    uint32_t opcode = (instruction >> 26);// & 0x3F);
     assert(("opcode larger than it should be", opcode < 64)); // if opcode > 63 opcode didnt get read correctly
+
+    reg_a_  = (instruction >> (21) & 0x1F); //get next five bits
+    reg_b_ = (instruction >> (16) & 0x1F); //get next five bits
+    immediate_value_ = (instruction & 0xFFFF); //get next 16 bits 0xFFFF: 00001111111111111111
 
     if(opcode == 4){
         //r type instruction
-        reg_a_  = (instruction >> (21) & 0x1F); //get next five bits
-        reg_b_ = (instruction >> (16) & 0x1F); //get next five bits
-        reg_c_ = (instruction >> (11) & 0x1F); //get next five bits
-        shift_value_ = (instruction >> (6) & 0x1F); //get next five bits 0x1f: 00011111
-        function_value_ = (instruction & 0x3F); //0x3f looks like so: 00111111
+        reg_c_ = (immediate_value_ >> 11); //get next five bits
+        shift_value_ = ((immediate_value_ >> 6) & 0x1F); //get next five bits 0x1f: 00011111
+        function_value_ = (immediate_value_ & 0x3F); //0x3f looks like so: 00111111
 
         if (r_type_instructions_.find(function_value_) != r_type_instructions_.end()) {
             (this->*r_type_instructions_[function_value_])();
-            //r_type_instructions_[function_value_]();
-
-            // if(function == 0 || function == 35 || function == 40){
-            //     r_type_instructions_[function](reg_b, reg_c, shift); //for shifts
-            // }
-            // else if(function == 33){
-            //     r_type_instructions_[function](reg_a);//for jump register
-            // }
-            // else{
-            //     r_type_instructions_[function](reg_a, reg_b, reg_c); // Call the function pointer
-            // }
-             
-            //there may be a problem here however, in that the shift value is only used in shift and will give the warning 
-            //"unused variable"
         } else {
             std::cout << "Function not found for choice " << function_value_ << std::endl; //for debug
         }
-
     }
     else if(opcode ==  56||opcode == 50||opcode == 46||opcode == 37||opcode == 28||opcode == 23||opcode == 16|| opcode == 9||opcode == 0){
-        // i type instruction
-        reg_a_  = (instruction >> (21) & 0x1F); //get next five bits
-        reg_b_ = (instruction >> (16) & 0x1F); //get next five bits
-        reg_c_ = (instruction >> (11) & 0x1F); //get next five bits
-        immediate_value_ = (instruction & 0xFFFF); //get next 16 bits 0xFFF: 00001111111111111111
-        
-        //hashtable with function pointers
-
         if (i_type_instructions_.find(opcode) != i_type_instructions_.end()) {
+            // call opcode function
             (this->*i_type_instructions_[opcode])();
-            //i_type_instructions_[opcode]();
-            
-            // instructionList[opcode](reg_a, reg_b reg_c, immediate); // Call the function pointer
-            // if(opcode == 23 || opcode == 50){
-            //     instructionList[opcode](immediate); //for jump
-            // }
-            // else{
-            //     instructionList[opcode](reg_a, reg_b, immediate); // Call the function pointer
-            // }
         } else {
+            std::cout << "missed" << std::endl;
             std::cout << "Function not found for choice " << opcode << std::endl;
         }
     }
@@ -106,10 +47,9 @@ void CPU::PerformInstruction(const uint32_t instruction){
 
 
 void CPU::initialJAL(uint32_t address_to_setup) {
-    PC = 4*(address_to_setup & 0xff);
+    PC = (address_to_setup);
     registerFile[31].address = PC+4;
 }
-
 
 //rtype instructions:
 void CPU::ShiftRightArithmetic(){
@@ -157,13 +97,13 @@ void CPU::JumpRegister(){
 void CPU::storeWord(){
     int8_t byte1 = (reg_b_ >> 8 & 0xFF); 
     int8_t byte2 = reg_b_ & 0xFF;
-    (*os).memory.setByte(registerFile[reg_c_].getAddress()+(immediate_value_/8), byte1);
-    (*os).memory.setByte(registerFile[reg_c_].getAddress()+(immediate_value_/8)+1, byte2);
+    (*os).memory.setByte(registerFile[reg_a_].getAddress()+(immediate_value_/8), byte1);
+    (*os).memory.setByte(registerFile[reg_a_].getAddress()+(immediate_value_/8)+1, byte2);
 }
 
 void CPU::addImm(){
-    int8_t imm_8 = immediate_value_ & 0xFF;
-    registerFile[reg_b_].address =  registerFile[reg_a_].getAddress() + imm_8;
+    int16_t imm_8 = immediate_value_; // issue was here. supposed to be int16_t. add not limited to a byte.
+    registerFile[reg_b_].address =  registerFile[reg_a_].getAddress() + immediate_value_;
 }
 
 void CPU::LoadByteUnsigned(){
@@ -190,10 +130,14 @@ void CPU::BranchEqual(){
 }
 
 void CPU::StoreByte(){ 
-    int8_t byte = reg_b_ & 0xFF;
-    size_t address = registerFile[reg_c_].getAddress()+(immediate_value_);
+    int8_t byte = registerFile[reg_b_].getAddress() & 0xFF;
+    size_t address = registerFile[reg_a_].getAddress()+(immediate_value_);
+    // /std::cout<<"address: " << address << std::endl;
     (*os).memory.setByte(address, byte);
-    if (address == 0x7110) std::cout << byte;
+    if (address == 0x7110) {
+        //std::cout<<"WRITE\n";
+        std::cout << byte;
+    }
 }
 
 void CPU::JumpAndLink(){
