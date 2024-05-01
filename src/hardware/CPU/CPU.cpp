@@ -1,8 +1,3 @@
-#include <iostream>
-#include <string>
-#include <unordered_map>
-#include <any>
-#include "register.h"
 #include "CPU.h"
 
 // CPU::CPU() : PC(0x400, "PC") {
@@ -38,7 +33,7 @@ void CPU::SetUpRegisters(){
 //based on the opcode
 
 void CPU::PerformInstruction(const uint32_t& instruction){
-    std::unorderedmap<int, std::any>instructionList;
+    std::unordered_map<int, std::any>instructionList;
     int16_t reg_a, reg_b, reg_c = 0;
     int opcode = (instruction >> (25) & 0x3F);
     if(opcode == 4){

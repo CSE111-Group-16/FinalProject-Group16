@@ -20,8 +20,11 @@ public:
     // ~CPU();
     CPU(OS* set_os) : os(set_os) {}; // Default constructor
     OS* os;
+    //CPU(Register* registerFile, Register PC); // Parameterized constructor
 
-    
+    // Destructor
+<<<<<<< HEAD
+    //~CPU();
     void SetUpRegisters(); //names and adds each register to the previously empty register file
     void PerformInstruction(const uint32_t instruction);
 

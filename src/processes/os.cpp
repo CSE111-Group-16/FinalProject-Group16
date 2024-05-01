@@ -59,6 +59,7 @@ void OS::resetSequence() {
 
 void OS::setup() {
     std::cout << "setup() starts at: " << address_to_setup << std::endl;
+    std::cout << "setup() address read to be: " << readInt32(0x81e0) << std::endl;
     
     // setup() psuedo code for now:
     /*
