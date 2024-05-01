@@ -23,7 +23,7 @@ public:
     //CPU(Register* registerFile, Register PC); // Parameterized constructor
 
     // Destructor
-<<<<<<< HEAD
+
     //~CPU();
     void SetUpRegisters(); //names and adds each register to the previously empty register file
     void PerformInstruction(const uint32_t instruction);
