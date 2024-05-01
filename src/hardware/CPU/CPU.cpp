@@ -46,15 +46,15 @@ void CPU::SetUpRegisters(){
 
 CPU::PerformInstruction(uint32_t instruction){
     std::unorderedmap<int, void(*)>instructionList;
-    int reg_a, reg_b, reg_c = 0;
+    int16_t reg_a, reg_b, reg_c = 0;
     int opcode = (instruction >> (25) & 0x3F);
     if(opcode == 4){
         //r type instruction
         reg_a  = (instruction >> (21) & 0x1F); //get next five bits
         reg_b = (instruction >> (16) & 0x1F); //get next five bits
         reg_c = (instruction >> (11) & 0x1F) //get next five bits
-        int shift_value = (instruction >> (6) & 0x1F); //get next five bits 0x1f: 00011111
-        int function = (instruction & 0x3F) //0x3f looks like so: 00111111
+        int8_t shift = (instruction >> (6) & 0x1F); //get next five bits 0x1f: 00011111
+        int8_t function = (instruction & 0x3F) //0x3f looks like so: 00111111
         //hashtable with function pointers
         instructionList[0]= &ShiftRightArithmetic;
         instructionList[3]= &Subtract; 
@@ -68,7 +68,7 @@ CPU::PerformInstruction(uint32_t instruction){
         instructionList[40] = &ShiftLeftLogical;
         if (instructionList.find(function) != instructionList.end()) {
             if(function == 0 || function == 35 || function == 40){
-                instructionList[function](reg_b, reg_c, shift_value); //for shifts
+                instructionList[function](reg_b, reg_c, shift); //for shifts
             }
             else if(function == 33){
                 instructionList[function](reg_a);//for jump register
@@ -89,7 +89,7 @@ CPU::PerformInstruction(uint32_t instruction){
         reg_a  = (instruction >> (21) & 0x1F); //get next five bits
         reg_b = (instruction >> (16) & 0x1F); //get next five bits
         reg_c = (instruction >> (11) & 0x1F) //get next five bits
-        int immediate = (instruction & 0xFFFF); //get next 16 bits 0xFFF: 00001111111111111111
+        int16_t immediate = (instruction & 0xFFFF); //get next 16 bits 0xFFF: 00001111111111111111
         
         //hashtable with function pointers
         instructionList[0]= &storeWord;
@@ -117,44 +117,88 @@ CPU::PerformInstruction(uint32_t instruction){
 }
 
 //rtype instructions:
-void ShiftRightArithmetic(int reg_b, int reg_c, int shift){
-    registerFile[reg_c] = registerFile[reg_b] >> shift_value; //must be signed
+void ShiftRightArithmetic(int16_t reg_b, int16_t reg_c, int8_t shift){
+    registerFile[reg_c] =  (int16_t)(((uint16_t)registerFile[reg_b]) >> shift); // Sign extend after the logical shift
 }
 
-void ShiftRightLogical(int reg_b, int reg_c, int shift){
-    registerFile[reg_c] = (uint32_t) registerFile[reg_b] >> shift_value; //must be unsigned
+void ShiftRightLogical(int16_t reg_b, int16_t reg_c, int8_t shift){
+    registerFile[reg_c] =  registerFile[reg_b] >> shift; //must be unsigned
 }
 
-void ShiftLeftLogical(int reg_b, int reg_c, int shift){
-    registerFile[reg_c] = registerFile[reg_b] << shift_value;
+void ShiftLeftLogical(int16_t reg_b, int16_t reg_c, int8_t shift){
+    registerFile[reg_c] = registerFile[reg_b] << shift;
 }
 
-void Subtract(int reg_a, int reg_b, int reg_c){
+void Subtract(int16_t reg_a, int16_t reg_b, int16_t reg_c){
     registerFile[reg_c] = registerFile[reg_a] - registerFile[reg_b];
 }
 
-void Add(int reg_a, int reg_b, int reg_c){
+void Add(int16_t reg_a, int16_t reg_b, int16_t reg_c){
     registerFile[reg_c] = registerFile[reg_a] + registerFile[reg_b];
 }
 
-void SetLessThan(int reg_a, int reg_b, int reg_c){
+void SetLessThan(int16_t reg_a, int16_t reg_b, int16_t reg_c){
     registerFile[reg_c] = (registerFile[reg_a] < registerFile[reg_b]);
 }
 
-void Or_(int reg_a, int reg_b, int reg_c){
+void Or_(int16_t reg_a, int16_t reg_b, int16_t reg_c){
     registerFile[reg_c] = registerFile[reg_a] | registerFile[reg_b];
 }
 
-void Nor_(int reg_a, int reg_b, int reg_c){
+void Nor_(int16_t reg_a, int16_t reg_b, int16_t reg_c){
     registerFile[reg_c] = ~(registerFile[reg_a] | registerFile[reg_b]);
 }
 
-void And_(int reg_a, int reg_b, int reg_c){
+void And_(int16_t reg_a, int16_t reg_b, int16_t reg_c){
     registerFile[reg_c] = registerFile[reg_a] & registerFile[reg_b];
 }
 
-void JumpRegister(int reg_a){
+void JumpRegister(int16_t reg_a){
     PC+= R[reg_a];
 }
+//
+//itype
+//
+void storeWord(int16_t reg_b, int16_t reg_c, int immediate){
+    int8_t byte1 = (reg_b >> 8 & 0xFF); 
+    int8_t byte2 = reg_b & 0xFF;
+    os.memory.setByte(registerFile[reg_c]+immediate, byte1);
+    os.memory.setByte(registerFile[reg_c]+immediate+1, byte2);
+}
+
+void addImm(int16_t reg_a, int16_t reg_b, int16_t immediate){
+    int8_t imm_8 = immediate & 0xFF;
+    registerFile[reg_b] =  registerFile[reg_a] + imm_8;
+}
+
+void LoadByteUnsigned(int16_t reg_a, int16_t reg_b, int16_t immediate){
+    int8_t imm_8 = immediate & 0xFF;
+    registerFile[reg_b] = os.memory.getByte(registerFile[reg_a]+imm_8);
+}
+
+void Jump(int16_t reg_a, int16_t reg_b, int16_t reg_c){
+    registerFile[reg_c] = registerFile[reg_a] - registerFile[reg_b];
+}
+
+void BranchNotEqual(int16_t reg_a, int16_t reg_b, int16_t reg_c){
+    registerFile[reg_c] = registerFile[reg_a] + registerFile[reg_b];
+}
+
+void BranchEqual(int16_t reg_a, int16_t reg_b, int16_t reg_c){
+    registerFile[reg_c] = (registerFile[reg_a] < registerFile[reg_b]);
+}
+
+void StoreByte(int16_t reg_a, int16_t reg_b, int16_t reg_c){
+    registerFile[reg_c] = registerFile[reg_a] | registerFile[reg_b];
+}
+
+void JumpAndLink(int16_t reg_a, int16_t reg_b, int16_t reg_c){
+    registerFile[reg_c] = ~(registerFile[reg_a] | registerFile[reg_b]);
+}
+
+void LoadWord(int16_t reg_a, int16_t reg_b, int16_t reg_c){
+    registerFile[reg_c] = registerFile[reg_a] & registerFile[reg_b];
+}
+
 
 
