@@ -10,6 +10,33 @@
 #include <any>
 #include <cassert>
 
+enum shift{
+    opcode_shift = 26,
+    reg_a_shift = 21,
+    reg_b_shift = 16,
+    reg_c_shift = 11,
+    shift_shift = 6,
+    byte_shift = 8,
+    five_bitmask = 0x1F,
+    six_bitmask = 0x3F,
+    eight_bitmask = 0xFF,
+    sixteen_bitmask = 0xFFFF,
+    opcode_max = 64,
+    rtype = 4,
+    LW = 56,
+    JAL = 50,
+    SB = 46,
+    BEQ = 37,
+    BNE = 28,
+    J = 23,
+    LBU = 16,
+    ADDI = 9,
+    SW = 0,
+    register_ra = 31,
+    register_sp = 29,
+    top_of_stack = 0x3400
+};
+
 
 class OS;
 class CPU {
@@ -93,3 +120,4 @@ private:
 };
 
 #endif // CPU_H
+
