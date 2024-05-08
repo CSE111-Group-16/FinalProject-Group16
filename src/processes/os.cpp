@@ -55,12 +55,10 @@ void OS::resetSequence() {
     loop();
     file.close();
     // start game loop() TODO (but prob later)
-    
-    //loop();
 }
 
 void OS::loop() {
-    std::cout<< "beginning loop\n";
+    std::cout<< "loop()\n";
     // Set up initial state
     cpu.PC = 0xfffc; // Set PC register to 0xfffc
     cpu.initialJAL(address_to_loop); // Set CPU to run this instruction
@@ -77,12 +75,15 @@ void OS::loop() {
             cpu.PC = 0xfffc;
             cpu.initialJAL(address_to_loop);
         }
+        if (exitCondition) break;
     }
+    std::cout<< "end loop()\n";
+
 }
 
 void OS::setup() {
     // setup() psuedo code for now:
-    
+    std::cout<<"startup()\n";
     cpu.PC = 0xfffc; // set PC register to 0xfffc
     cpu.initialJAL(address_to_setup); // set CPU to run this instruction
     
@@ -92,7 +93,9 @@ void OS::setup() {
 
         // stopp
         if (cpu.PC < 0x8000) break;
+        if (exitCondition) break;
     }
+    exitCondition = false;
 }
 
 

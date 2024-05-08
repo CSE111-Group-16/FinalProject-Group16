@@ -152,7 +152,7 @@ void CPU::StoreByte(){
     }
     // exit condition
     if (address == 0x7200) {
-        exit(EXIT_FAILURE);
+        os->exitCondition = true;
     }
 }
 

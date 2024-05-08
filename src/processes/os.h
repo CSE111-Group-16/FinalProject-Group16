@@ -29,6 +29,8 @@ class OS {
     uint32_t load_data_address;
     uint32_t program_data_address;
     uint32_t data_size;
+    bool exitCondition = false;
+
 
     // memory accessors (? idk if needed in os)
     uint32_t readInt32(const size_t& address) const;
