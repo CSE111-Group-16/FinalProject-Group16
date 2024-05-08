@@ -99,9 +99,9 @@ void CPU::storeWord(){
     int8_t byte2 = registerFile[reg_b_].getAddress() & eight_bitmask;
     (*os).memory.setByte(registerFile[reg_a_].getAddress()+(immediate_value_/byte_shift), byte1);
     (*os).memory.setByte(registerFile[reg_a_].getAddress()+(immediate_value_/byte_shift)+1, byte2);
-    if (address == 0x7110) {
-        std::cout << byte1 << byte2;
-    }
+    // if (address == 0x7110) {
+    //     std::cout << byte1 << byte2;
+    // }
 }
 
 void CPU::addImm(){
@@ -137,9 +137,20 @@ void CPU::StoreByte(){
     size_t address = registerFile[reg_a_].getAddress()+(immediate_value_);
     // /std::cout<<"address: " << address << std::endl;
     (*os).memory.setByte(address, byte);
+    
+    // write to stdout
     if (address == 0x7110) {
         //std::cout<<"WRITE\n";
         std::cout << byte;
+    }
+    // write to stderr
+    if (address == 0x7120) {
+        //std::cout<<"WRITE\n";
+        std::cerr << byte;
+    }
+    // exit condition
+    if (address == 0x7200) {
+        exit(EXIT_FAILURE);
     }
 }
 

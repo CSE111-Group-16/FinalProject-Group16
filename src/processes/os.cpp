@@ -54,10 +54,11 @@ void OS::resetSequence() {
     setup();
     file.close();
     // start game loop() TODO (but prob later)
-    loop();
+    //loop();
 }
 
 void OS::loop() {
+    std::cout<< "beginning loop\n";
     // Set up initial state
     cpu.PC = 0xfffc; // Set PC register to 0xfffc
     cpu.initialJAL(address_to_loop); // Set CPU to run this instruction
@@ -68,7 +69,11 @@ void OS::loop() {
         uint32_t instruction = readInt32(cpu.PC);
         //std::cout < < std::hex << cpu.PC << std::endl;
         cpu.PerformInstruction(instruction); // runs next instruction until PC == 0x0000
+        
+        // if reset loop
         if (cpu.PC == 0x0000 || cpu.PC < 0x8000) {
+            std::cout << "resetting loop" << std::endl;
+            
             cpu.PC = 0xfffc;
             cpu.initialJAL(address_to_loop); 
         }
@@ -81,11 +86,9 @@ void OS::setup() {
     cpu.PC = 0xfffc; // set PC register to 0xfffc
     cpu.initialJAL(address_to_setup); // set CPU to run this instruction
     
-    size_t i = 0; // start at 1 since above line was first instruction
     while (cpu.PC != 0x0000 || cpu.PC < 0x8000) { // when PC reg returns to 0x0000, setup() is finished
         //uint32_t instruction = readInt32(address_to_setup+(4*i));
         cpu.PerformInstruction(readInt32(cpu.PC)); // runs next instruction until PC == 0x0000
-        i++;
 
         // stopp
         if (cpu.PC < 0x8000) break;
