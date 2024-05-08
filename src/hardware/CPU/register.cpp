@@ -46,6 +46,7 @@ void Register::setAddress(uint16_t value) {
     address = value;
 }
 
+// getAddress() might not be returning usable address? returns value not reference
 uint16_t Register::getAddress() const {
     if (registerName == "zero") return 0;
     if (registerName == "sp") {
