@@ -49,7 +49,6 @@ void OS::resetSequence() {
 
     // set stack pointer reg to end of stack
     cpu.resetStackPointer();
-    // cpu.SetUpRegisters(); // pretty sure stack pointer is set to 0x3400 here
 
     // call setup()
     setup();
