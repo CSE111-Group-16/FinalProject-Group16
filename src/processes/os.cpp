@@ -41,15 +41,10 @@ void OS::resetSequence() {
     program_data_address = readInt32(0x81ec);
     data_size = readInt32(0x81f0);
     
-    // copy data to RAM (TEST)
-    std::cout<<"attempting data section. size: ";
-    std::cout<<data_size<<std::endl;
+    // copy data to RAM (90% sure working)
     for (size_t i=0; i<data_size; i++) {
         uint8_t rom_byte = memory.readByte(load_data_address + i);
-        //std::cout<<rom_byte<<std::endl;
         memory.setByte(program_data_address + i, rom_byte);
-        std::cout<<readInt8(program_data_address+i)<<std::endl;
-    
     }
 
     // set stack pointer reg to end of stack
