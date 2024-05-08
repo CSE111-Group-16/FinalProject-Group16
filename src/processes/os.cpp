@@ -54,7 +54,7 @@ void OS::resetSequence() {
     setup();
     file.close();
     // start game loop() TODO (but prob later)
-    // loop();
+    loop();
 }
 
 void OS::loop() {
@@ -63,13 +63,14 @@ void OS::loop() {
     cpu.initialJAL(address_to_loop); // Set CPU to run this instruction
 
     // Loop until the PC reaches 0x0000 or goes below 0x8000
-    while (true) {
+    while (true) { 
         std::cout << "this is an instruction in the loop" << std::endl;
         uint32_t instruction = readInt32(cpu.PC);
-        std::cout << std::hex << cpu.PC << std::endl;
+        //std::cout < < std::hex << cpu.PC << std::endl;
         cpu.PerformInstruction(instruction); // runs next instruction until PC == 0x0000
         if (cpu.PC == 0x0000 || cpu.PC < 0x8000) {
-            break; 
+            cpu.PC = 0xfffc;
+            cpu.initialJAL(address_to_loop); 
         }
     }
 }
