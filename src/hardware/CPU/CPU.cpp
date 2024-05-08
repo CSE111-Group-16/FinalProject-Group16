@@ -61,7 +61,14 @@ void CPU::ShiftRightLogical(){
 }
 
 void CPU::ShiftLeftLogical(){
+    std::cout << "reg a before addi" << registerFile[reg_a_].getAddress() + immediate_value_ << std::endl;
+    std::cout << "reg b before addi" << registerFile[reg_b_].getAddress() << std::endl;
+    std::cout << "reg c before addi" << registerFile[reg_c_].getAddress() << std::endl;
     registerFile[reg_c_].address = registerFile[reg_b_].getAddress() << shift_value_;
+    std::cout << "reg a after addi" << registerFile[reg_a_].getAddress() + immediate_value_ << std::endl;
+    std::cout << "reg b after addi" << registerFile[reg_b_].getAddress() << std::endl;
+    std::cout << "reg c before addi" << registerFile[reg_c_].getAddress() << std::endl;
+
 }
 
 void CPU::Subtract(){
@@ -69,7 +76,14 @@ void CPU::Subtract(){
 }
 
 void CPU::Add(){
+    //std::cout << "reg a before addi" << registerFile[reg_a_].getAddress() + immediate_value_ << std::endl;
+    //std::cout << "reg b before addi" << registerFile[reg_b_].getAddress() << std::endl;
+    //std::cout << "reg c before addi" << registerFile[reg_c_].getAddress() << std::endl;
+
     registerFile[reg_c_].address = registerFile[reg_a_].getAddress() + registerFile[reg_b_].getAddress();
+    //std::cout << "reg c after add" << registerFile[reg_c_].getAddress() + immediate_value_ << std::endl;
+    //std::cout << "reg b before addi" << registerFile[reg_b_].getAddress() << std::endl;
+
 }
 
 void CPU::SetLessThan(){
@@ -108,7 +122,11 @@ void CPU::storeWord(){
 }
 
 void CPU::addImm(){
+    //std::cout << "reg a before addi" << registerFile[reg_a_].getAddress() + immediate_value_ << std::endl;
+    //std::cout << "reg b before addi" << registerFile[reg_b_].getAddress() << std::endl;
+
     registerFile[reg_b_].address =  registerFile[reg_a_].getAddress() + immediate_value_;
+    //std::cout << "reg b after addi" <<  registerFile[reg_b_].getAddress() << std::endl;
 }
 
 void CPU::LoadByteUnsigned(){
@@ -121,16 +139,23 @@ void CPU::Jump(){
 }
 
 void CPU::BranchNotEqual(){
+    //std::cout << registerFile[reg_a_].getAddress() << std::endl;
+    //std::cout << registerFile[reg_b_].getAddress() << std::endl;
+
    if(registerFile[reg_a_].getAddress()!=registerFile[reg_b_].getAddress()){
         PC += 4*(immediate_value_); //PC is incremented after the instruction anyways
+        std::cout << "not equal" << std::endl;
+
         // removed /8
    }
 }
 
 void CPU::BranchEqual(){
+    //std::cout << registerFile[reg_a_].getAddress() << std::endl;
+    //std::cout << registerFile[reg_b_].getAddress() << std::endl;
     if(registerFile[reg_a_].getAddress()==registerFile[reg_b_].getAddress()){
         PC += 4*(immediate_value_); //PC is incremented after the instruction anyways
-        // removed /8
+        std::cout << "equal" << std::endl;
    }
 }
 
