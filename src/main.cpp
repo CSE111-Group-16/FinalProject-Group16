@@ -17,6 +17,7 @@ int main(int argc, char* argv[]) {
 			if (filepath.extension() == ".slug") {
 				OS os;
 				os.startup(path);
+				
 			}
 			else {
 				std::cout << "Provide only a path to a valid slug file" << std::endl;

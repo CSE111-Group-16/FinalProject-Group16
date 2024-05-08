@@ -164,12 +164,20 @@ void CPU::StoreByte(){
     size_t address = registerFile[reg_a_].getAddress()+(immediate_value_);
     // /std::cout<<"address: " << address << std::endl;
     (*os).memory.setByte(address, byte);
+    
+    // write to stdout
     if (address == 0x7110) {
         //std::cout<<"WRITE\n";
         std::cout << byte;
     }
-    else if (address == 0x7200){
-        exit(EXIT_FAILURE);
+    // write to stderr
+    if (address == 0x7120) {
+        //std::cout<<"WRITE\n";
+        std::cerr << byte;
+    }
+    // exit condition
+    if (address == 0x7200) {
+        os->exitCondition = true;
     }
 }
 

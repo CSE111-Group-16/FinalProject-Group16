@@ -41,7 +41,7 @@ void OS::resetSequence() {
     program_data_address = readInt32(0x81ec);
     data_size = readInt32(0x81f0);
     
-    // copy data to RAM (TEST)
+    // copy data to RAM (90% sure working)
     for (size_t i=0; i<data_size; i++) {
         uint8_t rom_byte = memory.readByte(load_data_address + i);
         memory.setByte(program_data_address + i, rom_byte);
@@ -49,49 +49,53 @@ void OS::resetSequence() {
 
     // set stack pointer reg to end of stack
     cpu.resetStackPointer();
-    // cpu.SetUpRegisters(); // pretty sure stack pointer is set to 0x3400 here
 
     // call setup()
     setup();
     loop();
     file.close();
     // start game loop() TODO (but prob later)
-    
 }
 
 void OS::loop() {
+    std::cout<< "loop()\n";
     // Set up initial state
     cpu.PC = 0xfffc; // Set PC register to 0xfffc
     cpu.initialJAL(address_to_loop); // Set CPU to run this instruction
 
     // Loop until the PC reaches 0x0000 or goes below 0x8000
-    while (true) {
+    while (true) { 
         std::cout << "this is an instruction in the loop" << std::endl;
         uint32_t instruction = readInt32(cpu.PC);
-        std::cout << std::hex << cpu.PC << std::endl;
+        //std::cout < < std::hex << cpu.PC << std::endl;
         cpu.PerformInstruction(instruction); // runs next instruction until PC == 0x0000
+        
+        // if reset loop
         if (cpu.PC == 0x0000 || cpu.PC < 0x8000) {
             cpu.PC = 0xfffc;
             cpu.initialJAL(address_to_loop);
         }
+        if (exitCondition) break;
     }
+    std::cout<< "end loop()\n";
+
 }
 
 void OS::setup() {
     // setup() psuedo code for now:
-    
+    std::cout<<"startup()\n";
     cpu.PC = 0xfffc; // set PC register to 0xfffc
     cpu.initialJAL(address_to_setup); // set CPU to run this instruction
     
-    size_t i = 0; // start at 1 since above line was first instruction
     while (cpu.PC != 0x0000 || cpu.PC < 0x8000) { // when PC reg returns to 0x0000, setup() is finished
         //uint32_t instruction = readInt32(address_to_setup+(4*i));
         cpu.PerformInstruction(readInt32(cpu.PC)); // runs next instruction until PC == 0x0000
-        i++;
 
         // stopp
         if (cpu.PC < 0x8000) break;
+        if (exitCondition) break;
     }
+    exitCondition = false;
 }
 
 
