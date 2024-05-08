@@ -52,8 +52,10 @@ void OS::resetSequence() {
 
     // call setup()
     setup();
+    loop();
     file.close();
     // start game loop() TODO (but prob later)
+    
     //loop();
 }
 
@@ -72,10 +74,8 @@ void OS::loop() {
         
         // if reset loop
         if (cpu.PC == 0x0000 || cpu.PC < 0x8000) {
-            std::cout << "resetting loop" << std::endl;
-            
             cpu.PC = 0xfffc;
-            cpu.initialJAL(address_to_loop); 
+            cpu.initialJAL(address_to_loop);
         }
     }
 }

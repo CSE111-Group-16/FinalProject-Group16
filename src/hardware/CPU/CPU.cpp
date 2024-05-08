@@ -97,15 +97,17 @@ void CPU::JumpRegister(){
 void CPU::storeWord(){
     int8_t byte1 = ((registerFile[reg_b_].getAddress() >> byte_shift) & eight_bitmask); 
     int8_t byte2 = registerFile[reg_b_].getAddress() & eight_bitmask;
-    (*os).memory.setByte(registerFile[reg_a_].getAddress()+(immediate_value_/byte_shift), byte1);
-    (*os).memory.setByte(registerFile[reg_a_].getAddress()+(immediate_value_/byte_shift)+1, byte2);
-    // if (address == 0x7110) {
-    //     std::cout << byte1 << byte2;
-    // }
+    (*os).memory.setByte(registerFile[reg_a_].getAddress()+(immediate_value_), byte1); //byte_shift
+    (*os).memory.setByte(registerFile[reg_a_].getAddress()+(immediate_value_)+1, byte2);//byte_shift removed
+    if (registerFile[reg_a_].getAddress()+(immediate_value_) == 0x7110) {
+        std::cout << byte1 << byte2;
+    }
+    //else if(registerFile[reg_a_].getAddress()+(immediate_value_) == 0x7200){
+      //  exit(EXIT_FAILURE);
+    //}
 }
 
 void CPU::addImm(){
-    int16_t imm_8 = immediate_value_; // issue was here. supposed to be int16_t. add not limited to a byte.
     registerFile[reg_b_].address =  registerFile[reg_a_].getAddress() + immediate_value_;
 }
 
