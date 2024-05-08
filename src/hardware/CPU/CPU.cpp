@@ -89,16 +89,19 @@ void CPU::And_(){
 }
 
 void CPU::JumpRegister(){
-    PC+= registerFile[reg_a_].getAddress();
+    PC= registerFile[reg_a_].getAddress();
 }
 //
 //itype
 //
 void CPU::storeWord(){
-    int8_t byte1 = (reg_b_ >> byte_shift & eight_bitmask); 
-    int8_t byte2 = reg_b_ & eight_bitmask;
+    int8_t byte1 = ((registerFile[reg_b_].getAddress() >> byte_shift) & eight_bitmask); 
+    int8_t byte2 = registerFile[reg_b_].getAddress() & eight_bitmask;
     (*os).memory.setByte(registerFile[reg_a_].getAddress()+(immediate_value_/byte_shift), byte1);
     (*os).memory.setByte(registerFile[reg_a_].getAddress()+(immediate_value_/byte_shift)+1, byte2);
+    if (address == 0x7110) {
+        std::cout << byte1 << byte2;
+    }
 }
 
 void CPU::addImm(){
