@@ -75,7 +75,7 @@ void OS::loop() {
     while (true) { 
         uint32_t instruction = readInt32(cpu.PC);
         //std::cout << std::hex << instruction << std::endl;
-        std::cout << std::hex << cpu.PC << std::endl;
+        std::cout << std::hex << instruction << std::endl;
         cpu.PerformInstruction(instruction); // runs next instruction until PC == 0x0000
         std::cout << std::hex << cpu.PC << std::endl;
         // if reset loop
@@ -84,12 +84,12 @@ void OS::loop() {
 
             // not sure if supposed to break or reset loop here
             //70% sure its break tho
-            break;
-            //cpu.PC = 0xfffc;
-            //cpu.initialJAL(address_to_loop);
+            //break;
+            cpu.PC = 0xfffc;
+            cpu.initialJAL(address_to_loop);
         }
-        if (exitCondition) break;
-        std::cout<<"endloop iter\n";
+        if (exitCondition) exit(EXIT_SUCCESS);
+        //std::cout<<"endloop iter\n";
     }
     std::cout<< "\nend loop()================\n";
 
@@ -100,15 +100,18 @@ void OS::setup() {
     std::cout<<"startup()===============\n";
     cpu.PC = 0xfffc; // set PC register to 0xfffc
     cpu.initialJAL(address_to_setup); // set CPU to run this instruction
+    std::cout << std::hex << cpu.PC << std::endl;
     
     while (cpu.PC != 0x0000) { // when PC reg returns to 0x0000, setup() is finished
         uint32_t instruction = readInt32(cpu.PC);
-        //std::cout<<std::hex<<instruction<<std::endl;
+        
+        std::cout << std::hex << cpu.PC << std::endl;
+        std::cout << std::hex << instruction << std::endl;
 
         cpu.PerformInstruction(instruction); // runs next instruction until PC == 0x0000
         // stopp
-        if (cpu.PC < 0x8000) break;
-        if (exitCondition) break;
+        if (cpu.PC < 0x8000 || cpu.PC == 0x0000) break;
+        if (exitCondition) exit(EXIT_SUCCESS);
     }
     exitCondition = false;
     std::cout<<"\nend startup()===============\n";

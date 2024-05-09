@@ -36,6 +36,10 @@ void CPU::PerformInstruction(const uint32_t instruction){
             std::cerr << "Function not found for choice " << opcode << std::endl;
         }
     }
+    else{
+        //nop
+        PC +=4;
+    }
     // moving increment to individual instructions
     //PC +=4;
     
@@ -110,7 +114,7 @@ void CPU::storeWord(){
     (*os).memory.setByte(registerFile[reg_a_].getAddress()+(immediate_value_), byte1); //byte_shift
     (*os).memory.setByte(registerFile[reg_a_].getAddress()+(immediate_value_)+1, byte2);//byte_shift removed
     if (registerFile[reg_a_].getAddress()+(immediate_value_) == 0x7110) {
-        std::cerr << byte1 << byte2;
+        std::cout << byte1 << byte2;
     }
     //else if(registerFile[reg_a_].getAddress()+(immediate_value_) == 0x7200){
       //  exit(EXIT_FAILURE);
@@ -119,9 +123,6 @@ void CPU::storeWord(){
 }
 
 void CPU::addImm(){
-    //std::cout << "reg a before addi" << registerFile[reg_a_].getAddress() + immediate_value_ << std::endl;
-    //std::cout << "reg b before addi" << registerFile[reg_b_].getAddress() << std::endl;
-
     registerFile[reg_b_].address =  registerFile[reg_a_].getAddress() + immediate_value_;
     PC +=4;
 }
@@ -142,10 +143,14 @@ void CPU::BranchNotEqual(){
     //std::cout << registerFile[reg_b_].getAddress() << std::endl;
 
    if(registerFile[reg_a_].getAddress()!=registerFile[reg_b_].getAddress()){
-        PC += 4*(immediate_value_); //PC is incremented after the instruction anyways
+        PC += 4+4*(immediate_value_); //PC is incremented after the instruction anyways
         std::cout << "not equal" << std::endl;
 
         // removed /8
+   }
+   else{
+        PC+=4;
+        std::cout << "equal" << std::endl;
    }
 }
 
@@ -153,12 +158,18 @@ void CPU::BranchEqual(){
     //std::cout << registerFile[reg_a_].getAddress() << std::endl;
     //std::cout << registerFile[reg_b_].getAddress() << std::endl;
     if(registerFile[reg_a_].getAddress()==registerFile[reg_b_].getAddress()){
-        PC += 4*(immediate_value_); //PC is incremented after the instruction anyways
-        std::cout << "equal" << std::endl;
+        PC += 4+4*(immediate_value_); //PC is incremented after the instruction anyways
+        //std::cout << "equal" << std::endl;
+   }
+   else{
+        PC+=4;
    }
 }
 
 void CPU::StoreByte(){ 
+    std::cout << "reg " << registerFile[reg_a_].registerName << " + imm before SB" << registerFile[reg_a_].getAddress() + immediate_value_ << std::endl;
+    std::cout << "reg " << registerFile[reg_b_].registerName << " before SB" << registerFile[reg_b_].getAddress()<< std::endl;
+    
     int8_t byte = registerFile[reg_b_].getAddress() & eight_bitmask;
     size_t address = registerFile[reg_a_].getAddress()+(immediate_value_);
     // /std::cout<<"address: " << address << std::endl;
@@ -167,7 +178,7 @@ void CPU::StoreByte(){
     // write to stdout
     if (address == 0x7110) {
         //std::cout<<"WRITE\n";
-        std::cerr << byte;
+        std::cout << byte; //changed for debugging
     }
     // write to stderr
     if (address == 0x7120) {
@@ -188,10 +199,16 @@ void CPU::JumpAndLink(){
 }
 
 void CPU::LoadWord(){
-    //std::cout << "register a before lw " << std::hex << registerFile[reg_a_].getAddress()+immediate_value_ << std::endl;
-    //std::cout << "register b before lw " << std::hex << registerFile[reg_b_].address << std::endl;
+    std::cout << "reg " << registerFile[reg_a_].registerName << " + imm before LW" << registerFile[reg_a_].getAddress() + immediate_value_ << std::endl;
+    std::cout << "reg " << registerFile[reg_b_].registerName << " before LW" << registerFile[reg_b_].getAddress()<< std::endl;
+    if(registerFile[reg_b_].registerName == "x0"){
+        registerFile[reg_b_].address = 0;
+        return;
+    }
     uint16_t low_byte = *(*os).memory.getByte(registerFile[reg_a_].getAddress()+immediate_value_); // Get the low byte
     uint16_t high_byte = *(*os).memory.getByte((registerFile[reg_a_].getAddress()+immediate_value_)+1); // Get the high byte
     registerFile[reg_b_].address = (high_byte << byte_shift) | low_byte; // Combine bytes into a word
     PC +=4;
+    std::cout << "reg " << registerFile[reg_a_].registerName << " + imm after LW" << registerFile[reg_a_].getAddress() + immediate_value_ << std::endl;
+    std::cout << "reg " << registerFile[reg_b_].registerName << " after LW" << registerFile[reg_b_].getAddress()<< std::endl;
 }
