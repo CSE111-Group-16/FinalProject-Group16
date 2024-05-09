@@ -24,7 +24,7 @@ void CPU::PerformInstruction(const uint32_t instruction){
         if (r_type_instructions_.find(function_value_) != r_type_instructions_.end()) {
             (this->*r_type_instructions_[function_value_])();
         } else {
-            std::cout << "Function not found for choice " << function_value_ << std::endl; //for debug
+            std::cerr << "Function not found for choice " << function_value_ << std::endl; //for debug
         }
     }
     else if(opcode ==  LW||opcode == JAL||opcode == SB||opcode == BEQ||opcode == BNE||opcode == J||opcode == LBU|| opcode == ADDI||opcode == SW){
@@ -32,11 +32,12 @@ void CPU::PerformInstruction(const uint32_t instruction){
             // call opcode function
             (this->*i_type_instructions_[opcode])();
         } else {
-            std::cout << "missed" << std::endl;
-            std::cout << "Function not found for choice " << opcode << std::endl;
+            std::cerr << "missed" << std::endl;
+            std::cerr << "Function not found for choice " << opcode << std::endl;
         }
     }
-    PC +=4;
+    // moving increment to individual instructions
+    //PC +=4;
     
     //todo: separate all of the bits depending on the opcode
     //if opcode == 4 then i type, and seperate bits based on that
@@ -46,47 +47,55 @@ void CPU::PerformInstruction(const uint32_t instruction){
 }
 
 
-void CPU::initialJAL(uint32_t address_to_setup) {
-    registerFile[register_ra].address = PC;
-    //std::cout << "register" << std::hex << registerFile[register_ra].address << std::endl;
-    PC = (address_to_setup);
+void CPU::initialJAL(uint32_t address_to_jump) {
+    registerFile[register_ra].address = PC+4;
+    PC = (address_to_jump);
 }
 
 //rtype instructions:
 void CPU::ShiftRightArithmetic(){
     registerFile[reg_c_].address =  (int16_t)(((uint16_t)registerFile[reg_b_].getAddress()) >> shift_value_); // Sign extend after the logical shift
+    PC +=4;
 }
 
 void CPU::ShiftRightLogical(){
     registerFile[reg_c_].address =  registerFile[reg_b_].getAddress() >> shift_value_; //must be unsigned
+    PC +=4;
 }
 
 void CPU::ShiftLeftLogical(){
     registerFile[reg_c_].address = registerFile[reg_b_].getAddress() << shift_value_;
+    PC +=4;
 }
 
 void CPU::Subtract(){
     registerFile[reg_c_].address = registerFile[reg_a_].getAddress() - registerFile[reg_b_].getAddress();
+    PC +=4;
 }
 
 void CPU::Add(){
     registerFile[reg_c_].address = registerFile[reg_a_].getAddress() + registerFile[reg_b_].getAddress();
+    PC +=4;
 }
 
 void CPU::SetLessThan(){
     registerFile[reg_c_].address = (registerFile[reg_a_].getAddress() < registerFile[reg_b_].getAddress());
+    PC +=4;
 }
 
 void CPU::Or_(){
     registerFile[reg_c_].address = registerFile[reg_a_].getAddress() | registerFile[reg_b_].getAddress();
+    PC +=4;
 }
 
 void CPU::Nor_(){
     registerFile[reg_c_].address = ~(registerFile[reg_a_].getAddress() | registerFile[reg_b_].getAddress());
+    PC +=4;
 }
 
 void CPU::And_(){
     registerFile[reg_c_].address = registerFile[reg_a_].getAddress() & registerFile[reg_b_].getAddress();
+    PC +=4;
 }
 
 void CPU::JumpRegister(){
@@ -106,6 +115,7 @@ void CPU::storeWord(){
     //else if(registerFile[reg_a_].getAddress()+(immediate_value_) == 0x7200){
       //  exit(EXIT_FAILURE);
     //}
+    PC +=4;
 }
 
 void CPU::addImm(){
@@ -113,20 +123,18 @@ void CPU::addImm(){
     //std::cout << "reg b before addi" << registerFile[reg_b_].getAddress() << std::endl;
 
     registerFile[reg_b_].address =  registerFile[reg_a_].getAddress() + immediate_value_;
-    //std::cout << "reg b after addi" <<  registerFile[reg_b_].getAddress() << std::endl;
+    PC +=4;
 }
 
 void CPU::LoadByteUnsigned(){
     //registerFile[reg_b_].address = os->readInt8(registerFile[reg_a_].getAddress()+immediate_value_);
     int8_t imm_8 = immediate_value_ & eight_bitmask;
     registerFile[reg_b_].address = *(*os).memory.getByte(registerFile[reg_a_].getAddress()+imm_8);
-    //if(registerFile[reg_a_].getAddress()+imm_8 == ){
-    //    std::getline(std::cin, input);
-    //}
+    PC +=4;
 }
 
 void CPU::Jump(){
-    PC+= 4+immediate_value_; // removed /8
+    PC+= 4*immediate_value_; // removed /8, also changed + to *
 }
 
 void CPU::BranchNotEqual(){
@@ -170,6 +178,7 @@ void CPU::StoreByte(){
     if (address == 0x7200) {
         os->exitCondition = true;
     }
+    PC +=4;
 }
 
 void CPU::JumpAndLink(){
@@ -184,9 +193,5 @@ void CPU::LoadWord(){
     uint16_t low_byte = *(*os).memory.getByte(registerFile[reg_a_].getAddress()+immediate_value_); // Get the low byte
     uint16_t high_byte = *(*os).memory.getByte((registerFile[reg_a_].getAddress()+immediate_value_)+1); // Get the high byte
     registerFile[reg_b_].address = (high_byte << byte_shift) | low_byte; // Combine bytes into a word
-    //std::cout << "register b after lw " << std::hex << registerFile[reg_b_].address << std::endl;
-    // removed /8 from both immediate_value
-    //uint16_t low_byte = *(*os).memory.getByte(registerFile[reg_a_].getAddress()+immediate_value_); // Get the low byte
-    //uint16_t high_byte = *(*os).memory.getByte((registerFile[reg_a_].getAddress()+immediate_value_)+1); // Get the high byte
-    //registerFile[reg_b_].address = (high_byte << byte_shift) | low_byte; // Combine bytes into a word
+    PC +=4;
 }
