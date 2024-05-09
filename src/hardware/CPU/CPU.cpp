@@ -136,6 +136,7 @@ void CPU::storeWord(){
     (*os).memory.setByte(registerFile[reg_a_].getAddress()+(immediate_value_), byte1); //byte_shift
     (*os).memory.setByte(registerFile[reg_a_].getAddress()+(immediate_value_)+1, byte2);//byte_shift removed
     if (registerFile[reg_a_].getAddress()+(immediate_value_) == 0x7110) {
+        (*os).logger << "WROTE FROM storeWord()" << std::endl;
         std::cout << byte1 << byte2;
     }
     //else if(registerFile[reg_a_].getAddress()+(immediate_value_) == 0x7200){
@@ -156,13 +157,14 @@ void CPU::addImm(){
 }
 
 void CPU::LoadByteUnsigned(){
-    (*os).logger << "reg b = " << registerFile[reg_b_].registerName << " before lbu" << registerFile[reg_b_].getAddress() << std::endl;
-    (*os).logger << "reg a = " << registerFile[reg_a_].registerName << " before lbu" << registerFile[reg_a_].getAddress() << std::endl;
+    (*os).logger << "reg b = " << registerFile[reg_b_].registerName << " before lbu " << registerFile[reg_b_].getAddress() << std::endl;
+    (*os).logger << "reg a = " << registerFile[reg_a_].registerName << " before lbu " << registerFile[reg_a_].getAddress() << std::endl;
+    (*os).logger << "immediate: " << immediate_value_ << std::endl;
 
-    
+    (*os).logger << "reading from memory[" << registerFile[reg_a_].getAddress()+immediate_value_<<"]"<<std::endl;
     registerFile[reg_b_].address = (*os).memory.readByte(registerFile[reg_a_].getAddress()+immediate_value_);
     PC +=4;
-    (*os).logger << "reg b = " << registerFile[reg_b_].registerName << " after lbu" << registerFile[reg_b_].getAddress() << std::endl;
+    (*os).logger << "reg b = " << registerFile[reg_b_].registerName << " after lbu " << registerFile[reg_b_].getAddress() << std::endl;
 
 }
 
@@ -198,7 +200,7 @@ void CPU::BranchEqual(){
 
 void CPU::StoreByte(){ 
     (*os).logger << "reg " << registerFile[reg_a_].registerName << " + imm before SB" << registerFile[reg_a_].getAddress() + immediate_value_ << std::endl;
-    (*os).logger << "reg " << registerFile[reg_b_].registerName << " before SB" << registerFile[reg_b_].getAddress()<< std::endl;
+    (*os).logger << "reg " << registerFile[reg_b_].registerName << " before SB " << registerFile[reg_b_].getAddress()<< std::endl;
     
     int8_t byte = registerFile[reg_b_].getAddress() & eight_bitmask;
     size_t address = registerFile[reg_a_].getAddress()+(immediate_value_);
@@ -207,7 +209,7 @@ void CPU::StoreByte(){
     
     // write to stdout
     if (address == 0x7110) {
-        //(*os).logger<<"WRITE\n";
+        (*os).logger << "WRITE: " << byte << std::endl;
         std::cout << byte; //changed for debugging
     }
     // write to stderr
