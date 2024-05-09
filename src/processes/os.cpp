@@ -2,6 +2,11 @@
 
 void OS::startup(std::string filename) {
     filename_ = filename;
+    logger.open("log.txt", std::ios::trunc | std::ios::binary);
+    if (!logger.is_open()) {
+        std::cerr << "Error opening logger" << std::endl;
+    }
+
     resetSequence();
 }
 
@@ -12,6 +17,7 @@ void OS::resetSequence() {
     // opening ROM file
     std::ifstream file;
     file.open(filename_, std::ios::ate);
+
 
     // check if file opened successfully
     if (!file.is_open()) {
@@ -60,11 +66,11 @@ void OS::resetSequence() {
 }
 
 void OS::loop() {
-    std::cout<< "loop()====================\n";
+    logger << "loop()====================\n";
     // Set up initial state
     cpu.PC = 0xfffc; // Set PC register to 0xfffc
     cpu.initialJAL(address_to_loop); // Set CPU to run this instruction
-    std::cout << "initial " << std::hex << cpu.PC << std::endl;
+    logger << "initial " << std::hex << cpu.PC << std::endl;
 
     if (cpu.PC == 0x0000 || cpu.PC < 0x8000) {
             cpu.PC = 0xfffc;
@@ -74,39 +80,34 @@ void OS::loop() {
     // Loop until the PC reaches 0x0000 or goes below 0x8000
     while (true) { 
         uint32_t instruction = readInt32(cpu.PC);
-        //std::cout << std::hex << instruction << std::endl;
-        std::cout << std::hex << instruction << std::endl;
+        //logger << std::hex << instruction << std::endl;
+        logger << std::hex << instruction << std::endl;
         cpu.PerformInstruction(instruction); // runs next instruction until PC == 0x0000
-        std::cout << std::hex << cpu.PC << std::endl;
+        logger << std::hex << cpu.PC << std::endl;
         // if reset loop
         if (cpu.PC <= 0x0000) {
-            std::cout<<"should reset loop\n";
-
             // not sure if supposed to break or reset loop here
-            //70% sure its break tho
-            //break;
             cpu.PC = 0xfffc;
             cpu.initialJAL(address_to_loop);
         }
         if (exitCondition) exit(EXIT_SUCCESS);
-        //std::cout<<"endloop iter\n";
     }
-    std::cout<< "\nend loop()================\n";
+    logger << "\nend loop()================\n";
 
 }
 
 void OS::setup() {
     // setup() psuedo code for now:
-    std::cout<<"startup()===============\n";
+    logger <<"startup()===============\n";
     cpu.PC = 0xfffc; // set PC register to 0xfffc
     cpu.initialJAL(address_to_setup); // set CPU to run this instruction
-    std::cout << std::hex << cpu.PC << std::endl;
+    logger << std::hex << cpu.PC << std::endl;
     
     while (cpu.PC != 0x0000) { // when PC reg returns to 0x0000, setup() is finished
         uint32_t instruction = readInt32(cpu.PC);
         
-        std::cout << std::hex << cpu.PC << std::endl;
-        std::cout << std::hex << instruction << std::endl;
+        logger << std::hex << cpu.PC << std::endl;
+        logger << std::hex << instruction << std::endl;
 
         cpu.PerformInstruction(instruction); // runs next instruction until PC == 0x0000
         // stopp
@@ -114,7 +115,7 @@ void OS::setup() {
         if (exitCondition) exit(EXIT_SUCCESS);
     }
     exitCondition = false;
-    std::cout<<"\nend startup()===============\n";
+    logger <<"\nend startup()===============\n";
 
 }
 

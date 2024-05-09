@@ -15,11 +15,13 @@ class OS {
     // accessable to user
     void startup(std::string ROM_file); 
     void shutDown(); // not sure if needed
-    
+    ~OS() {logger.close();}
     // hardware
     CPU cpu;
     Memory memory;
-    
+    std::ofstream logger;
+
+
     // ROM contents (might remove if we can get it in memory)
     // std::unique_ptr<char[]> rom_contents_; // maybe remove later if storing ROM in memory
     
