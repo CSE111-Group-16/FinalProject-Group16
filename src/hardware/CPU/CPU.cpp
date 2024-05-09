@@ -86,6 +86,8 @@ void CPU::Subtract(){
 void CPU::Add(){
     (*os).logger << "reg a = " << registerFile[reg_a_].registerName << " before add" << registerFile[reg_a_].getAddress() << std::endl;
     (*os).logger << "reg b = " << registerFile[reg_b_].registerName << " before add" << registerFile[reg_b_].getAddress()<< std::endl;
+    (*os).logger << "a, b, c: " << reg_a_ <<", "<< reg_b_ <<", "<< reg_c_ << std::endl;
+
     (*os).logger << "reg c = " << registerFile[reg_c_].registerName << " before add" << registerFile[reg_c_].getAddress() << std::endl;
     
     int16_t add = registerFile[reg_a_].getAddress() + registerFile[reg_b_].getAddress();
@@ -162,7 +164,18 @@ void CPU::LoadByteUnsigned(){
     (*os).logger << "immediate: " << immediate_value_ << std::endl;
 
     (*os).logger << "reading from memory[" << registerFile[reg_a_].getAddress()+immediate_value_<<"]"<<std::endl;
-    registerFile[reg_b_].address = (*os).memory.readByte(registerFile[reg_a_].getAddress()+immediate_value_);
+    if (registerFile[reg_a_].getAddress()+immediate_value_ == 0x7110) {
+        // load from stdin
+        uint8_t byte;
+        std::cin >> byte;
+        (*os).logger << "read byte from stdin: " << byte <<std::endl;
+        registerFile[reg_b_].address = byte;
+
+
+    } else {
+        // load from memory
+        registerFile[reg_b_].address = (*os).memory.readByte(registerFile[reg_a_].getAddress()+immediate_value_);
+    }
     PC +=4;
     (*os).logger << "reg b = " << registerFile[reg_b_].registerName << " after lbu " << registerFile[reg_b_].getAddress() << std::endl;
 
