@@ -81,12 +81,14 @@ void OS::loop() {
     while (true) { 
         uint32_t instruction = readInt32(cpu.PC);
         //logger << std::hex << instruction << std::endl;
-        logger << std::hex << instruction << std::endl;
+        logger << "\nInstruction: " <<std::hex << instruction << std::endl;
+        logger << "PC address: " << std::hex << cpu.PC << std::endl;
         cpu.PerformInstruction(instruction); // runs next instruction until PC == 0x0000
-        logger << std::hex << cpu.PC << std::endl;
+
         // if reset loop
         if (cpu.PC <= 0x0000) {
             // not sure if supposed to break or reset loop here
+            logger << "\n===reset loop===" << std::endl;
             cpu.PC = 0xfffc;
             cpu.initialJAL(address_to_loop);
         }
@@ -106,8 +108,8 @@ void OS::setup() {
     while (cpu.PC != 0x0000) { // when PC reg returns to 0x0000, setup() is finished
         uint32_t instruction = readInt32(cpu.PC);
         
-        logger << std::hex << cpu.PC << std::endl;
-        logger << std::hex << instruction << std::endl;
+        logger << "PC address: " <<std::hex << cpu.PC << std::endl;
+        logger << "Instruction: " <<std::hex << instruction << std::endl;
 
         cpu.PerformInstruction(instruction); // runs next instruction until PC == 0x0000
         // stopp
