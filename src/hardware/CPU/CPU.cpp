@@ -47,8 +47,9 @@ void CPU::PerformInstruction(const uint32_t instruction){
 
 
 void CPU::initialJAL(uint32_t address_to_setup) {
+    registerFile[register_ra].address = PC;
+    //std::cout << "register" << std::hex << registerFile[register_ra].address << std::endl;
     PC = (address_to_setup);
-    registerFile[register_ra].address = PC+4;
 }
 
 //rtype instructions:
@@ -61,14 +62,7 @@ void CPU::ShiftRightLogical(){
 }
 
 void CPU::ShiftLeftLogical(){
-    std::cout << "reg a before addi" << registerFile[reg_a_].getAddress() + immediate_value_ << std::endl;
-    std::cout << "reg b before addi" << registerFile[reg_b_].getAddress() << std::endl;
-    std::cout << "reg c before addi" << registerFile[reg_c_].getAddress() << std::endl;
     registerFile[reg_c_].address = registerFile[reg_b_].getAddress() << shift_value_;
-    std::cout << "reg a after addi" << registerFile[reg_a_].getAddress() + immediate_value_ << std::endl;
-    std::cout << "reg b after addi" << registerFile[reg_b_].getAddress() << std::endl;
-    std::cout << "reg c before addi" << registerFile[reg_c_].getAddress() << std::endl;
-
 }
 
 void CPU::Subtract(){
@@ -76,14 +70,7 @@ void CPU::Subtract(){
 }
 
 void CPU::Add(){
-    //std::cout << "reg a before addi" << registerFile[reg_a_].getAddress() + immediate_value_ << std::endl;
-    //std::cout << "reg b before addi" << registerFile[reg_b_].getAddress() << std::endl;
-    //std::cout << "reg c before addi" << registerFile[reg_c_].getAddress() << std::endl;
-
     registerFile[reg_c_].address = registerFile[reg_a_].getAddress() + registerFile[reg_b_].getAddress();
-    //std::cout << "reg c after add" << registerFile[reg_c_].getAddress() + immediate_value_ << std::endl;
-    //std::cout << "reg b before addi" << registerFile[reg_b_].getAddress() << std::endl;
-
 }
 
 void CPU::SetLessThan(){
@@ -114,7 +101,7 @@ void CPU::storeWord(){
     (*os).memory.setByte(registerFile[reg_a_].getAddress()+(immediate_value_), byte1); //byte_shift
     (*os).memory.setByte(registerFile[reg_a_].getAddress()+(immediate_value_)+1, byte2);//byte_shift removed
     if (registerFile[reg_a_].getAddress()+(immediate_value_) == 0x7110) {
-        std::cout << byte1 << byte2;
+        std::cerr << byte1 << byte2;
     }
     //else if(registerFile[reg_a_].getAddress()+(immediate_value_) == 0x7200){
       //  exit(EXIT_FAILURE);
@@ -130,8 +117,12 @@ void CPU::addImm(){
 }
 
 void CPU::LoadByteUnsigned(){
+    //registerFile[reg_b_].address = os->readInt8(registerFile[reg_a_].getAddress()+immediate_value_);
     int8_t imm_8 = immediate_value_ & eight_bitmask;
     registerFile[reg_b_].address = *(*os).memory.getByte(registerFile[reg_a_].getAddress()+imm_8);
+    //if(registerFile[reg_a_].getAddress()+imm_8 == ){
+    //    std::getline(std::cin, input);
+    //}
 }
 
 void CPU::Jump(){
@@ -168,7 +159,7 @@ void CPU::StoreByte(){
     // write to stdout
     if (address == 0x7110) {
         //std::cout<<"WRITE\n";
-        std::cout << byte;
+        std::cerr << byte;
     }
     // write to stderr
     if (address == 0x7120) {
@@ -188,8 +179,14 @@ void CPU::JumpAndLink(){
 }
 
 void CPU::LoadWord(){
-    // removed /8 from both immediate_value
+    //std::cout << "register a before lw " << std::hex << registerFile[reg_a_].getAddress()+immediate_value_ << std::endl;
+    //std::cout << "register b before lw " << std::hex << registerFile[reg_b_].address << std::endl;
     uint16_t low_byte = *(*os).memory.getByte(registerFile[reg_a_].getAddress()+immediate_value_); // Get the low byte
     uint16_t high_byte = *(*os).memory.getByte((registerFile[reg_a_].getAddress()+immediate_value_)+1); // Get the high byte
     registerFile[reg_b_].address = (high_byte << byte_shift) | low_byte; // Combine bytes into a word
+    //std::cout << "register b after lw " << std::hex << registerFile[reg_b_].address << std::endl;
+    // removed /8 from both immediate_value
+    //uint16_t low_byte = *(*os).memory.getByte(registerFile[reg_a_].getAddress()+immediate_value_); // Get the low byte
+    //uint16_t high_byte = *(*os).memory.getByte((registerFile[reg_a_].getAddress()+immediate_value_)+1); // Get the high byte
+    //registerFile[reg_b_].address = (high_byte << byte_shift) | low_byte; // Combine bytes into a word
 }

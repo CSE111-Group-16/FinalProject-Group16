@@ -62,14 +62,22 @@ void OS::loop() {
     // Set up initial state
     cpu.PC = 0xfffc; // Set PC register to 0xfffc
     cpu.initialJAL(address_to_loop); // Set CPU to run this instruction
+    std::cout << "initial " << std::hex << cpu.PC << std::endl;
+
+    if (cpu.PC == 0x0000 || cpu.PC < 0x8000) {
+            cpu.PC = 0xfffc;
+            cpu.initialJAL(address_to_loop);
+    }
 
     // Loop until the PC reaches 0x0000 or goes below 0x8000
     while (true) { 
-        std::cout << "this is an instruction in the loop" << std::endl;
+        //std::cout << "this is an instruction in the loop" << std::endl;
         uint32_t instruction = readInt32(cpu.PC);
-        //std::cout < < std::hex << cpu.PC << std::endl;
+        std::cout << instruction << std::endl;
+       
+
         cpu.PerformInstruction(instruction); // runs next instruction until PC == 0x0000
-        
+        std::cout << std::hex << cpu.PC << std::endl;
         // if reset loop
         if (cpu.PC == 0x0000 || cpu.PC < 0x8000) {
             cpu.PC = 0xfffc;
