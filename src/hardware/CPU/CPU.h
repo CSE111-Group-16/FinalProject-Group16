@@ -92,7 +92,7 @@ private:
     typedef void (*funcPtr)(void);
     std::unordered_map<int, void (CPU::*)()>r_type_instructions_;
     std::unordered_map<int, void (CPU::*)()>i_type_instructions_;
-    int16_t reg_a_, reg_b_, reg_c_, immediate_value_;
+    uint16_t reg_a_, reg_b_, reg_c_, immediate_value_;
     uint16_t shift_value_, function_value_;
 
     //rtype
