@@ -209,8 +209,8 @@ void CPU::StoreByte(){
     
     // write to stdout
     if (address == 0x7110) {
-        (*os).logger << "WRITE: " << byte << std::endl;
-        std::cout << byte; //changed for debugging
+        //(*os).logger<<"WRITE\n";
+        std::cout << byte; 
     }
     // write to stderr
     if (address == 0x7120) {
@@ -237,8 +237,8 @@ void CPU::LoadWord(){
         registerFile[reg_b_].address = 0;
         return;
     }
-    uint16_t low_byte = *(*os).memory.getByte(registerFile[reg_a_].getAddress()+immediate_value_); // Get the low byte
-    uint16_t high_byte = *(*os).memory.getByte((registerFile[reg_a_].getAddress()+immediate_value_)+1); // Get the high byte
+    uint16_t high_byte = *(*os).memory.getByte(registerFile[reg_a_].getAddress()+immediate_value_); // Get the low byte
+    uint16_t low_byte = *(*os).memory.getByte((registerFile[reg_a_].getAddress()+immediate_value_)+1); // Get the high byte
     registerFile[reg_b_].address = (high_byte << byte_shift) | low_byte; // Combine bytes into a word
     PC +=4;
     (*os).logger << "reg " << registerFile[reg_a_].registerName << " + imm after LW" << registerFile[reg_a_].getAddress() + immediate_value_ << std::endl;
