@@ -164,7 +164,7 @@ void CPU::LoadByteUnsigned(){
     (*os).logger << "immediate: " << immediate_value_ << std::endl;
 
     (*os).logger << "reading from memory[" << registerFile[reg_a_].getAddress()+immediate_value_<<"]"<<std::endl;
-    if (registerFile[reg_a_].getAddress()+immediate_value_ == 0x7110) {
+    if (registerFile[reg_a_].getAddress()+immediate_value_ == 0x7100) {
         // load from stdin
         uint8_t byte;
         std::cin >> byte;
@@ -239,7 +239,7 @@ void CPU::StoreByte(){
 
 void CPU::JumpAndLink(){
     registerFile[register_ra].address = PC + 4;
-    PC += 4* (immediate_value_); //immediate is in bits
+    PC = 4* (immediate_value_); //immediate is in bits
     // removed /8
 }
 

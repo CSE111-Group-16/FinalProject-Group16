@@ -93,6 +93,7 @@ void OS::loop() {
             cpu.initialJAL(address_to_loop);
         }
         if (exitCondition) exit(EXIT_SUCCESS);
+        if(cpu.PC < 0x8000) break;
     }
     logger << "\nend loop()================\n";
 
