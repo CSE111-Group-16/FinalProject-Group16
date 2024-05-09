@@ -158,11 +158,15 @@ void CPU::addImm(){
 void CPU::LoadByteUnsigned(){
     (*os).logger << "reg b = " << registerFile[reg_b_].registerName << " before lbu" << registerFile[reg_b_].getAddress() << std::endl;
     (*os).logger << "reg a = " << registerFile[reg_a_].registerName << " before lbu" << registerFile[reg_a_].getAddress() << std::endl;
-
-    
-    registerFile[reg_b_].address = (*os).memory.readByte(registerFile[reg_a_].getAddress()+immediate_value_);
+    if(registerFile[reg_a_].getAddress()+immediate_value_ == 0x7100){
+        std::getline(std::cin, registerFile[reg_b_].address);
+    }
+    else{
+        registerFile[reg_b_].address = (*os).memory.readByte(registerFile[reg_a_].getAddress()+immediate_value_);
+    }
     PC +=4;
     (*os).logger << "reg b = " << registerFile[reg_b_].registerName << " after lbu" << registerFile[reg_b_].getAddress() << std::endl;
+
 
 }
 
