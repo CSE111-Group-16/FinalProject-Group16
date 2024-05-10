@@ -6,6 +6,7 @@
 #include <memory>
 #include <fstream>
 #include <iostream>
+#include <iomanip>
 
 class OS {
     public:
@@ -15,11 +16,13 @@ class OS {
     // accessable to user
     void startup(std::string ROM_file); 
     void shutDown(); // not sure if needed
-    
+    ~OS() {logger.close();}
     // hardware
     CPU cpu;
     Memory memory;
-    
+    std::ofstream logger;
+
+
     // ROM contents (might remove if we can get it in memory)
     // std::unique_ptr<char[]> rom_contents_; // maybe remove later if storing ROM in memory
     
@@ -29,6 +32,8 @@ class OS {
     uint32_t load_data_address;
     uint32_t program_data_address;
     uint32_t data_size;
+    bool exitCondition = false;
+
 
     // memory accessors (? idk if needed in os)
     uint32_t readInt32(const size_t& address) const;
