@@ -15,9 +15,10 @@ jobs:
           cmake --version
       - name: Build hello example
         run: |
-          cd examples
           mkdir build
           cd build
           cmake ..
           make
-          ./hello
+          ./BananaEmulator ../../tests/slug_files/hello_world1.slug
+          ./BananaEmulator ../../tests/slug_files/hello_world2.slug
+          ./BananaEmulator ../../tests/slug_files/hello_world3.slug < ../../tests/slug_files/hello_world1_input.txt
