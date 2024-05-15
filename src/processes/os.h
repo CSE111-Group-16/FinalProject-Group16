@@ -7,6 +7,7 @@
 #include <fstream>
 #include <iostream>
 #include <iomanip>
+#include <SDL2/SDL.h>
 
 class OS {
     public:
@@ -16,7 +17,10 @@ class OS {
     // accessable to user
     void startup(std::string ROM_file); 
     void shutDown(); // not sure if needed
-    ~OS() {logger.close();}
+    ~OS() {
+        logger.close();
+        SDL_Quit();
+        }
     // hardware
     CPU cpu;
     Memory memory;
