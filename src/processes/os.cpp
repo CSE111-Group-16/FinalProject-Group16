@@ -7,7 +7,7 @@ void OS::startup(std::string filename) {
         std::cerr << "Error opening logger" << std::endl;
     }
 
-    SDL_Init(SDL_INIT_VIDEO);
+    
     resetSequence();
 }
 
