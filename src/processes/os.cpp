@@ -6,8 +6,8 @@ void OS::startup(std::string filename) {
     if (!logger.is_open()) {
         std::cerr << "Error opening logger" << std::endl;
     }
+
     
-    SDL_Init(SDL_INIT_VIDEO);
     resetSequence();
 }
 
@@ -83,6 +83,7 @@ void OS::loop() {
         
         // reset to start of loop()
         if (cpu.PC <= 0x0000) {
+            gpu.loopIter();
             logger << "\n=== reset loop ===" << std::endl;
             cpu.PC = 0xfffc;
             cpu.initialJAL(address_to_loop);

@@ -30,5 +30,17 @@ int main(int argc, char* argv[]) {
 	else {
 		std::cout << "Provide only a path to a valid slug file" << std::endl;
 	}
+
+
+
+
+
+
+
+
+
+
+
+	
 	return 0;
 }

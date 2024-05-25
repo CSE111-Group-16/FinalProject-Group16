@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../hardware/CPU/CPU.h"
+#include "../hardware/GPU/gpu.h"
 #include "../hardware/memory.h"
 #include <string>
 #include <memory>
@@ -12,7 +13,7 @@
 class OS {
     public:
     // default constructor
-    OS() : memory(this), cpu(this) {};
+    OS() : memory(this), cpu(this), gpu(this) {};
 
     // accessable to user
     void startup(std::string ROM_file); 
@@ -24,6 +25,7 @@ class OS {
     // hardware
     CPU cpu;
     Memory memory;
+    GPU gpu;
     std::ofstream logger;
 
 

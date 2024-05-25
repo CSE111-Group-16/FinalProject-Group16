@@ -100,11 +100,11 @@ private:
     bool logInstructionBreakdown = true; // logs translation of instruction to parts
     bool logPreInstructionReg = false; // logs values stored at registers before instruction
     bool logPostInstructionReg = false; // logs values stored at registers after instructions
-    bool logFullRegisters = true;
-    bool logInstructionName = true;
-    bool logStdout = true;
-    bool logStderr = true;
-    bool logStdin = true;
+    bool logFullRegisters = false;
+    bool logInstructionName = false;
+    bool logStdout = false;
+    bool logStderr = false;
+    bool logStdin = false;
 
     // debug helper functions:
     void logRegisters(bool reg_a=false, bool reg_b=false, bool reg_c=false, bool reg_pc=false);
