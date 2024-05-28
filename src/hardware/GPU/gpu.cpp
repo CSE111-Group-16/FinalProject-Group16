@@ -12,6 +12,4 @@ void GPU::loopIter() {
     void decodeFrameBuffer();
     (*os).logger << "GPU: displaying frame buffer" << std::endl;
     void displayFrameBuffer();
-    (*os).logger << "GPU: clearing frame buffer" << std::endl;
-    void clearFrameBuffer();
 }

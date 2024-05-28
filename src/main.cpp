@@ -4,8 +4,18 @@
 #include "processes/os.h"
 #include "hardware/CPU/CPU.h"
 #include "hardware/memory.h"
+#include <SDL2/SDL.h>
 
 int main(int argc, char* argv[]) {
+    // returns zero on success else non-zero
+    if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
+        printf("error initializing SDL: %s\n", SDL_GetError());
+    }
+    SDL_Window* win = SDL_CreateWindow("GAME",
+                                       SDL_WINDOWPOS_CENTERED,
+                                       SDL_WINDOWPOS_CENTERED,
+                                       1000, 1000, 0);
+
 	if (2 == argc) {
 		std::string path = argv[1];
 		// https://en.cppreference.com/w/cpp/filesystem/exists
@@ -31,16 +41,7 @@ int main(int argc, char* argv[]) {
 		std::cout << "Provide only a path to a valid slug file" << std::endl;
 	}
 
-
-
-
-
-
-
-
-
-
-
+	SDL_DestroyWindow(win);
 	
 	return 0;
 }

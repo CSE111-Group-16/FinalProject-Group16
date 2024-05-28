@@ -258,8 +258,10 @@ void CPU::LoadByteUnsigned(){
         registerFile[reg_b_].address = byte;
     } else if (registerFile[reg_a_].getAddress()+immediate_value_ == 0x7000) {
         // load input from controller
-        
-
+        uint8_t byte;
+        std::cin >> byte;
+        if (logStdin) (*os).logger << "read byte from controller: " << byte <<std::endl;
+        registerFile[reg_b_].address = byte;
     } else {
         // load from memory
         registerFile[reg_b_].address = (*os).memory.readByte(registerFile[reg_a_].getAddress()+immediate_value_);

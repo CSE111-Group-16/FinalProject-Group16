@@ -12,9 +12,11 @@ cmake ../../
 make 
 
 # running test application
-./BananaEmulator ../slug_files/hello_world1.slug > results.txt
-./BananaEmulator ../slug_files/hello_world2.slug >> results.txt
-./BananaEmulator ../slug_files/hello_world3.slug < ../slug_files/hello_world3_input.txt >> results.txt
+#./BananaEmulator ../slug_files/hello_world1.slug > results.txt
+#./BananaEmulator ../slug_files/hello_world2.slug >> results.txt
+#./BananaEmulator ../slug_files/hello_world3.slug < ../slug_files/hello_world3_input.txt >> results.txt
+./BananaEmulator ../slug_files/box.slug > results.txt
+
 
 # return to origin
 cd ../

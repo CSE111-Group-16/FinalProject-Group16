@@ -1,10 +1,19 @@
-#!bin/bash
+#!/bin/bash
 
-make
-../build/BananaEmulator ../../tests/slug_files/hello_world1.slug > results.txt
+# run with:
+# $ source currentTest.sh
 
-../build/BananaEmulator ../../tests/slug_files/hello_world2.slug >> results.txt
+# cmake 
+mkdir -p build
+cd build/
+cmake ../../
 
-../build/BananaEmulator ../../tests/slug_files/hello_world3.slug < ../../local-rom/tests/hello_world3/0.in >> results.txt
+# building executable
+make 
+
+# running test application
+./BananaEmulator ../slug_files/hello_world1.slug > results.txt
+./BananaEmulator ../slug_files/hello_world2.slug >> results.txt
+./BananaEmulator ../slug_files/hello_world3.slug < ../slug_files/hello_world3_input.txt >> results.txt
 
 cat results.txt
