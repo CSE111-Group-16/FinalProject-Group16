@@ -125,13 +125,11 @@ void OS::eventLoop() {
                 case SDLK_RIGHT:
                     std::cout << "RIGHT" << std::endl;
 
-                    // std::cerr << (int)controllerByte<<std::endl;
                     controllerByte = controllerByte | CONTROLLER_RIGHT_MASK;
                     break;
                 case SDLK_a:
                     std::cout << "A" << std::endl;
                     controllerByte = controllerByte | CONTROLLER_A_MASK;
-                    // std::cerr << (int)controllerByte<<std::endl;
                     break;
                 case SDLK_s:
                     std::cout << "B" << std::endl;
@@ -195,11 +193,4 @@ uint16_t OS::readInt16(const size_t& address) const {
 
 uint8_t OS::readInt8(const size_t& address) const {
     return (uint8_t)memory.readByte(address);
-}
-
-uint8_t OS::readController() {
-    uint8_t controllerByte = 0xff;
-
-    // TODO apply coorisponding button mask to controllerByte based on read controller input
-    return controllerByte;
 }

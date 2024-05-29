@@ -261,7 +261,7 @@ void CPU::LoadByteUnsigned(){
         // load input from controller
         uint8_t byte = (*os).controllerByte & 0xff;
         std::bitset<8> x(byte);
-        std::cerr << "read byte from controller: " << x <<std::endl;
+        //std::cerr << "read byte from controller: " << x <<std::endl;
         registerFile[reg_b_].address = byte;
     } else {
         // load from memory
