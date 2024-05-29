@@ -1,5 +1,7 @@
 #include "os.h"
-
+#include <chrono>
+#include <thread>
+#include <iomanip>
 void OS::startup(std::string filename) {
     filename_ = filename;
     logger.open("log.txt", std::ios::trunc | std::ios::binary);
@@ -71,7 +73,7 @@ void OS::loop() {
     logger << "======= loop() ======= \n";
     cpu.PC = 0xfffc; 
     cpu.initialJAL(address_to_loop);
-
+    std::cout << std::fixed << std::setprecision(20);
     // infinite game loop until exit code
     while (true) { 
         eventLoop();
@@ -79,17 +81,26 @@ void OS::loop() {
 
         if (logInstruction) logger << "\nInstruction: " <<std::hex << instruction << std::endl;
         if (logPCLocation) logger << "PC address: " << std::hex << cpu.PC << std::endl;
-
+        
         cpu.PerformInstruction(instruction);
         // reset to start of loop()
+
         if (cpu.PC <= 0x0000) {
-            // TODO add delay of at most 16.667
+            auto startTime = std::chrono::high_resolution_clock::now();
             gpu.loopIter();
             logger << "\n=== reset loop ===" << std::endl;
             cpu.PC = 0xfffc;
             cpu.initialJAL(address_to_loop);
-        }
 
+            double elapsed = 0.0;
+            //delay frame
+            do {
+                auto endTime = std::chrono::high_resolution_clock::now();
+                elapsed = std::chrono::duration<double>(endTime - startTime).count();
+                std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            } while (elapsed < 0.016667);
+            }
+            
         // exit condition triggered
         if (exitCondition) exit(EXIT_SUCCESS);
     }
