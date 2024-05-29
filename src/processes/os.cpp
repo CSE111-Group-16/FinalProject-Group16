@@ -79,8 +79,6 @@ void OS::loop() {
 
         if (logInstruction) logger << "\nInstruction: " <<std::hex << instruction << std::endl;
         if (logPCLocation) logger << "PC address: " << std::hex << cpu.PC << std::endl;
-        if (logInstruction) logger << "\nInstruction: " <<std::hex << instruction << std::endl;
-        if (logPCLocation) logger << "PC address: " << std::hex << cpu.PC << std::endl;
 
         cpu.PerformInstruction(instruction);
         // reset to start of loop()
