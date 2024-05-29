@@ -5,6 +5,7 @@
 #include "hardware/CPU/CPU.h"
 #include "hardware/memory.h"
 #include <SDL2/SDL.h>
+#include <SDL2/SDL.h>
 
 int main(int argc, char* argv[]) {
     // returns zero on success else non-zero
@@ -14,7 +15,7 @@ int main(int argc, char* argv[]) {
     SDL_Window* win = SDL_CreateWindow("GAME",
                                        SDL_WINDOWPOS_CENTERED,
                                        SDL_WINDOWPOS_CENTERED,
-                                       1000, 1000, 0);
+                                       WINDOW_WIDTH, WINDOW_HEIGHT, 0);
 
 	if (2 == argc) {
 		std::string path = argv[1];

@@ -87,7 +87,8 @@ public:
     //void SetUpRegisters(); //names and adds each register to the previously empty register file
     void PerformInstruction(const uint32_t instruction);
     void initialJAL(uint32_t address_to_setup);
-    // Destructor
+
+    
 private:
     typedef void (*funcPtr)(void);
     std::unordered_map<int, void (CPU::*)()>r_type_instructions_;
@@ -105,6 +106,7 @@ private:
     bool logStdout = false;
     bool logStderr = false;
     bool logStdin = false;
+    
 
     // debug helper functions:
     void logRegisters(bool reg_a=false, bool reg_b=false, bool reg_c=false, bool reg_pc=false);
