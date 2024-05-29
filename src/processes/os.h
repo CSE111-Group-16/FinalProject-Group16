@@ -22,17 +22,39 @@
 
 #define WINDOW_WIDTH 128
 #define WINDOW_HEIGHT 120
+// pulled directly from doc
+#define CONTROLLER_A_MASK ((uint8_t)0x80)
+#define CONTROLLER_B_MASK ((uint8_t)0x40)
+#define CONTROLLER_SELECT_MASK ((uint8_t)0x20)
+#define CONTROLLER_START_MASK ((uint8_t)0x10)
+#define CONTROLLER_UP_MASK ((uint8_t)0x08)
+#define CONTROLLER_DOWN_MASK ((uint8_t)0x04)
+#define CONTROLLER_LEFT_MASK ((uint8_t)0x02)
+#define CONTROLLER_RIGHT_MASK ((uint8_t)0x01)
+
+#define WINDOW_WIDTH 128
+#define WINDOW_HEIGHT 120
 
 class OS {
 public:
     // default constructor
-    OS() : memory(this), cpu(this), gpu(this) {};
+    OS() : memory(this), cpu(this), gpu(this) {
+        // initialize sdl
+        if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
+            printf("error initializing SDL: %s\n", SDL_GetError());
+        }
+        win = SDL_CreateWindow("GAME",
+                                SDL_WINDOWPOS_CENTERED,
+                                SDL_WINDOWPOS_CENTERED,
+                                WINDOW_WIDTH, WINDOW_HEIGHT, 0);
+        };
 
     // accessable to user
     void startup(std::string ROM_file); 
     void shutDown(); // not sure if needed
     ~OS() {
         logger.close();
+    	SDL_DestroyWindow(win);
         SDL_Quit();
         }
     // hardware
@@ -40,6 +62,9 @@ public:
     Memory memory;
     GPU gpu;
     std::ofstream logger;
+    SDL_Window* win;
+    SDL_Surface* screen;
+    SDL_Event eventHandler;
 
 
     // ROM contents (might remove if we can get it in memory)
@@ -70,9 +95,12 @@ public:
     void resetSequence();
     void setup();
     void loop();
+    void eventLoop();
 
 
 private:
     bool logInstruction = false;
     bool logPCLocation = false;
+
+    // key booleans
 };
