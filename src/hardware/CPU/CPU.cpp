@@ -260,16 +260,14 @@ void CPU::LoadByteUnsigned(){
     } else if (registerFile[reg_a_].getAddress()+immediate_value_ == 0x7000) {
         // load input from controller
         uint8_t byte = (*os).controllerByte & 0xff;
-        if ((*os).pressedA) { 
-            byte = byte | 0x80;
-            
-        }
+        
+        if ((*os).pressedA) byte = byte | CONTROLLER_A_MASK;
         if ((*os).pressedB) byte = byte | CONTROLLER_B_MASK;
         if ((*os).pressedSelect) byte = byte | CONTROLLER_SELECT_MASK;
         if ((*os).pressedStart) byte = byte | CONTROLLER_START_MASK;
         
-        // std::bitset<8> x(byte);
-        // std::cerr << "read byte from controller: " << x <<std::endl;
+        std::bitset<8> x(byte);
+        std::cerr << "read byte from controller: " << x <<std::endl;
         registerFile[reg_b_].address = byte;
     } else {
         // load from memory
@@ -432,4 +430,28 @@ void CPU::r_typeBreakdown(uint32_t opcode) {
     (*os).logger << "  reg_c : " << reg_c_ << std::endl;
     (*os).logger << "  shift : " << shift_value_ << std::endl;
     (*os).logger << "  func  : " << function_value_ << std::endl;
+}
+
+
+uint8_t CPU::readController() {
+    uint8_t byte = 0x00;
+    if ((*os).eventHandler.type == SDL_KEYDOWN) {
+        //Select surfaces based on key press
+        switch( (*os).eventHandler.key.keysym.sym )
+        {
+            case SDLK_UP:
+                byte = byte | CONTROLLER_UP_MASK;
+                break;
+            case SDLK_DOWN:
+                byte = byte | CONTROLLER_DOWN_MASK;
+                break;
+            case SDLK_LEFT:
+                byte = byte | CONTROLLER_LEFT_MASK;
+                break;
+            case SDLK_RIGHT:
+                byte = byte | CONTROLLER_RIGHT_MASK;
+                break;
+        }
+    }
+    return byte;
 }

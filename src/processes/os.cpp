@@ -116,6 +116,7 @@ void OS::eventLoop() {
             //Select surfaces based on key press
             switch( eventHandler.key.keysym.sym )
             {
+                
                 case SDLK_UP:
                     controllerByte = controllerByte | CONTROLLER_UP_MASK;
                     break;
@@ -128,6 +129,9 @@ void OS::eventLoop() {
                 case SDLK_RIGHT:
                     controllerByte = controllerByte | CONTROLLER_RIGHT_MASK;
                     break;
+
+
+                // none of these controls work. i have no idea why
                 case SDLK_a:
                     pressedA = true;
                     // std::cerr << "PRESSED A IN OS" << std::endl;
@@ -137,16 +141,19 @@ void OS::eventLoop() {
                     pressedB = true;
                     controllerByte = controllerByte | CONTROLLER_B_MASK;
                     break;
-                case SDLK_SPACE:
+                case SDLK_e:
                     pressedSelect = true;
+        // std::cout<< pressedSelect << std::endl;
+
                     controllerByte = controllerByte | CONTROLLER_SELECT_MASK;
                     break;
-                case SDLK_e:
+                case SDLK_SPACE:
                     pressedStart = true;
                     controllerByte = controllerByte | CONTROLLER_UP_MASK;
                     break;
                 
             }
+
         }
     }
 }

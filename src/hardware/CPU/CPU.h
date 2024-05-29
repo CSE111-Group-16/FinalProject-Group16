@@ -88,7 +88,7 @@ public:
     void PerformInstruction(const uint32_t instruction);
     void initialJAL(uint32_t address_to_setup);
 
-    
+    uint8_t readController();
 private:
     typedef void (*funcPtr)(void);
     std::unordered_map<int, void (CPU::*)()>r_type_instructions_;
