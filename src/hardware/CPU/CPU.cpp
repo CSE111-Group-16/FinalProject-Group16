@@ -1,5 +1,6 @@
 #include "CPU.h"
 #include "../../processes/os.h"
+#include <bitset>
 
 void CPU::resetStackPointer() {
     registerFile[register_sp].setAddress(top_of_stack);
@@ -259,7 +260,8 @@ void CPU::LoadByteUnsigned(){
     } else if (registerFile[reg_a_].getAddress()+immediate_value_ == 0x7000) {
         // load input from controller
         uint8_t byte = (*os).readController();
-        (*os).logger << "read byte from controller: " << byte <<std::endl;
+        std::bitset<8> x(byte);
+        (*os).logger << "read byte from controller: " << x <<std::endl;
         registerFile[reg_b_].address = byte;
     } else {
         // load from memory
