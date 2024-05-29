@@ -1,4 +1,5 @@
 #include "os.h"
+#include <ctime>
 
 void OS::startup(std::string filename) {
     filename_ = filename;
@@ -81,16 +82,28 @@ void OS::loop() {
         if (logPCLocation) logger << "PC address: " << std::hex << cpu.PC << std::endl;
         if (logInstruction) logger << "\nInstruction: " <<std::hex << instruction << std::endl;
         if (logPCLocation) logger << "PC address: " << std::hex << cpu.PC << std::endl;
-
+        
         cpu.PerformInstruction(instruction);
         // reset to start of loop()
+
         if (cpu.PC <= 0x0000) {
-            // TODO add delay of at most 16.667
+            std::time_t startTime = std::time(nullptr);
             gpu.loopIter();
             logger << "\n=== reset loop ===" << std::endl;
             cpu.PC = 0xfffc;
             cpu.initialJAL(address_to_loop);
+
+            
+            std::time_t endTime = std::time(nullptr);
+            double elapsed = difftime(endTime, startTime);
+            //delay frame
+            while(elapsed <= 16.667){
+                endTime = std::time(nullptr);
+                elapsed = difftime(endTime, startTime);
+            }
+
         }
+        
 
         // exit condition triggered
         if (exitCondition) exit(EXIT_SUCCESS);
