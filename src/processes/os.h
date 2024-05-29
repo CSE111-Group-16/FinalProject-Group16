@@ -76,6 +76,7 @@ public:
     uint32_t load_data_address;
     uint32_t program_data_address;
     uint32_t data_size;
+    uint8_t controllerByte;
     bool exitCondition = false;
 
 
