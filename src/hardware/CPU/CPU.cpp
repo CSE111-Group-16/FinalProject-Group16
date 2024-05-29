@@ -257,12 +257,6 @@ void CPU::LoadByteUnsigned(){
         std::cin >> byte;
         if (logStdin) (*os).logger << "read byte from stdin: " << byte <<std::endl;
         registerFile[reg_b_].address = byte;
-    } else if (registerFile[reg_a_].getAddress()+immediate_value_ == 0x7000) {
-        // load input from controller
-        uint8_t byte = (*os).readController();
-        std::bitset<8> x(byte);
-        (*os).logger << "read byte from controller: " << x <<std::endl;
-        registerFile[reg_b_].address = byte;
     } else {
         // load from memory
         registerFile[reg_b_].address = (*os).memory.readByte(registerFile[reg_a_].getAddress()+immediate_value_);
@@ -270,6 +264,7 @@ void CPU::LoadByteUnsigned(){
     if (logPostInstructionReg) logRegisters(true, true, true, false);
     PC +=4;
 }
+
 
 void CPU::Jump(){
     if (logPreInstructionReg) {
