@@ -80,7 +80,6 @@ public:
     uint32_t readInt32(const size_t& address) const;
     uint16_t readInt16(const size_t& address) const;
     uint8_t readInt8(const size_t& address) const;
-    uint8_t readController();
 
     private:
 
@@ -94,10 +93,9 @@ public:
     void loop();
     void eventLoop();
 
-
+    // super scuffed but it doesnt work otherwise
+    bool pressedA, pressedB, pressedSelect, pressedStart;
 private:
     bool logInstruction = false;
     bool logPCLocation = false;
-
-    // key booleans
 };
