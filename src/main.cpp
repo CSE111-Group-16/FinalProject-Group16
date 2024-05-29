@@ -1,5 +1,6 @@
 #include <iostream>
 #include <filesystem>
+#include <SDL2/SDL.h>
 #include "tester.h"
 #include "processes/os.h"
 #include "hardware/CPU/CPU.h"
@@ -7,6 +8,7 @@
 
 int main(int argc, char* argv[]) {
 	if (2 == argc) {
+		SDL_Init(SDL_INIT_VIDEO);
 		std::string path = argv[1];
 		// https://en.cppreference.com/w/cpp/filesystem/exists
 		// check if the file exists:

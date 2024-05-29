@@ -18,6 +18,7 @@ void OS::resetSequence() {
     std::ifstream file;
     file.open(filename_, std::ios::ate);
 
+
     // check if file opened successfully
     if (!file.is_open()) {
         std::cerr << "Error opening file: " << filename_ << std::endl;

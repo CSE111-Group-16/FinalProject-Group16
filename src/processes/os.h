@@ -22,18 +22,6 @@
 
 #define WINDOW_WIDTH 128
 #define WINDOW_HEIGHT 120
-// pulled directly from doc
-#define CONTROLLER_A_MASK ((uint8_t)0x80)
-#define CONTROLLER_B_MASK ((uint8_t)0x40)
-#define CONTROLLER_SELECT_MASK ((uint8_t)0x20)
-#define CONTROLLER_START_MASK ((uint8_t)0x10)
-#define CONTROLLER_UP_MASK ((uint8_t)0x08)
-#define CONTROLLER_DOWN_MASK ((uint8_t)0x04)
-#define CONTROLLER_LEFT_MASK ((uint8_t)0x02)
-#define CONTROLLER_RIGHT_MASK ((uint8_t)0x01)
-
-#define WINDOW_WIDTH 128
-#define WINDOW_HEIGHT 120
 
 class OS {
 public:
@@ -47,6 +35,12 @@ public:
                                 SDL_WINDOWPOS_CENTERED,
                                 SDL_WINDOWPOS_CENTERED,
                                 WINDOW_WIDTH, WINDOW_HEIGHT, 0);
+
+        renderer = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+        texture = SDL_CreateTexture(renderer,
+                                         SDL_PIXELFORMAT_ARGB8888,
+                                         SDL_TEXTUREACCESS_STREAMING,
+                                         WINDOW_WIDTH, WINDOW_HEIGHT);                
         };
 
     // accessable to user
@@ -65,6 +59,8 @@ public:
     SDL_Window* win;
     SDL_Surface* screen;
     SDL_Event eventHandler;
+    SDL_Renderer* renderer;
+    SDL_Texture* texture;
 
 
     // ROM contents (might remove if we can get it in memory)
