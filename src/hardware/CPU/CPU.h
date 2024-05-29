@@ -87,7 +87,8 @@ public:
     //void SetUpRegisters(); //names and adds each register to the previously empty register file
     void PerformInstruction(const uint32_t instruction);
     void initialJAL(uint32_t address_to_setup);
-    // Destructor
+
+    
 private:
     typedef void (*funcPtr)(void);
     std::unordered_map<int, void (CPU::*)()>r_type_instructions_;
@@ -96,15 +97,16 @@ private:
     uint16_t shift_value_, function_value_;
 
     // debug options:
-    bool logInstructionOperation = false; // logs operation of instruction (UNFINISHED)
-    bool logInstructionBreakdown = false; // logs translation of instruction to parts
+    bool logInstructionOperation = true; // logs operation of instruction (UNFINISHED)
+    bool logInstructionBreakdown = true; // logs translation of instruction to parts
     bool logPreInstructionReg = false; // logs values stored at registers before instruction
     bool logPostInstructionReg = false; // logs values stored at registers after instructions
     bool logFullRegisters = false;
-    bool logInstructionName = false;
+    bool logInstructionName = true;
     bool logStdout = false;
     bool logStderr = false;
-    bool logStdin = false;
+    bool logStdin = true;
+    
 
     // debug helper functions:
     void logRegisters(bool reg_a=false, bool reg_b=false, bool reg_c=false, bool reg_pc=false);

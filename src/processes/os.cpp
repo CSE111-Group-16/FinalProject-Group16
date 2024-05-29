@@ -76,8 +76,8 @@ void OS::loop() {
     while (true) { 
         uint32_t instruction = readInt32(cpu.PC);
 
-        logger << "\nInstruction: " <<std::hex << instruction << std::endl;
-        logger << "PC address: " << std::hex << cpu.PC << std::endl;
+        if (logInstruction) logger << "\nInstruction: " <<std::hex << instruction << std::endl;
+        if (logPCLocation) logger << "PC address: " << std::hex << cpu.PC << std::endl;
 
         cpu.PerformInstruction(instruction);
         
@@ -105,8 +105,8 @@ void OS::setup() {
     while (cpu.PC != 0x0000) {
         uint32_t instruction = readInt32(cpu.PC);
         
-        logger << "PC address: " <<std::hex << cpu.PC << std::endl;
-        logger << "Instruction: " <<std::hex << instruction << std::endl;
+        if (logInstruction) logger << "PC address: " <<std::hex << cpu.PC << std::endl;
+        if (logPCLocation) logger << "Instruction: " <<std::hex << instruction << std::endl;
 
         cpu.PerformInstruction(instruction);
         
