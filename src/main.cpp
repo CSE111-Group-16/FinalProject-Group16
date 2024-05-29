@@ -14,7 +14,7 @@ int main(int argc, char* argv[]) {
     SDL_Window* win = SDL_CreateWindow("GAME",
                                        SDL_WINDOWPOS_CENTERED,
                                        SDL_WINDOWPOS_CENTERED,
-                                       1000, 1000, 0);
+                                       128, 120, 0);
 
 	if (2 == argc) {
 		std::string path = argv[1];

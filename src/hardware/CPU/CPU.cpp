@@ -260,7 +260,7 @@ void CPU::LoadByteUnsigned(){
         // load input from controller
         uint8_t byte;
 
-        // std::cin >> byte;
+        std::cin >> byte;
         
         (*os).logger << "read byte from controller: " << byte <<std::endl;
         registerFile[reg_b_].address = byte;

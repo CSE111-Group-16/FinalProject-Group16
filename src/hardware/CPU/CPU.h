@@ -97,8 +97,8 @@ private:
     uint16_t shift_value_, function_value_;
 
     // debug options:
-    bool logInstructionOperation = true; // logs operation of instruction (UNFINISHED)
-    bool logInstructionBreakdown = true; // logs translation of instruction to parts
+    bool logInstructionOperation = false; // logs operation of instruction (UNFINISHED)
+    bool logInstructionBreakdown = false; // logs translation of instruction to parts
     bool logPreInstructionReg = false; // logs values stored at registers before instruction
     bool logPostInstructionReg = false; // logs values stored at registers after instructions
     bool logFullRegisters = false;
