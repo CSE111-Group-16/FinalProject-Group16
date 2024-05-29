@@ -83,10 +83,20 @@ void OS::loop() {
         
         // reset to start of loop()
         if (cpu.PC <= 0x0000) {
+            auto startTime = std::chrono::high_resolution_clock::now();
+            gpu.loopIter();
             logger << "\n=== reset loop ===" << std::endl;
             cpu.PC = 0xfffc;
             cpu.initialJAL(address_to_loop);
-        }
+
+            double elapsed = 0.0;
+            //delay frame
+            do {
+                auto endTime = std::chrono::high_resolution_clock::now();
+                elapsed = std::chrono::duration<double>(endTime - startTime).count();
+                std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            } while (elapsed < 0.016667);
+            }
 
         // exit condition triggered
         if (exitCondition) exit(EXIT_SUCCESS);
