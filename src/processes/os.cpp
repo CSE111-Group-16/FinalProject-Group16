@@ -99,14 +99,22 @@ void OS::loop() {
 }
 
 void OS::eventLoop() {
-    while( SDL_PollEvent( &eventHandler ) != 0 )
+    while( SDL_PollEvent( &eventHandler ) != 0 ) {
+        if( eventHandler.type == SDL_QUIT )
         {
-            if( eventHandler.type == SDL_QUIT )
+            std::cerr << "exit program" << std::endl;
+            exitCondition = true;
+        }
+        //User presses a key
+        else if( eventHandler.type == SDL_KEYDOWN )
+        {
+            //Select surfaces based on key press (gonna be REALLY ugly code here)
+            switch( eventHandler.key.keysym.sym )
             {
-                std::cerr << "exit program" << std::endl;
-                exitCondition = true;
+                // case SDLK_UP:
             }
         }
+    }
 }
 
 void OS::setup() {
