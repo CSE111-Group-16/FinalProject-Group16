@@ -138,3 +138,7 @@ uint16_t OS::readInt16(const size_t& address) const {
 uint8_t OS::readInt8(const size_t& address) const {
     return (uint8_t)memory.readByte(address);
 }
+
+uint8_t OS::readController() {
+    return 0;
+}

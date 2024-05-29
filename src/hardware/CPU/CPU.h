@@ -102,10 +102,10 @@ private:
     bool logPreInstructionReg = false; // logs values stored at registers before instruction
     bool logPostInstructionReg = false; // logs values stored at registers after instructions
     bool logFullRegisters = false;
-    bool logInstructionName = true;
+    bool logInstructionName = false;
     bool logStdout = false;
     bool logStderr = false;
-    bool logStdin = true;
+    bool logStdin = false;
     
 
     // debug helper functions:

@@ -7,6 +7,9 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL.h>
 
+#define WINDOW_WIDTH 128
+#define WINDOW_HEIGHT 120
+
 int main(int argc, char* argv[]) {
     // returns zero on success else non-zero
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
@@ -15,7 +18,7 @@ int main(int argc, char* argv[]) {
     SDL_Window* win = SDL_CreateWindow("GAME",
                                        SDL_WINDOWPOS_CENTERED,
                                        SDL_WINDOWPOS_CENTERED,
-                                       128, 120, 0);
+                                       WINDOW_WIDTH, WINDOW_HEIGHT, 0);
 
 	if (2 == argc) {
 		std::string path = argv[1];

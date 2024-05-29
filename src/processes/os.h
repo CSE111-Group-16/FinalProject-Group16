@@ -55,6 +55,7 @@ public:
     uint32_t readInt32(const size_t& address) const;
     uint16_t readInt16(const size_t& address) const;
     uint8_t readInt8(const size_t& address) const;
+    uint8_t readController();
 
     private:
 
@@ -67,7 +68,8 @@ public:
     void setup();
     void loop();
 
+
 private:
-    bool logInstruction = true;
-    bool logPCLocation = true;
+    bool logInstruction = false;
+    bool logPCLocation = false;
 };

@@ -11,6 +11,7 @@ private:
     uint8_t encodePixel(bool pixed_state) const;
     // internal gpu operations
     void displayFrameBuffer();
+    void decodeFrameBuffer();
     void clearFrameBuffer();
 public:
     const int DISPLAY_RESOLUTION_WIDTH = 128;
