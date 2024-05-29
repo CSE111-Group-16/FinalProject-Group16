@@ -34,6 +34,8 @@ void GPU::setPixel(int width, int height, bool state) {
     (*os).memory.setByte(pixel_address, pixel_state);
 }
 
+
+/// @brief uses the renderer and the texture to update the frame buffer
 void GPU::displayFrameBuffer() {
     // Lock texture for manipulation
     int pitch;
@@ -42,13 +44,11 @@ void GPU::displayFrameBuffer() {
         (*os).logger << "SDL_LockTexture error: " << SDL_GetError() << std::endl;
         return;
     }
-
     Uint32* pixels = static_cast<Uint32*>(mPixels);
     for (int w = 0; w < WINDOW_WIDTH; w++) {
         for (int h = 0; h < WINDOW_HEIGHT; h++) {
-            int index = h * (pitch / sizeof(uint32_t)) + w;
-            //modify to white?
-            pixels[index] = 0xFFFFFFFF;
+            bool pixel = readPixel(w,h);
+            pixels[h * (pitch / sizeof(Uint32)) + w] = pixel ? 0xFFFFFFFF : 0x00000000;
         }
     }
 
