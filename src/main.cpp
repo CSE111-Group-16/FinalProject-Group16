@@ -5,8 +5,19 @@
 #include "processes/os.h"
 #include "hardware/CPU/CPU.h"
 #include "hardware/memory.h"
+#include <SDL2/SDL.h>
+#include <SDL2/SDL.h>
 
 int main(int argc, char* argv[]) {
+    // returns zero on success else non-zero
+    if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
+        printf("error initializing SDL: %s\n", SDL_GetError());
+    }
+    SDL_Window* win = SDL_CreateWindow("GAME",
+                                       SDL_WINDOWPOS_CENTERED,
+                                       SDL_WINDOWPOS_CENTERED,
+                                       WINDOW_WIDTH, WINDOW_HEIGHT, 0);
+
 	if (2 == argc) {
 		SDL_Init(SDL_INIT_VIDEO);
 		std::string path = argv[1];
@@ -32,6 +43,8 @@ int main(int argc, char* argv[]) {
 	else {
 		std::cout << "Provide only a path to a valid slug file" << std::endl;
 	}
-	SDL_Quit();
-    return 0;
+
+	SDL_DestroyWindow(win);
+	
+	return 0;
 }

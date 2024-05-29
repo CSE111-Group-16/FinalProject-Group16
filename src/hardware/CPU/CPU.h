@@ -2,7 +2,7 @@
 #define CPU_H
 #pragma once
 
-#include "register.h" // Include the header file for the Register class
+#include "register.h"
 #include <vector>
 #include <iostream>
 #include <string>
@@ -44,7 +44,7 @@ public:
     // Constructors
     CPU(OS* set_os) : os(set_os) {
         std::string names[32] = {
-            "zero", "at", "v0", "v1", "a0", "a1", "a2", "a3",
+            "$0", "at", "v0", "v1", "a0", "a1", "a2", "a3",
             "t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7",
             "s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7",
             "s8", "s9", "k0", "k1", "gp", "sp", "fp", "ra"
@@ -87,7 +87,8 @@ public:
     //void SetUpRegisters(); //names and adds each register to the previously empty register file
     void PerformInstruction(const uint32_t instruction);
     void initialJAL(uint32_t address_to_setup);
-    // Destructor
+
+    
 private:
     typedef void (*funcPtr)(void);
     std::unordered_map<int, void (CPU::*)()>r_type_instructions_;
@@ -95,7 +96,25 @@ private:
     uint16_t reg_a_, reg_b_, reg_c_, immediate_value_;
     uint16_t shift_value_, function_value_;
 
-    //rtype
+    // debug options:
+    bool logInstructionOperation = false; // logs operation of instruction (UNFINISHED)
+    bool logInstructionBreakdown = false; // logs translation of instruction to parts
+    bool logPreInstructionReg = false; // logs values stored at registers before instruction
+    bool logPostInstructionReg = false; // logs values stored at registers after instructions
+    bool logFullRegisters = false;
+    bool logInstructionName = false;
+    bool logStdout = false;
+    bool logStderr = false;
+    bool logStdin = false;
+    
+
+    // debug helper functions:
+    void logRegisters(bool reg_a=false, bool reg_b=false, bool reg_c=false, bool reg_pc=false);
+    void logAllRegisters();
+    void i_typeBreakdown(uint32_t);
+    void r_typeBreakdown(uint32_t);
+
+    // r-type instructions:
     void ShiftRightArithmetic();
     void ShiftRightLogical(); 
     void ShiftLeftLogical();
@@ -107,7 +126,7 @@ private:
     void And_();
     void JumpRegister();
 
-    //itype
+    // i-type instructions:
     void storeWord();
     void addImm();
     void LoadByteUnsigned();

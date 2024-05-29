@@ -13,9 +13,6 @@ public:
     Register(); // Default constructor
     Register(uint16_t addrValue, const std::string& strValue); // Parameterized constructor
 
-    // Destructor
-    ~Register();
-
     // Public member functions
     void setAddress(uint16_t value); // Function to set address
     void setName(const std::string& value); // Function to set register name

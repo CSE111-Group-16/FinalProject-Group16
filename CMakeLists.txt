@@ -10,11 +10,13 @@ add_executable(${PROJECT_NAME}
     src/main.cpp
     src/processes/os.cpp
     src/hardware/CPU/CPU.cpp
+    src/hardware/GPU/gpu.cpp
     src/hardware/CPU/register.cpp
     src/hardware/memory.cpp
     src/tester.cpp
 )
 
+# SDL2
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
-target_link_libraries(BananaEmulator ${SDL2_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
