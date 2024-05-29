@@ -260,8 +260,16 @@ void CPU::LoadByteUnsigned(){
     } else if (registerFile[reg_a_].getAddress()+immediate_value_ == 0x7000) {
         // load input from controller
         uint8_t byte = (*os).controllerByte & 0xff;
-        std::bitset<8> x(byte);
-        //std::cerr << "read byte from controller: " << x <<std::endl;
+        if ((*os).pressedA) { 
+            byte = byte | 0x80;
+            
+        }
+        if ((*os).pressedB) byte = byte | CONTROLLER_B_MASK;
+        if ((*os).pressedSelect) byte = byte | CONTROLLER_SELECT_MASK;
+        if ((*os).pressedStart) byte = byte | CONTROLLER_START_MASK;
+        
+        // std::bitset<8> x(byte);
+        // std::cerr << "read byte from controller: " << x <<std::endl;
         registerFile[reg_b_].address = byte;
     } else {
         // load from memory

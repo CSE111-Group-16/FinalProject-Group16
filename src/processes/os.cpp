@@ -99,9 +99,14 @@ void OS::loop() {
 }
 
 void OS::eventLoop() {
+
     while( SDL_PollEvent( &eventHandler ) != 0 ) {
         // reset controller byte
         controllerByte = 0x00;
+        pressedA = false;
+        pressedB = false;
+        pressedSelect = false;
+        pressedStart = false;
         if( eventHandler.type == SDL_QUIT )
         {
             std::cerr << "exit program" << std::endl;
@@ -110,7 +115,7 @@ void OS::eventLoop() {
         //User presses a key
         else if( eventHandler.type == SDL_KEYDOWN )
         {
-            //Select surfaces based on key press (gonna be REALLY ugly code here)
+            //Select surfaces based on key press
             switch( eventHandler.key.keysym.sym )
             {
                 case SDLK_UP:
@@ -123,26 +128,23 @@ void OS::eventLoop() {
                     controllerByte = controllerByte | CONTROLLER_LEFT_MASK;
                     break;
                 case SDLK_RIGHT:
-                    std::cout << "RIGHT" << std::endl;
-
                     controllerByte = controllerByte | CONTROLLER_RIGHT_MASK;
                     break;
                 case SDLK_a:
-                    std::cout << "A" << std::endl;
+                    pressedA = true;
+                    // std::cerr << "PRESSED A IN OS" << std::endl;
                     controllerByte = controllerByte | CONTROLLER_A_MASK;
                     break;
                 case SDLK_s:
-                    std::cout << "B" << std::endl;
+                    pressedB = true;
                     controllerByte = controllerByte | CONTROLLER_B_MASK;
                     break;
                 case SDLK_SPACE:
-                    std::cout << "SELECT" << std::endl;
-
+                    pressedSelect = true;
                     controllerByte = controllerByte | CONTROLLER_SELECT_MASK;
                     break;
                 case SDLK_e:
-                    std::cout << "START" << std::endl;
-
+                    pressedStart = true;
                     controllerByte = controllerByte | CONTROLLER_UP_MASK;
                     break;
                 
