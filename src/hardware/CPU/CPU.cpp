@@ -298,10 +298,6 @@ void CPU::BranchNotEqual(){
         if (logPostInstructionReg) logRegisters(true, true, true, true);
         PC+=4;
    }
-   else{
-        PC+=4;
-        (*os).logger << "equal" << std::endl;
-   }
 }
 
 void CPU::BranchEqual(){
