@@ -40,19 +40,39 @@ void GPU::decodeFrameBuffer() {
 }
 
 void GPU::displayFrameBuffer() {
-    for (int w=0; w<WINDOW_WIDTH; w++) {
-        for (int h=0; h<WINDOW_HEIGHT; h++) {
+    // Lock texture for manipulation
+    int pitch;
+    void* mPixels;
+    if (SDL_LockTexture(os->texture, NULL, &mPixels, &pitch) != 0) {
+        (*os).logger << "SDL_LockTexture error: " << SDL_GetError() << std::endl;
+        return;
+    }
 
+    Uint32* pixels = static_cast<Uint32*>(mPixels);
+    for (int w = 0; w < WINDOW_WIDTH; w++) {
+        for (int h = 0; h < WINDOW_HEIGHT; h++) {
+            int index = h * (pitch / sizeof(uint32_t)) + w;
+            //modify to white?
+            pixels[index] = 0xFFFFFFFF;
         }
     }
-    // TODO: draw on texture with sdl2 here
 
-    // TODO: render with sdl2 after drawing texture
+    SDL_UnlockTexture(os->texture);
+
+    SDL_RenderClear(os->renderer);
+
+    SDL_Rect srcRect = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
+    SDL_Rect dstRect = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
+    SDL_RenderCopy(os->renderer, os->texture, &srcRect, &dstRect);
+
+    SDL_RenderPresent(os->renderer);
 }
+
 
 
 void GPU::loopIter() {
     // decodeFrameBuffer();
     (*os).logger << "GPU: displaying frame buffer" << std::endl;
-    // void displayFrameBuffer();
+   displayFrameBuffer();
+
 }

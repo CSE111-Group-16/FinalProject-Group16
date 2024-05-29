@@ -47,6 +47,12 @@ public:
                                 SDL_WINDOWPOS_CENTERED,
                                 SDL_WINDOWPOS_CENTERED,
                                 WINDOW_WIDTH, WINDOW_HEIGHT, 0);
+
+        renderer = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+        texture = SDL_CreateTexture(renderer,
+                                         SDL_PIXELFORMAT_ARGB8888,
+                                         SDL_TEXTUREACCESS_STREAMING,
+                                         WINDOW_WIDTH, WINDOW_HEIGHT);                
         };
 
     // accessable to user
@@ -65,6 +71,8 @@ public:
     SDL_Window* win;
     SDL_Surface* screen;
     SDL_Event eventHandler;
+    SDL_Renderer* renderer;
+    SDL_Texture* texture;
 
 
     // ROM contents (might remove if we can get it in memory)
@@ -101,6 +109,5 @@ public:
 private:
     bool logInstruction = false;
     bool logPCLocation = false;
-
     // key booleans
 };
