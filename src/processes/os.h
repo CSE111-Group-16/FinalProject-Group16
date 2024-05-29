@@ -26,13 +26,23 @@
 class OS {
 public:
     // default constructor
-    OS() : memory(this), cpu(this), gpu(this) {};
+    OS() : memory(this), cpu(this), gpu(this) {
+        // initialize sdl
+        if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
+            printf("error initializing SDL: %s\n", SDL_GetError());
+        }
+        win = SDL_CreateWindow("GAME",
+                                SDL_WINDOWPOS_CENTERED,
+                                SDL_WINDOWPOS_CENTERED,
+                                WINDOW_WIDTH, WINDOW_HEIGHT, 0);
+        };
 
     // accessable to user
     void startup(std::string ROM_file); 
     void shutDown(); // not sure if needed
     ~OS() {
         logger.close();
+    	SDL_DestroyWindow(win);
         SDL_Quit();
         }
     // hardware
@@ -40,6 +50,9 @@ public:
     Memory memory;
     GPU gpu;
     std::ofstream logger;
+    SDL_Window* win;
+    SDL_Surface* screen;
+    SDL_Event eventHandler;
 
 
     // ROM contents (might remove if we can get it in memory)
@@ -70,9 +83,12 @@ public:
     void resetSequence();
     void setup();
     void loop();
+    void eventLoop();
 
 
 private:
     bool logInstruction = false;
     bool logPCLocation = false;
+
+    // key booleans
 };

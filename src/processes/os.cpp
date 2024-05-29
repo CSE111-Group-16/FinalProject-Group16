@@ -7,7 +7,6 @@ void OS::startup(std::string filename) {
         std::cerr << "Error opening logger" << std::endl;
     }
 
-
     resetSequence();
 }
 
@@ -74,6 +73,7 @@ void OS::loop() {
 
     // infinite game loop until exit code
     while (true) { 
+        eventLoop();
         uint32_t instruction = readInt32(cpu.PC);
 
         if (logInstruction) logger << "\nInstruction: " <<std::hex << instruction << std::endl;
@@ -94,6 +94,17 @@ void OS::loop() {
         if (exitCondition) exit(EXIT_SUCCESS);
     }
     logger << "\n======= end loop() =======\n";
+}
+
+void OS::eventLoop() {
+    while( SDL_PollEvent( &eventHandler ) != 0 )
+        {
+            if( eventHandler.type == SDL_QUIT )
+            {
+                std::cerr << "exit program" << std::endl;
+                exitCondition = true;
+            }
+        }
 }
 
 void OS::setup() {
@@ -141,8 +152,8 @@ uint8_t OS::readInt8(const size_t& address) const {
 }
 
 uint8_t OS::readController() {
-    uint8_t controllerByte = 0;
+    uint8_t controllerByte = 0xff;
 
     // TODO apply coorisponding button mask to controllerByte based on read controller input
-    return 0;
+    return controllerByte;
 }
