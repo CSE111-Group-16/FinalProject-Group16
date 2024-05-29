@@ -34,11 +34,6 @@ void GPU::setPixel(int width, int height, bool state) {
     (*os).memory.setByte(pixel_address, pixel_state);
 }
 
-// maybe just will be in displayFrameBuffer()
-void GPU::decodeFrameBuffer() {
-    
-}
-
 void GPU::displayFrameBuffer() {
     // Lock texture for manipulation
     int pitch;
@@ -71,7 +66,6 @@ void GPU::displayFrameBuffer() {
 
 
 void GPU::loopIter() {
-    // decodeFrameBuffer();
     (*os).logger << "GPU: displaying frame buffer" << std::endl;
    displayFrameBuffer();
 

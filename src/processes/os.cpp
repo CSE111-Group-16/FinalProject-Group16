@@ -83,7 +83,6 @@ void OS::loop() {
         if (logPCLocation) logger << "PC address: " << std::hex << cpu.PC << std::endl;
 
         cpu.PerformInstruction(instruction);
-        
         // reset to start of loop()
         if (cpu.PC <= 0x0000) {
             // TODO add delay of at most 16.667
@@ -101,6 +100,8 @@ void OS::loop() {
 
 void OS::eventLoop() {
     while( SDL_PollEvent( &eventHandler ) != 0 ) {
+        // reset controller byte
+        controllerByte = 0x00;
         if( eventHandler.type == SDL_QUIT )
         {
             std::cerr << "exit program" << std::endl;
@@ -112,7 +113,41 @@ void OS::eventLoop() {
             //Select surfaces based on key press (gonna be REALLY ugly code here)
             switch( eventHandler.key.keysym.sym )
             {
-                // case SDLK_UP:
+                case SDLK_UP:
+                    controllerByte = controllerByte | CONTROLLER_UP_MASK;
+                    break;
+                case SDLK_DOWN:
+                    controllerByte = controllerByte | CONTROLLER_DOWN_MASK;
+                    break;
+                case SDLK_LEFT:
+                    controllerByte = controllerByte | CONTROLLER_LEFT_MASK;
+                    break;
+                case SDLK_RIGHT:
+                    std::cout << "RIGHT" << std::endl;
+
+                    // std::cerr << (int)controllerByte<<std::endl;
+                    controllerByte = controllerByte | CONTROLLER_RIGHT_MASK;
+                    break;
+                case SDLK_a:
+                    std::cout << "A" << std::endl;
+                    controllerByte = controllerByte | CONTROLLER_A_MASK;
+                    // std::cerr << (int)controllerByte<<std::endl;
+                    break;
+                case SDLK_s:
+                    std::cout << "B" << std::endl;
+                    controllerByte = controllerByte | CONTROLLER_B_MASK;
+                    break;
+                case SDLK_SPACE:
+                    std::cout << "SELECT" << std::endl;
+
+                    controllerByte = controllerByte | CONTROLLER_SELECT_MASK;
+                    break;
+                case SDLK_e:
+                    std::cout << "START" << std::endl;
+
+                    controllerByte = controllerByte | CONTROLLER_UP_MASK;
+                    break;
+                
             }
         }
     }
