@@ -5,6 +5,7 @@
 #include "hardware/CPU/CPU.h"
 #include "hardware/memory.h"
 #include <SDL2/SDL.h>
+#include <SDL2/SDL.h>
 
 int main(int argc, char* argv[]) {
     // returns zero on success else non-zero
