@@ -1,5 +1,6 @@
 #include "CPU.h"
 #include "../../processes/os.h"
+#include <bitset>
 
 void CPU::resetStackPointer() {
     registerFile[register_sp].setAddress(top_of_stack);
@@ -256,6 +257,12 @@ void CPU::LoadByteUnsigned(){
         std::cin >> byte;
         if (logStdin) (*os).logger << "read byte from stdin: " << byte <<std::endl;
         registerFile[reg_b_].address = byte;
+    } else if (registerFile[reg_a_].getAddress()+immediate_value_ == 0x7000) {
+        // load input from controller
+        uint8_t byte = (*os).readController();
+        std::bitset<8> x(byte);
+        (*os).logger << "read byte from controller: " << x <<std::endl;
+        registerFile[reg_b_].address = byte;
     } else {
         // load from memory
         registerFile[reg_b_].address = (*os).memory.readByte(registerFile[reg_a_].getAddress()+immediate_value_);
@@ -285,11 +292,11 @@ void CPU::BranchNotEqual(){
     
    if(registerFile[reg_a_].getAddress()!=registerFile[reg_b_].getAddress()){
         PC += 4+4*(immediate_value_); //PC is incremented after the instruction anyways
-        (*os).logger << "not equal" << std::endl;
+        if (logStderr) (*os).logger << "not equal" << std::endl;
         if (logPostInstructionReg) logRegisters(true, true, true, true);
    }
    else{
-        (*os).logger << "equal" << std::endl;
+        if (logStderr) (*os).logger << "equal" << std::endl;
         if (logPostInstructionReg) logRegisters(true, true, true, true);
         PC+=4;
    }

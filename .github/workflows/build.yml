@@ -22,4 +22,4 @@ jobs:
           make
           ./BananaEmulator ../tests/slug_files/hello_world1.slug
           ./BananaEmulator ../tests/slug_files/hello_world2.slug
-          ./BananaEmulator ../tests/slug_files/hello_world3.slug < ../tests/slug_files/hello_world1_input.txt
+          ./BananaEmulator ../tests/slug_files/hello_world3.slug < ../tests/slug_files/hello_world3_input.txt

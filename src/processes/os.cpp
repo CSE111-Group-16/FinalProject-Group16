@@ -6,8 +6,7 @@ void OS::startup(std::string filename) {
     if (!logger.is_open()) {
         std::cerr << "Error opening logger" << std::endl;
     }
-    
-    SDL_Init(SDL_INIT_VIDEO);
+
     resetSequence();
 }
 
@@ -74,16 +73,23 @@ void OS::loop() {
 
     // infinite game loop until exit code
     while (true) { 
+        eventLoop();
         uint32_t instruction = readInt32(cpu.PC);
 
-        logger << "\nInstruction: " <<std::hex << instruction << std::endl;
-        logger << "PC address: " << std::hex << cpu.PC << std::endl;
+        if (logInstruction) logger << "\nInstruction: " <<std::hex << instruction << std::endl;
+        if (logPCLocation) logger << "PC address: " << std::hex << cpu.PC << std::endl;
+        if (logInstruction) logger << "\nInstruction: " <<std::hex << instruction << std::endl;
+        if (logPCLocation) logger << "PC address: " << std::hex << cpu.PC << std::endl;
 
         cpu.PerformInstruction(instruction);
         
         // reset to start of loop()
         if (cpu.PC <= 0x0000) {
+<<<<<<< HEAD
             auto startTime = std::chrono::high_resolution_clock::now();
+=======
+            // TODO add delay of at most 16.667
+>>>>>>> e8359bd9ba933d4b0978288fae030ba7ab2d200d
             gpu.loopIter();
             logger << "\n=== reset loop ===" << std::endl;
             cpu.PC = 0xfffc;
@@ -104,6 +110,17 @@ void OS::loop() {
     logger << "\n======= end loop() =======\n";
 }
 
+void OS::eventLoop() {
+    while( SDL_PollEvent( &eventHandler ) != 0 )
+        {
+            if( eventHandler.type == SDL_QUIT )
+            {
+                std::cerr << "exit program" << std::endl;
+                exitCondition = true;
+            }
+        }
+}
+
 void OS::setup() {
     logger <<"======= startup() =======\n";
     cpu.PC = 0xfffc; // set PC register to 0xfffc
@@ -114,8 +131,8 @@ void OS::setup() {
     while (cpu.PC != 0x0000) {
         uint32_t instruction = readInt32(cpu.PC);
         
-        logger << "PC address: " <<std::hex << cpu.PC << std::endl;
-        logger << "Instruction: " <<std::hex << instruction << std::endl;
+        if (logInstruction) logger << "PC address: " <<std::hex << cpu.PC << std::endl;
+        if (logPCLocation) logger << "Instruction: " <<std::hex << instruction << std::endl;
 
         cpu.PerformInstruction(instruction);
         
@@ -146,4 +163,11 @@ uint16_t OS::readInt16(const size_t& address) const {
 
 uint8_t OS::readInt8(const size_t& address) const {
     return (uint8_t)memory.readByte(address);
+}
+
+uint8_t OS::readController() {
+    uint8_t controllerByte = 0xff;
+
+    // TODO apply coorisponding button mask to controllerByte based on read controller input
+    return controllerByte;
 }
