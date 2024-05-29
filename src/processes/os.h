@@ -20,6 +20,9 @@
 #define CONTROLLER_LEFT_MASK ((uint8_t)0x02)
 #define CONTROLLER_RIGHT_MASK ((uint8_t)0x01)
 
+#define WINDOW_WIDTH 128
+#define WINDOW_HEIGHT 120
+
 class OS {
 public:
     // default constructor

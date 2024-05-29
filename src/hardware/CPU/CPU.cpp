@@ -290,11 +290,11 @@ void CPU::BranchNotEqual(){
     
    if(registerFile[reg_a_].getAddress()!=registerFile[reg_b_].getAddress()){
         PC += 4+4*(immediate_value_); //PC is incremented after the instruction anyways
-        (*os).logger << "not equal" << std::endl;
+        if (logStderr) (*os).logger << "not equal" << std::endl;
         if (logPostInstructionReg) logRegisters(true, true, true, true);
    }
    else{
-        (*os).logger << "equal" << std::endl;
+        if (logStderr) (*os).logger << "equal" << std::endl;
         if (logPostInstructionReg) logRegisters(true, true, true, true);
         PC+=4;
    }

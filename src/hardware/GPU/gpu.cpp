@@ -34,12 +34,17 @@ void GPU::setPixel(int width, int height, bool state) {
     (*os).memory.setByte(pixel_address, pixel_state);
 }
 
+// maybe just will be in displayFrameBuffer()
 void GPU::decodeFrameBuffer() {
     
 }
 
 void GPU::displayFrameBuffer() {
+    for (int w=0; w<WINDOW_WIDTH; w++) {
+        for (int h=0; h<WINDOW_HEIGHT; h++) {
 
+        }
+    }
     // TODO: draw on texture with sdl2 here
 
     // TODO: render with sdl2 after drawing texture

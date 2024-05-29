@@ -7,9 +7,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL.h>
 
-#define WINDOW_WIDTH 128
-#define WINDOW_HEIGHT 120
-
 int main(int argc, char* argv[]) {
     // returns zero on success else non-zero
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {

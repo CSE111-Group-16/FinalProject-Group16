@@ -83,6 +83,7 @@ void OS::loop() {
         
         // reset to start of loop()
         if (cpu.PC <= 0x0000) {
+            // TODO add delay of at most 16.667
             gpu.loopIter();
             logger << "\n=== reset loop ===" << std::endl;
             cpu.PC = 0xfffc;
@@ -140,5 +141,8 @@ uint8_t OS::readInt8(const size_t& address) const {
 }
 
 uint8_t OS::readController() {
+    uint8_t controllerByte = 0;
+
+    // TODO apply coorisponding button mask to controllerByte based on read controller input
     return 0;
 }
