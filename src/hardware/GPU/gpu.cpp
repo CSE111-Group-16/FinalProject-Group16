@@ -53,7 +53,6 @@ void GPU::displayFrameBuffer() {
     }
 
     SDL_UnlockTexture(os->texture);
-
     SDL_RenderClear(os->renderer);
 
     SDL_Rect srcRect = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
