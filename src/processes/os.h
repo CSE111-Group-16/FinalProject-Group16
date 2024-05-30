@@ -93,6 +93,8 @@ private:
     void loop();
     void eventLoop();
 
+
+private:
     bool logInstruction = false;
     bool logPCLocation = false;
 };

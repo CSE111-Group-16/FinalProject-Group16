@@ -278,6 +278,7 @@ void CPU::LoadByteUnsigned(){
     PC +=4;
 }
 
+
 void CPU::Jump(){
     if (logPreInstructionReg) {
         (*os).logger << "Pre instruction: " << std::endl;
