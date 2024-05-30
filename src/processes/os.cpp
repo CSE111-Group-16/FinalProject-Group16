@@ -85,6 +85,12 @@ void OS::loop() {
         // reset to start of loop()
 
         if (cpu.PC <= 0x0000) {
+            // reset controller byte
+            controllerByte = 0x00;
+            pressedA = false;
+            pressedB = false;
+            pressedSelect = false;
+            pressedStart = false;
             auto startTime = std::chrono::high_resolution_clock::now();
             gpu.loopIter();
             logger << "\n=== reset loop ===" << std::endl;
@@ -109,12 +115,6 @@ void OS::loop() {
 void OS::eventLoop() {
 
     while( SDL_PollEvent( &eventHandler ) != 0 ) {
-        // reset controller byte
-        controllerByte = 0x00;
-        pressedA = false;
-        pressedB = false;
-        pressedSelect = false;
-        pressedStart = false;
         if( eventHandler.type == SDL_QUIT )
         {
             std::cerr << "exit program" << std::endl;
@@ -140,11 +140,11 @@ void OS::eventLoop() {
                     controllerByte = controllerByte | CONTROLLER_RIGHT_MASK;
                     break;
 
-
+                // TODO FIX
                 // none of these controls work. i have no idea why
+                // controller byte isnt getting set correctly, and booleans arent working.
                 case SDLK_a:
                     pressedA = true;
-                    // std::cerr << "PRESSED A IN OS" << std::endl;
                     controllerByte = controllerByte | CONTROLLER_A_MASK;
                     break;
                 case SDLK_s:
@@ -153,13 +153,12 @@ void OS::eventLoop() {
                     break;
                 case SDLK_e:
                     pressedSelect = true;
-        // std::cout<< pressedSelect << std::endl;
 
                     controllerByte = controllerByte | CONTROLLER_SELECT_MASK;
                     break;
                 case SDLK_SPACE:
                     pressedStart = true;
-                    controllerByte = controllerByte | CONTROLLER_UP_MASK;
+                    controllerByte = controllerByte | CONTROLLER_START_MASK;
                     break;
                 
             }

@@ -215,8 +215,8 @@ void CPU::storeWord(){
     if (logInstructionName) (*os).logger << __func__ << ":" << std::endl;
 
     // operation
-    int8_t byte1 = ((registerFile[reg_b_].getAddress() >> byte_shift) & eight_bitmask); 
-    int8_t byte2 = registerFile[reg_b_].getAddress() & eight_bitmask;
+    uint8_t byte1 = ((registerFile[reg_b_].getAddress() >> byte_shift) & eight_bitmask); 
+    uint8_t byte2 = registerFile[reg_b_].getAddress() & eight_bitmask;
     (*os).memory.setByte(registerFile[reg_a_].getAddress()+(immediate_value_), byte1); //byte_shift
     (*os).memory.setByte(registerFile[reg_a_].getAddress()+(immediate_value_)+1, byte2);//byte_shift removed
     
@@ -260,14 +260,15 @@ void CPU::LoadByteUnsigned(){
     } else if (registerFile[reg_a_].getAddress()+immediate_value_ == 0x7000) {
         // load input from controller
         uint8_t byte = (*os).controllerByte & 0xff;
-        
+
+        // didnt work        
         if ((*os).pressedA) byte = byte | CONTROLLER_A_MASK;
-        if ((*os).pressedB) byte = byte | CONTROLLER_B_MASK;
-        if ((*os).pressedSelect) byte = byte | CONTROLLER_SELECT_MASK;
-        if ((*os).pressedStart) byte = byte | CONTROLLER_START_MASK;
+        // if ((*os).pressedB) byte = byte | CONTROLLER_B_MASK;
+        // if ((*os).pressedSelect) byte = byte | CONTROLLER_SELECT_MASK;
+        // if ((*os).pressedStart) byte = byte | CONTROLLER_START_MASK;
         
-        std::bitset<8> x(byte);
-        std::cerr << "read byte from controller: " << x <<std::endl;
+        // std::bitset<8> x(byte);
+        // std::cerr << "read byte from controller: " << x <<std::endl;
         registerFile[reg_b_].address = byte;
     } else {
         // load from memory

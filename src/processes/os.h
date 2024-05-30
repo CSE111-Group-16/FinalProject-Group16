@@ -72,7 +72,7 @@ public:
     uint32_t load_data_address;
     uint32_t program_data_address;
     uint32_t data_size;
-    uint16_t controllerByte;
+    int controllerByte;
     bool exitCondition = false;
     bool pressedA, pressedB, pressedSelect, pressedStart;
 
