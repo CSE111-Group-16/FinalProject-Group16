@@ -73,7 +73,6 @@ void OS::loop() {
     logger << "======= loop() ======= \n";
     cpu.PC = 0xfffc; 
     cpu.initialJAL(address_to_loop);
-    std::cout << std::fixed << std::setprecision(20);
     // infinite game loop until exit code
     while (true) { 
         eventLoop();
