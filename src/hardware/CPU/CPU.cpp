@@ -215,8 +215,8 @@ void CPU::storeWord(){
     if (logInstructionName) (*os).logger << __func__ << ":" << std::endl;
 
     // operation
-    int8_t byte1 = ((registerFile[reg_b_].getAddress() >> byte_shift) & eight_bitmask); 
-    int8_t byte2 = registerFile[reg_b_].getAddress() & eight_bitmask;
+    uint8_t byte1 = ((registerFile[reg_b_].getAddress() >> byte_shift) & eight_bitmask); 
+    uint8_t byte2 = registerFile[reg_b_].getAddress() & eight_bitmask;
     (*os).memory.setByte(registerFile[reg_a_].getAddress()+(immediate_value_), byte1); //byte_shift
     (*os).memory.setByte(registerFile[reg_a_].getAddress()+(immediate_value_)+1, byte2);//byte_shift removed
     
@@ -255,7 +255,20 @@ void CPU::LoadByteUnsigned(){
         // load from stdin
         uint8_t byte;
         std::cin >> byte;
-        if (logStdin) (*os).logger << "read byte from stdin: " << byte <<std::endl;
+        // if (logStdin) (*os).logger << "read byte from stdin: " << byte <<std::endl;
+        registerFile[reg_b_].address = byte;
+    } else if (registerFile[reg_a_].getAddress()+immediate_value_ == 0x7000) {
+        // load input from controller
+        uint8_t byte = (*os).controllerByte & 0xff;
+
+        // didnt work        
+        if ((*os).pressedA) byte = byte | CONTROLLER_A_MASK;
+        // if ((*os).pressedB) byte = byte | CONTROLLER_B_MASK;
+        // if ((*os).pressedSelect) byte = byte | CONTROLLER_SELECT_MASK;
+        // if ((*os).pressedStart) byte = byte | CONTROLLER_START_MASK;
+        
+        // std::bitset<8> x(byte);
+        // std::cerr << "read byte from controller: " << x <<std::endl;
         registerFile[reg_b_].address = byte;
     } else {
         // load from memory
@@ -419,4 +432,28 @@ void CPU::r_typeBreakdown(uint32_t opcode) {
     (*os).logger << "  reg_c : " << reg_c_ << std::endl;
     (*os).logger << "  shift : " << shift_value_ << std::endl;
     (*os).logger << "  func  : " << function_value_ << std::endl;
+}
+
+
+uint8_t CPU::readController() {
+    uint8_t byte = 0x00;
+    if ((*os).eventHandler.type == SDL_KEYDOWN) {
+        //Select surfaces based on key press
+        switch( (*os).eventHandler.key.keysym.sym )
+        {
+            case SDLK_UP:
+                byte = byte | CONTROLLER_UP_MASK;
+                break;
+            case SDLK_DOWN:
+                byte = byte | CONTROLLER_DOWN_MASK;
+                break;
+            case SDLK_LEFT:
+                byte = byte | CONTROLLER_LEFT_MASK;
+                break;
+            case SDLK_RIGHT:
+                byte = byte | CONTROLLER_RIGHT_MASK;
+                break;
+        }
+    }
+    return byte;
 }

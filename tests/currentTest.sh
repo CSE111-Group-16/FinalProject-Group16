@@ -16,8 +16,10 @@ make
 #./BananaEmulator ../slug_files/hello_world2.slug >> results.txt
 #./BananaEmulator ../slug_files/hello_world3.slug < ../slug_files/hello_world3_input.txt >> results.txt
 
-./BananaEmulator ../slug_files/box.slug > results.txt
-# currently box.slug doesnt escape setup function
+./BananaEmulator ../slug_files/box.slug >> results.txt
+./BananaEmulator ../slug_files/image.slug > results.txt
+./BananaEmulator ../slug_files/input.slug
+
 
 # return to origin
 cd ../
