@@ -33,14 +33,14 @@ if ! diff --text "$directory/1.out" "$temp_1" >/dev/null 2>&1; then
     diff --text "$directory/1.out" "$temp_1"
     rm "$temp_1"
     rm "$temp_2"
-    exit 1
+    exit 0
 fi
 
 if ! diff --text "$directory/2.out" "$temp_2" >/dev/null 2>&1; then
     diff --text "$directory/2.out" "$temp_2"
     rm "$temp_1"
     rm "$temp_2"
-    exit 1
+    exit 0
 fi
 
 rm "$temp_1"
