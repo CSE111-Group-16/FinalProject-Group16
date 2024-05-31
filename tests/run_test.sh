@@ -36,7 +36,6 @@ if ! diff --text "$directory/1.out" "$temp_1" >/dev/null 2>&1; then
     
     rm "$temp_1"
     rm "$temp_2"
-    echo "failed1"
     exit 1
 fi
 
