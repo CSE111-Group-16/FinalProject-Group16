@@ -23,6 +23,6 @@ jobs:
           ./BananaEmulator ../tests/slug_files/hello_world1.slug
           ./BananaEmulator ../tests/slug_files/hello_world2.slug
           ./BananaEmulator ../tests/slug_files/hello_world3.slug < ../tests/slug_files/hello_world3_input.txt
-          ../tests/run_test.sh ../tests/hello_world1 ../tests/slug_files/hello_world1.slug
-          ../tests/run_test.sh ../tests/hello_world2 ../tests/slug_files/hello_world2.slug
-          ../tests/run_test.sh ../tests/hello_world3 ../tests/slug_files/hello_world3.slug
+          sh ../tests/run_test.sh ../tests/hello_world1 ../tests/slug_files/hello_world1.slug
+          sh ../tests/run_test.sh ../tests/hello_world2 ../tests/slug_files/hello_world2.slug
+          sh ../tests/run_test.sh ../tests/hello_world3 ../tests/slug_files/hello_world3.slug
