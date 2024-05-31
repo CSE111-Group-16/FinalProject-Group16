@@ -65,7 +65,6 @@ void GPU::displayFrameBuffer() {
 
 
 void GPU::loopIter() {
-    (*os).logger << "GPU: displaying frame buffer" << std::endl;
    displayFrameBuffer();
 
 }

@@ -18,7 +18,7 @@ make
 
 ./BananaEmulator ../slug_files/box.slug >> results.txt
 ./BananaEmulator ../slug_files/image.slug > results.txt
-./BananaEmulator ../slug_files/input.slug > results.txt
+./BananaEmulator ../slug_files/input.slug
 
 
 # return to origin

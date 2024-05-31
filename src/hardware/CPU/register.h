@@ -6,7 +6,7 @@
 
 class Register {
 public:
-    uint16_t address; // should really be named 'value' or something
+    int16_t address; // should really be named 'value' or something
     std::string registerName;
 
     // Constructors

@@ -73,6 +73,7 @@ void OS::loop() {
     logger << "======= loop() ======= \n";
     cpu.PC = 0xfffc; 
     cpu.initialJAL(address_to_loop);
+    std::cout << std::fixed << std::setprecision(20);
     // infinite game loop until exit code
     while (true) { 
         eventLoop();
@@ -80,13 +81,17 @@ void OS::loop() {
 
         if (logInstruction) logger << "\nInstruction: " <<std::hex << instruction << std::endl;
         if (logPCLocation) logger << "PC address: " << std::hex << cpu.PC << std::endl;
-        if (logInstruction) logger << "\nInstruction: " <<std::hex << instruction << std::endl;
-        if (logPCLocation) logger << "PC address: " << std::hex << cpu.PC << std::endl;
         
         cpu.PerformInstruction(instruction);
         // reset to start of loop()
 
         if (cpu.PC <= 0x0000) {
+            // reset controller byte
+            controllerByte = 0x00;
+            pressedA = false;
+            pressedB = false;
+            pressedSelect = false;
+            pressedStart = false;
             auto startTime = std::chrono::high_resolution_clock::now();
             gpu.loopIter();
             logger << "\n=== reset loop ===" << std::endl;
@@ -109,9 +114,8 @@ void OS::loop() {
 }
 
 void OS::eventLoop() {
+
     while( SDL_PollEvent( &eventHandler ) != 0 ) {
-        // reset controller byte
-        controllerByte = 0x00;
         if( eventHandler.type == SDL_QUIT )
         {
             std::cerr << "exit program" << std::endl;
@@ -120,9 +124,10 @@ void OS::eventLoop() {
         //User presses a key
         else if( eventHandler.type == SDL_KEYDOWN )
         {
-            //Select surfaces based on key press (gonna be REALLY ugly code here)
+            //Select surfaces based on key press
             switch( eventHandler.key.keysym.sym )
             {
+                
                 case SDLK_UP:
                     controllerByte = controllerByte | CONTROLLER_UP_MASK;
                     break;
@@ -133,30 +138,32 @@ void OS::eventLoop() {
                     controllerByte = controllerByte | CONTROLLER_LEFT_MASK;
                     break;
                 case SDLK_RIGHT:
-                    std::cout << "RIGHT" << std::endl;
-
                     controllerByte = controllerByte | CONTROLLER_RIGHT_MASK;
                     break;
+
+                // TODO FIX
+                // none of these controls work. i have no idea why
+                // controller byte isnt getting set correctly, and booleans arent working.
                 case SDLK_a:
-                    std::cout << "A" << std::endl;
+                    pressedA = true;
                     controllerByte = controllerByte | CONTROLLER_A_MASK;
                     break;
                 case SDLK_s:
-                    std::cout << "B" << std::endl;
+                    pressedB = true;
                     controllerByte = controllerByte | CONTROLLER_B_MASK;
                     break;
-                case SDLK_SPACE:
-                    std::cout << "SELECT" << std::endl;
+                case SDLK_e:
+                    pressedSelect = true;
 
                     controllerByte = controllerByte | CONTROLLER_SELECT_MASK;
                     break;
-                case SDLK_e:
-                    std::cout << "START" << std::endl;
-
-                    controllerByte = controllerByte | CONTROLLER_UP_MASK;
+                case SDLK_SPACE:
+                    pressedStart = true;
+                    controllerByte = controllerByte | CONTROLLER_START_MASK;
                     break;
                 
             }
+
         }
     }
 }

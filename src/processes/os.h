@@ -72,8 +72,9 @@ public:
     uint32_t load_data_address;
     uint32_t program_data_address;
     uint32_t data_size;
-    uint8_t controllerByte;
+    int controllerByte;
     bool exitCondition = false;
+    bool pressedA, pressedB, pressedSelect, pressedStart;
 
 
     // memory accessors (? idk if needed in os)
@@ -81,8 +82,7 @@ public:
     uint16_t readInt16(const size_t& address) const;
     uint8_t readInt8(const size_t& address) const;
 
-    private:
-
+private:
     // file info
     std::string filename_;
     size_t rom_size_;
