@@ -145,7 +145,6 @@ void OS::eventLoop() {
                     break;
                 case SDLK_e:
                     pressedSelect = true;
-
                     controllerByte = controllerByte | CONTROLLER_SELECT_MASK;
                     break;
                 case SDLK_SPACE:

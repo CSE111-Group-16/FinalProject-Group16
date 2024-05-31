@@ -3,7 +3,7 @@
 #include <bitset>
 
 void CPU::resetStackPointer() {
-    registerFile[register_sp].setAddress(top_of_stack);
+    registerFile[register_sp].setValue(top_of_stack);
 }
 
 void CPU::PerformInstruction(const uint32_t instruction){
@@ -50,7 +50,7 @@ void CPU::PerformInstruction(const uint32_t instruction){
 }
 
 void CPU::initialJAL(uint32_t address_to_jump) {
-    registerFile[register_ra].address = PC+4;
+    registerFile[register_ra].setValue(PC+4);
     PC = (address_to_jump);
 }
 
@@ -64,14 +64,14 @@ void CPU::ShiftRightArithmetic(){
     if (logInstructionOperation) {
         (*os).logger << "\tSRA: R[reg_c] = (signed) R[reg_b] >> shift_value" << std::endl;
         (*os).logger << "\tR[" << registerFile[reg_c_].getName() << "] = (signed) R[" << registerFile[reg_b_].getName() << "] >> " << shift_value_ <<  std::endl;
-        (*os).logger << "\t" << registerFile[reg_c_].getAddress() << " = " << registerFile[reg_b_].getAddress() << " >> " << shift_value_ <<  std::endl;
-        (*os).logger << "\tR[" << registerFile[reg_c_].getName() << "]: " << registerFile[reg_c_].getAddress() << " => ";
+        (*os).logger << "\t" << registerFile[reg_c_].getValue() << " = " << registerFile[reg_b_].getValue() << " >> " << shift_value_ <<  std::endl;
+        (*os).logger << "\tR[" << registerFile[reg_c_].getName() << "]: " << registerFile[reg_c_].getValue() << " => ";
     }
 
     // operation
-    registerFile[reg_c_].address =  (int16_t)((registerFile[reg_b_].getAddress()) >> shift_value_); // Sign extend after the logical shift
+    registerFile[reg_c_].setValue((int16_t)((registerFile[reg_b_].getValue()) >> shift_value_)); // Sign extend after the logical shift
     
-    if (logInstructionOperation) (*os).logger << registerFile[reg_c_].getAddress() << std::endl;
+    if (logInstructionOperation) (*os).logger << registerFile[reg_c_].getValue() << std::endl;
     if (logPostInstructionReg) {
         (*os).logger << "Pre instruction: " << std::endl;
         logRegisters(false, true, true, false);
@@ -87,7 +87,7 @@ void CPU::ShiftRightLogical(){
     if (logInstructionName) (*os).logger << __func__ << ":" << std::endl;
 
     // operation
-    registerFile[reg_c_].address =  registerFile[reg_b_].getAddress() >> shift_value_; //must be unsigned
+    registerFile[reg_c_].setValue(registerFile[reg_b_].getValue() >> shift_value_); //must be unsigned
     
     if (logPostInstructionReg) logRegisters(false, true, true, false);
     PC +=4;
@@ -101,7 +101,7 @@ void CPU::ShiftLeftLogical(){
     if (logInstructionName) (*os).logger << __func__ << ":" << std::endl;
 
     // operation
-    registerFile[reg_c_].address = registerFile[reg_b_].getAddress() << shift_value_;
+    registerFile[reg_c_].setValue(registerFile[reg_b_].getValue() << shift_value_);
     
     if (logPostInstructionReg) logRegisters(true, true, true, false);
     PC +=4;
@@ -114,7 +114,7 @@ void CPU::Subtract(){
     }
     if (logInstructionName) (*os).logger << __func__ << ":" << std::endl;
     // operation
-    registerFile[reg_c_].address = registerFile[reg_a_].getAddress() - registerFile[reg_b_].getAddress();
+    registerFile[reg_c_].setValue(registerFile[reg_a_].getValue() - registerFile[reg_b_].getValue());
     
     if (logPostInstructionReg) logRegisters(true, true, true, false);
     PC +=4;
@@ -128,8 +128,8 @@ void CPU::Add(){
     if (logInstructionName) (*os).logger << __func__ << ":" << std::endl;
 
     // operation
-    int16_t add = registerFile[reg_a_].getAddress() + registerFile[reg_b_].getAddress();
-    registerFile[reg_c_].address = add;
+    int16_t add = registerFile[reg_a_].getValue() + registerFile[reg_b_].getValue();
+    registerFile[reg_c_].setValue(add);
     
     if (logPostInstructionReg) logRegisters(true, true, true, false);
     PC +=4;
@@ -144,7 +144,7 @@ void CPU::SetLessThan(){
     if (logInstructionName) (*os).logger << __func__ << ":" << std::endl;
 
     // operation
-    registerFile[reg_c_].address = (registerFile[reg_a_].getAddress() < registerFile[reg_b_].getAddress());
+    registerFile[reg_c_].setValue(registerFile[reg_a_].getValue() < registerFile[reg_b_].getValue());
     
     if (logPostInstructionReg) logRegisters(true, true, true, false);
     PC +=4;
@@ -158,7 +158,7 @@ void CPU::Or_(){
     if (logInstructionName) (*os).logger << __func__ << ":" << std::endl;
 
     // operation
-    registerFile[reg_c_].address = registerFile[reg_a_].getAddress() | registerFile[reg_b_].getAddress();
+    registerFile[reg_c_].setValue(registerFile[reg_a_].getValue() | registerFile[reg_b_].getValue());
     
     if (logPostInstructionReg) logRegisters(true, true, true, false);
     PC +=4;
@@ -172,7 +172,7 @@ void CPU::Nor_(){
     if (logInstructionName) (*os).logger << __func__ << ":" << std::endl;
     
     // operation
-    registerFile[reg_c_].address = ~(registerFile[reg_a_].getAddress() | registerFile[reg_b_].getAddress());
+    registerFile[reg_c_].setValue(~(registerFile[reg_a_].getValue() | registerFile[reg_b_].getValue()));
     
     if (logPostInstructionReg) logRegisters(true, true, true, false);
     PC +=4;
@@ -186,7 +186,7 @@ void CPU::And_(){
     if (logInstructionName) (*os).logger << __func__ << ":" << std::endl;
 
     // operation
-    registerFile[reg_c_].address = registerFile[reg_a_].getAddress() & registerFile[reg_b_].getAddress();
+    registerFile[reg_c_].setValue(registerFile[reg_a_].getValue() & registerFile[reg_b_].getValue());
     
     if (logPostInstructionReg) logRegisters(true, true, true, false);
     PC +=4;
@@ -200,7 +200,7 @@ void CPU::JumpRegister(){
     if (logInstructionName) (*os).logger << __func__ << ":" << std::endl;
 
     // operation
-    PC= registerFile[reg_a_].getAddress();
+    PC= registerFile[reg_a_].getValue();
     if (logPostInstructionReg) logRegisters(true, false, false, true);
 }
 
@@ -215,13 +215,13 @@ void CPU::storeWord(){
     if (logInstructionName) (*os).logger << __func__ << ":" << std::endl;
 
     // operation
-    uint8_t byte1 = ((registerFile[reg_b_].getAddress() >> byte_shift) & eight_bitmask); 
-    uint8_t byte2 = registerFile[reg_b_].getAddress() & eight_bitmask;
-    (*os).memory.setByte(registerFile[reg_a_].getAddress()+(immediate_value_), byte1); //byte_shift
-    (*os).memory.setByte(registerFile[reg_a_].getAddress()+(immediate_value_)+1, byte2);//byte_shift removed
+    uint8_t byte1 = ((registerFile[reg_b_].getValue() >> byte_shift) & eight_bitmask); 
+    uint8_t byte2 = registerFile[reg_b_].getValue() & eight_bitmask;
+    (*os).memory.setByte(registerFile[reg_a_].getValue()+(immediate_value_), byte1); //byte_shift
+    (*os).memory.setByte(registerFile[reg_a_].getValue()+(immediate_value_)+1, byte2);//byte_shift removed
     
     // not sure this will ever be used
-    if (registerFile[reg_a_].getAddress()+(immediate_value_) == 0x7110) {
+    if (registerFile[reg_a_].getValue()+(immediate_value_) == 0x7110) {
         (*os).logger << "WROTE FROM storeWord (?)" << std::endl;
         std::cout << byte1 << byte2;
     }
@@ -237,7 +237,7 @@ void CPU::addImm(){
     }
     if (logInstructionName) (*os).logger << __func__ << ":" << std::endl;
 
-    registerFile[reg_b_].address =  registerFile[reg_a_].getAddress() + immediate_value_;
+    registerFile[reg_b_].setValue(registerFile[reg_a_].getValue() + immediate_value_);
     
     if (logPostInstructionReg) logRegisters(true, true, true, false);
     PC +=4;
@@ -251,22 +251,19 @@ void CPU::LoadByteUnsigned(){
     }
     if (logInstructionName) (*os).logger << __func__ << ":" << std::endl;
 
-    if (registerFile[reg_a_].getAddress()+immediate_value_ == 0x7100) {
+    if (registerFile[reg_a_].getValue()+immediate_value_ == 0x7100) {
         // load from stdin
         uint8_t byte;
         std::cin >> byte;
-        // if (logStdin) (*os).logger << "read byte from stdin: " << byte <<std::endl;
-        registerFile[reg_b_].address = byte;
-    } else if (registerFile[reg_a_].getAddress()+immediate_value_ == 0x7000) {
+        if (logStdin) (*os).logger << "read byte from stdin: " << byte <<std::endl;
+        registerFile[reg_b_].setValue(byte);
+    } else if (registerFile[reg_a_].getValue()+immediate_value_ == 0x7000) {
         // load input from controller
         uint8_t byte = (*os).controllerByte & 0xff;
-        
-        // std::bitset<8> x(byte);
-        // std::cerr << "read byte from controller: " << x <<std::endl;
-        registerFile[reg_b_].address = byte;
+        registerFile[reg_b_].setValue(byte);
     } else {
         // load from memory
-        registerFile[reg_b_].address = (*os).memory.readByte(registerFile[reg_a_].getAddress()+immediate_value_);
+        registerFile[reg_b_].setValue((*os).memory.readByte(registerFile[reg_a_].getValue()+immediate_value_));
     }
     if (logPostInstructionReg) logRegisters(true, true, true, false);
     PC +=4;
@@ -292,7 +289,7 @@ void CPU::BranchNotEqual(){
     if (logInstructionName) (*os).logger << __func__ << ":" << std::endl;
 
     
-   if(registerFile[reg_a_].getAddress()!=registerFile[reg_b_].getAddress()){
+   if(registerFile[reg_a_].getValue()!=registerFile[reg_b_].getValue()){
         PC += 4+4*(immediate_value_); //PC is incremented after the instruction anyways
         if (logStderr) (*os).logger << "not equal" << std::endl;
         if (logPostInstructionReg) logRegisters(true, true, true, true);
@@ -311,7 +308,7 @@ void CPU::BranchEqual(){
     }
     if (logInstructionName) (*os).logger << __func__ << ":" << std::endl;
 
-    if(registerFile[reg_a_].getAddress()==registerFile[reg_b_].getAddress()){
+    if(registerFile[reg_a_].getValue()==registerFile[reg_b_].getValue()){
         PC += 4+4*(immediate_value_); 
         if (logPostInstructionReg) logRegisters(true, true, true, false);
         //(*os).logger << "equal" << std::endl;
@@ -330,22 +327,22 @@ void CPU::StoreByte(){
     if (logInstructionName) (*os).logger << __func__ << ":" << std::endl;
 
     
-    int8_t byte = registerFile[reg_b_].getAddress() & eight_bitmask;
-    size_t address = registerFile[reg_a_].getAddress()+(immediate_value_);
-    (*os).memory.setByte(address, byte);
+    int8_t byte = registerFile[reg_b_].getValue() & eight_bitmask;
+    size_t value = registerFile[reg_a_].getValue()+(immediate_value_);
+    (*os).memory.setByte(value, byte);
     
     // write to stdout
-    if (address == 0x7110) {
+    if (value == 0x7110) {
         std::cout << byte;
         if (logStdout) (*os).logger << "stdout: " << byte << std::endl;
     }
     // write to stderr
-    if (address == 0x7120) {
+    if (value == 0x7120) {
         std::cerr << byte;
         if (logStderr) (*os).logger << "stderr: " << byte << std::endl;
     }
     // exit condition
-    if (address == 0x7200) {
+    if (value == 0x7200) {
         (*os).logger << "\n\nEnd Condition Triggered!" << std::endl;
         os->exitCondition = true;
     }
@@ -361,7 +358,7 @@ void CPU::JumpAndLink(){
     }
     if (logInstructionName) (*os).logger << __func__ << ":" << std::endl;
 
-    registerFile[register_ra].address = PC + 4;
+    registerFile[register_ra].setValue(PC + 4);
     PC = 4* (immediate_value_);
 
     if (logPostInstructionReg) logRegisters(true, true, true, true);
@@ -373,14 +370,13 @@ void CPU::LoadWord(){
         logRegisters(true, true, true, false);
     }
     if (logInstructionName) (*os).logger << __func__ << ":" << std::endl;
-
-    if(registerFile[reg_b_].registerName == "x0"){
-        registerFile[reg_b_].address = 0;
+    if(registerFile[reg_b_].getName() == "x0"){
+        registerFile[reg_b_].setValue(0);
         return;
     }
-    uint16_t high_byte = *(*os).memory.getByte(registerFile[reg_a_].getAddress()+immediate_value_); // Get the low byte
-    uint16_t low_byte = *(*os).memory.getByte((registerFile[reg_a_].getAddress()+immediate_value_)+1); // Get the high byte
-    registerFile[reg_b_].address = (high_byte << byte_shift) | low_byte; // Combine bytes into a word
+    uint16_t high_byte = *(*os).memory.getByte(registerFile[reg_a_].getValue()+immediate_value_); // Get the low byte
+    uint16_t low_byte = *(*os).memory.getByte((registerFile[reg_a_].getValue()+immediate_value_)+1); // Get the high byte
+    registerFile[reg_b_].setValue((high_byte << byte_shift) | low_byte); // Combine bytes into a word
     
     if (logPostInstructionReg) logRegisters(true, true, true, false);
     PC +=4;
@@ -392,9 +388,9 @@ void CPU::LoadWord(){
 /// @param reg_c 
 /// @param reg_pc 
 void CPU::logRegisters(bool reg_a, bool reg_b, bool reg_c, bool reg_pc) {
-    if (reg_a)  (*os).logger << "  reg a: " << registerFile[reg_a_].registerName << " = " << registerFile[reg_a_].getAddress() << std::endl;
-    if (reg_b)  (*os).logger << "  reg b: " << registerFile[reg_b_].registerName << " = " << registerFile[reg_b_].getAddress() << std::endl;
-    if (reg_c)  (*os).logger << "  reg c: " << registerFile[reg_c_].registerName << " = " << registerFile[reg_c_].getAddress() << std::endl;
+    if (reg_a)  (*os).logger << "  reg a: " << registerFile[reg_a_].getName() << " = " << registerFile[reg_a_].getValue() << std::endl;
+    if (reg_b)  (*os).logger << "  reg b: " << registerFile[reg_b_].getName() << " = " << registerFile[reg_b_].getValue() << std::endl;
+    if (reg_c)  (*os).logger << "  reg c: " << registerFile[reg_c_].getName() << " = " << registerFile[reg_c_].getValue() << std::endl;
     if (reg_pc) (*os).logger << "  PC at: " << PC << std::endl;
 }
 
@@ -402,10 +398,10 @@ void CPU::logRegisters(bool reg_a, bool reg_b, bool reg_c, bool reg_pc) {
 void CPU::logAllRegisters() {
     (*os).logger << "All Registers:" << std::endl;
         for (int i = 0; i < 32; i+=4) {
-            (*os).logger << std::setw(2) << registerFile[i].registerName   << "(" << std::setw(2) << i  << "): "<< std::setw(4) << registerFile[i].getAddress() << ", ";
-            (*os).logger << std::setw(2) << registerFile[i+1].registerName << "(" << std::setw(2) << i+1<<"): " << std::setw(4) << registerFile[i+1].getAddress() << ", ";
-            (*os).logger << std::setw(2) << registerFile[i+2].registerName << "(" << std::setw(2) << i+2<<"): " << std::setw(4) << registerFile[i+2].getAddress() << ", ";
-            (*os).logger << std::setw(2) << registerFile[i+3].registerName << "(" << std::setw(2) << i+3<<"): " << std::setw(4) << registerFile[i+3].getAddress() << std::endl;
+            (*os).logger << std::setw(2) << registerFile[i].getName()   << "(" << std::setw(2) << i  << "): "<< std::setw(4) << registerFile[i].getValue() << ", ";
+            (*os).logger << std::setw(2) << registerFile[i+1].getName() << "(" << std::setw(2) << i+1<<"): " << std::setw(4) << registerFile[i+1].getValue() << ", ";
+            (*os).logger << std::setw(2) << registerFile[i+2].getName() << "(" << std::setw(2) << i+2<<"): " << std::setw(4) << registerFile[i+2].getValue() << ", ";
+            (*os).logger << std::setw(2) << registerFile[i+3].getName() << "(" << std::setw(2) << i+3<<"): " << std::setw(4) << registerFile[i+3].getValue() << std::endl;
         }
 }
 
@@ -449,5 +445,24 @@ uint8_t CPU::readController() {
                 break;
         }
     }
+	else if((*os).eventHandler.type == SDL_KEYUP)
+	{
+		switch( (*os).eventHandler.key.keysym.sym )
+		{
+			case SDLK_UP:
+				byte = byte & ~CONTROLLER_UP_MASK;
+				break;
+			case SDLK_DOWN:
+				byte = byte & ~CONTROLLER_DOWN_MASK;
+				break;
+			case SDLK_LEFT:
+				byte = byte & ~CONTROLLER_LEFT_MASK;
+				break;
+			case SDLK_RIGHT:
+				byte = byte & ~CONTROLLER_RIGHT_MASK;
+				break;
+		}
+
+	}
     return byte;
 }
