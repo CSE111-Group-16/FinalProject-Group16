@@ -44,7 +44,6 @@ if ! diff --text "$directory/2.out" "$temp_2" >/dev/null 2>&1; then
     diff --text "$directory/2.out" "$temp_2"
     rm "$temp_1"
     rm "$temp_2"
-    echo "failed2"
     exit 1
 fi
 
