@@ -31,8 +31,12 @@ temp_2=$(mktemp /tmp/command_output.XXXXXX)
 # Compare stdout and stderr with corresponding files
 if ! diff --text "$directory/1.out" "$temp_1" >/dev/null 2>&1; then
     diff --text "$directory/1.out" "$temp_1"
+    cat "$directory/1.out"
+    cat "$temp_1"
+    
     rm "$temp_1"
     rm "$temp_2"
+    echo "failed1"
     exit 1
 fi
 
@@ -40,6 +44,7 @@ if ! diff --text "$directory/2.out" "$temp_2" >/dev/null 2>&1; then
     diff --text "$directory/2.out" "$temp_2"
     rm "$temp_1"
     rm "$temp_2"
+    echo "failed2"
     exit 1
 fi
 
