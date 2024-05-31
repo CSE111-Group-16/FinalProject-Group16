@@ -13,7 +13,6 @@ add_executable(${PROJECT_NAME}
     src/hardware/GPU/gpu.cpp
     src/hardware/CPU/register.cpp
     src/hardware/memory.cpp
-    src/tester.cpp
 )
 
 # SDL2
