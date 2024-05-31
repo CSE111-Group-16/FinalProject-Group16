@@ -97,15 +97,15 @@ private:
     uint16_t shift_value_, function_value_;
 
     // debug options:
-    bool logInstructionOperation = false; // logs operation of instruction (UNFINISHED)
-    bool logInstructionBreakdown = false; // logs translation of instruction to parts
-    bool logPreInstructionReg = false; // logs values stored at registers before instruction
-    bool logPostInstructionReg = false; // logs values stored at registers after instructions
-    bool logFullRegisters = false;
-    bool logInstructionName = false;
-    bool logStdout = false;
-    bool logStderr = false;
-    bool logStdin = false;
+    static constexpr bool logInstructionOperation = false; // logs operation of instruction (UNFINISHED)
+    static constexpr bool logInstructionBreakdown = false; // logs translation of instruction to parts
+    static constexpr bool logPreInstructionReg = false; // logs values stored at registers before instruction
+    static constexpr bool logPostInstructionReg = false; // logs values stored at registers after instructions
+    static constexpr bool logFullRegisters = false;
+    static constexpr bool logInstructionName = false;
+    static constexpr bool logStdout = false;
+    static constexpr bool logStderr = false;
+    static constexpr bool logStdin = false;
     
 
     // debug helper functions:

@@ -11,12 +11,12 @@ public:
 
     // Constructors
     Register(); // Default constructor
-    Register(uint16_t addrValue, const std::string& strValue); // Parameterized constructor
+    Register(int16_t addrValue, const std::string& strValue); // Parameterized constructor
 
     // Public member functions
-    void setAddress(uint16_t value); // Function to set address
+    void setAddress(int16_t value); // Function to set address
     void setName(const std::string& value); // Function to set register name
-    uint16_t getAddress() const; // Function to get address // pretty sure it should just be value
+    int16_t getAddress() const; // Function to get address // pretty sure it should just be value
     const std::string getName() const; // Function to get register name
 };
 

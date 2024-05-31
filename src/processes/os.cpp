@@ -86,12 +86,7 @@ void OS::loop() {
         // reset to start of loop()
 
         if (cpu.PC <= 0x0000) {
-            // reset controller byte
-            controllerByte = 0x00;
-            pressedA = false;
-            pressedB = false;
-            pressedSelect = false;
-            pressedStart = false;
+
             auto startTime = std::chrono::high_resolution_clock::now();
             gpu.loopIter();
             logger << "\n=== reset loop ===" << std::endl;
@@ -122,7 +117,7 @@ void OS::eventLoop() {
             exitCondition = true;
         }
         //User presses a key
-        else if( eventHandler.type == SDL_KEYDOWN )
+        else if( eventHandler.type == SDL_KEYDOWN ) // look
         {
             //Select surfaces based on key press
             switch( eventHandler.key.keysym.sym )
@@ -140,10 +135,6 @@ void OS::eventLoop() {
                 case SDLK_RIGHT:
                     controllerByte = controllerByte | CONTROLLER_RIGHT_MASK;
                     break;
-
-                // TODO FIX
-                // none of these controls work. i have no idea why
-                // controller byte isnt getting set correctly, and booleans arent working.
                 case SDLK_a:
                     pressedA = true;
                     controllerByte = controllerByte | CONTROLLER_A_MASK;
@@ -161,7 +152,44 @@ void OS::eventLoop() {
                     pressedStart = true;
                     controllerByte = controllerByte | CONTROLLER_START_MASK;
                     break;
+            }
+
+        }
+        else if( eventHandler.type == SDL_KEYUP ) // look
+        {
+            //Select surfaces based on key press
+            switch( eventHandler.key.keysym.sym )
+            {
                 
+                case SDLK_UP:
+                    controllerByte = controllerByte & ~CONTROLLER_UP_MASK;
+                    break;
+                case SDLK_DOWN:
+                    controllerByte = controllerByte & ~CONTROLLER_DOWN_MASK;
+                    break;
+                case SDLK_LEFT:
+                    controllerByte = controllerByte & ~CONTROLLER_LEFT_MASK;
+                    break;
+                case SDLK_RIGHT:
+                    controllerByte = controllerByte & ~CONTROLLER_RIGHT_MASK;
+                    break;
+                case SDLK_a:
+                    pressedA = false;
+                    controllerByte = controllerByte & ~CONTROLLER_A_MASK;
+                    break;
+                case SDLK_s:
+                    pressedB = false;
+                    controllerByte = controllerByte & ~CONTROLLER_B_MASK;
+                    break;
+                case SDLK_e:
+                    pressedSelect = false;
+
+                    controllerByte = controllerByte & ~CONTROLLER_SELECT_MASK;
+                    break;
+                case SDLK_SPACE:
+                    pressedStart = false;
+                    controllerByte = controllerByte & ~CONTROLLER_START_MASK;
+                    break;
             }
 
         }

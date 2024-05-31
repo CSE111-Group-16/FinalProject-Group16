@@ -9,18 +9,18 @@ Register::Register() {
 }
 
 // Parameterized constructor definition
-Register::Register(uint16_t addrValue, const std::string& strValue) {
+Register::Register(int16_t addrValue, const std::string& strValue) {
     address = addrValue;
     registerName = strValue;
 }
 
 // Function to set address
-void Register::setAddress(uint16_t value) {
+void Register::setAddress(int16_t value) {
     address = value;
 }
 
 // getAddress() might not be returning usable address? returns value not reference
-uint16_t Register::getAddress() const {
+int16_t Register::getAddress() const {
     if (registerName == "zero") return 0;
     if (registerName == "sp") {
         if (address > 0x3400) {

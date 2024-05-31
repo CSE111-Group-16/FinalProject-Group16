@@ -69,7 +69,7 @@ void CPU::ShiftRightArithmetic(){
     }
 
     // operation
-    registerFile[reg_c_].address =  (int16_t)(((uint16_t)registerFile[reg_b_].getAddress()) >> shift_value_); // Sign extend after the logical shift
+    registerFile[reg_c_].address =  (int16_t)((registerFile[reg_b_].getAddress()) >> shift_value_); // Sign extend after the logical shift
     
     if (logInstructionOperation) (*os).logger << registerFile[reg_c_].getAddress() << std::endl;
     if (logPostInstructionReg) {
@@ -260,12 +260,6 @@ void CPU::LoadByteUnsigned(){
     } else if (registerFile[reg_a_].getAddress()+immediate_value_ == 0x7000) {
         // load input from controller
         uint8_t byte = (*os).controllerByte & 0xff;
-
-        // didnt work        
-        if ((*os).pressedA) byte = byte | CONTROLLER_A_MASK;
-        // if ((*os).pressedB) byte = byte | CONTROLLER_B_MASK;
-        // if ((*os).pressedSelect) byte = byte | CONTROLLER_SELECT_MASK;
-        // if ((*os).pressedStart) byte = byte | CONTROLLER_START_MASK;
         
         // std::bitset<8> x(byte);
         // std::cerr << "read byte from controller: " << x <<std::endl;
