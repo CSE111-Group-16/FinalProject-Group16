@@ -10,7 +10,6 @@
 #include <iomanip>
 #include <SDL2/SDL.h>
 
-// pulled directly from doc
 #define CONTROLLER_A_MASK ((uint8_t)0x80)
 #define CONTROLLER_B_MASK ((uint8_t)0x40)
 #define CONTROLLER_SELECT_MASK ((uint8_t)0x20)
@@ -19,6 +18,13 @@
 #define CONTROLLER_DOWN_MASK ((uint8_t)0x04)
 #define CONTROLLER_LEFT_MASK ((uint8_t)0x02)
 #define CONTROLLER_RIGHT_MASK ((uint8_t)0x01)
+
+#define ADDRESS_TO_SETUP_ 0x81e0
+#define ADDRESS_TO_LOOP_ 0x81e4
+#define LOAD_DATA_ADDRESS_ 0x81e8
+#define PROGRAM_DATA_ADDRESS_ 0x81ec
+#define DATA_SIZE_ 0x81f0
+#define LOOP_CALL_ 0xfffc
 
 #define WINDOW_WIDTH 128
 #define WINDOW_HEIGHT 120
@@ -74,8 +80,6 @@ public:
     uint32_t data_size;
     int controllerByte;
     bool exitCondition = false;
-    bool pressedA, pressedB, pressedSelect, pressedStart;
-
 
     // memory accessors (? idk if needed in os)
     uint32_t readInt32(const size_t& address) const;
@@ -92,9 +96,6 @@ private:
     void setup();
     void loop();
     void eventLoop();
-
-
-private:
     bool logInstruction = false;
     bool logPCLocation = false;
 };

@@ -8,7 +8,7 @@ void CPU::resetStackPointer() {
 
 void CPU::PerformInstruction(const uint32_t instruction){
     reg_a_, reg_b_, reg_c_, shift_value_, immediate_value_ = 0;
-    uint32_t opcode = (instruction >> opcode_shift);// & 0x3F);
+    uint32_t opcode = (instruction >> opcode_shift);
     assert(("opcode larger than it should be ", opcode < opcode_max)); // if opcode > 63 opcode didnt get read correctly
 
     reg_a_  = (instruction >> (reg_a_shift) & five_bitmask); //get next five bits
@@ -19,7 +19,7 @@ void CPU::PerformInstruction(const uint32_t instruction){
         //r-type instruction
         reg_c_ = (immediate_value_ >> reg_c_shift); //get next five bits
         shift_value_ = ((immediate_value_ >> shift_shift) & five_bitmask); //get next five bits 0x1f: 00011111
-        function_value_ = (immediate_value_ & six_bitmask); //0x3f looks like so: 00111111        
+        function_value_ = (immediate_value_ & six_bitmask); //0x3f: 00111111        
 
         if (logInstructionBreakdown) r_typeBreakdown(opcode);
 
@@ -43,7 +43,6 @@ void CPU::PerformInstruction(const uint32_t instruction){
         }
     }
     else{
-        //nop
         PC +=4;
     }
     if (logFullRegisters) logAllRegisters();
@@ -220,7 +219,6 @@ void CPU::storeWord(){
     (*os).memory.setByte(registerFile[reg_a_].getValue()+(immediate_value_), byte1); //byte_shift
     (*os).memory.setByte(registerFile[reg_a_].getValue()+(immediate_value_)+1, byte2);//byte_shift removed
     
-    // not sure this will ever be used
     if (registerFile[reg_a_].getValue()+(immediate_value_) == 0x7110) {
         (*os).logger << "WROTE FROM storeWord (?)" << std::endl;
         std::cout << byte1 << byte2;
@@ -259,7 +257,7 @@ void CPU::LoadByteUnsigned(){
         registerFile[reg_b_].setValue(byte);
     } else if (registerFile[reg_a_].getValue()+immediate_value_ == 0x7000) {
         // load input from controller
-        uint8_t byte = (*os).controllerByte & 0xff;
+        uint8_t byte = (*os).controllerByte & eight_bitmask;
         registerFile[reg_b_].setValue(byte);
     } else {
         // load from memory
@@ -268,7 +266,6 @@ void CPU::LoadByteUnsigned(){
     if (logPostInstructionReg) logRegisters(true, true, true, false);
     PC +=4;
 }
-
 
 void CPU::Jump(){
     if (logPreInstructionReg) {
@@ -326,7 +323,6 @@ void CPU::StoreByte(){
     }
     if (logInstructionName) (*os).logger << __func__ << ":" << std::endl;
 
-    
     int8_t byte = registerFile[reg_b_].getValue() & eight_bitmask;
     size_t value = registerFile[reg_a_].getValue()+(immediate_value_);
     (*os).memory.setByte(value, byte);

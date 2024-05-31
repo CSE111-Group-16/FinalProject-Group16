@@ -2,6 +2,7 @@
 #include <chrono>
 #include <thread>
 #include <iomanip>
+
 void OS::startup(std::string filename) {
     filename_ = filename;
     logger.open("log.txt", std::ios::trunc | std::ios::binary);
@@ -43,11 +44,11 @@ void OS::resetSequence() {
     memory.loadROM(read_rom.get(), rom_size_); // put ROM into memory (at address 0x8000);
 
     // get relevant info from ROM
-    address_to_setup = readInt32(0x81e0);
-    address_to_loop = readInt32(0x81e4);
-    load_data_address = readInt32(0x81e8);
-    program_data_address = readInt32(0x81ec);
-    data_size = readInt32(0x81f0);
+    address_to_setup = readInt32(ADDRESS_TO_SETUP_);
+    address_to_loop = readInt32(ADDRESS_TO_LOOP_);
+    load_data_address = readInt32(LOAD_DATA_ADDRESS_);
+    program_data_address = readInt32(PROGRAM_DATA_ADDRESS_);
+    data_size = readInt32(DATA_SIZE_);
     
     // copy data to RAM (90% sure working)
     for (size_t i=0; i<data_size; i++) {
@@ -71,7 +72,7 @@ void OS::resetSequence() {
 
 void OS::loop() {
     logger << "======= loop() ======= \n";
-    cpu.PC = 0xfffc; 
+    cpu.PC = LOOP_CALL_; 
     cpu.initialJAL(address_to_loop);
     std::cout << std::fixed << std::setprecision(20);
     // infinite game loop until exit code
@@ -86,11 +87,10 @@ void OS::loop() {
         // reset to start of loop()
 
         if (cpu.PC <= 0x0000) {
-
             auto startTime = std::chrono::high_resolution_clock::now();
             gpu.loopIter();
             logger << "\n=== reset loop ===" << std::endl;
-            cpu.PC = 0xfffc;
+            cpu.PC = LOOP_CALL_;
             cpu.initialJAL(address_to_loop);
 
             double elapsed = 0.0;
@@ -100,7 +100,7 @@ void OS::loop() {
                 elapsed = std::chrono::duration<double>(endTime - startTime).count();
                 std::this_thread::sleep_for(std::chrono::milliseconds(1));
             } while (elapsed < 0.016667);
-            }
+        }
             
         // exit condition triggered
         if (exitCondition) exit(EXIT_SUCCESS);
@@ -109,7 +109,6 @@ void OS::loop() {
 }
 
 void OS::eventLoop() {
-
     while( SDL_PollEvent( &eventHandler ) != 0 ) {
         if( eventHandler.type == SDL_QUIT )
         {
@@ -117,12 +116,11 @@ void OS::eventLoop() {
             exitCondition = true;
         }
         //User presses a key
-        else if( eventHandler.type == SDL_KEYDOWN ) // look
+        else if( eventHandler.type == SDL_KEYDOWN )
         {
             //Select surfaces based on key press
             switch( eventHandler.key.keysym.sym )
             {
-                
                 case SDLK_UP:
                     controllerByte = controllerByte | CONTROLLER_UP_MASK;
                     break;
@@ -136,30 +134,24 @@ void OS::eventLoop() {
                     controllerByte = controllerByte | CONTROLLER_RIGHT_MASK;
                     break;
                 case SDLK_a:
-                    pressedA = true;
                     controllerByte = controllerByte | CONTROLLER_A_MASK;
                     break;
                 case SDLK_s:
-                    pressedB = true;
                     controllerByte = controllerByte | CONTROLLER_B_MASK;
                     break;
                 case SDLK_e:
-                    pressedSelect = true;
                     controllerByte = controllerByte | CONTROLLER_SELECT_MASK;
                     break;
                 case SDLK_SPACE:
-                    pressedStart = true;
                     controllerByte = controllerByte | CONTROLLER_START_MASK;
                     break;
             }
-
         }
-        else if( eventHandler.type == SDL_KEYUP ) // look
+        else if( eventHandler.type == SDL_KEYUP )
         {
             //Select surfaces based on key press
             switch( eventHandler.key.keysym.sym )
             {
-                
                 case SDLK_UP:
                     controllerByte = controllerByte & ~CONTROLLER_UP_MASK;
                     break;
@@ -173,31 +165,25 @@ void OS::eventLoop() {
                     controllerByte = controllerByte & ~CONTROLLER_RIGHT_MASK;
                     break;
                 case SDLK_a:
-                    pressedA = false;
                     controllerByte = controllerByte & ~CONTROLLER_A_MASK;
                     break;
                 case SDLK_s:
-                    pressedB = false;
                     controllerByte = controllerByte & ~CONTROLLER_B_MASK;
                     break;
                 case SDLK_e:
-                    pressedSelect = false;
-
                     controllerByte = controllerByte & ~CONTROLLER_SELECT_MASK;
                     break;
                 case SDLK_SPACE:
-                    pressedStart = false;
                     controllerByte = controllerByte & ~CONTROLLER_START_MASK;
                     break;
             }
-
         }
     }
 }
 
 void OS::setup() {
     logger <<"======= startup() =======\n";
-    cpu.PC = 0xfffc; // set PC register to 0xfffc
+    cpu.PC = LOOP_CALL_; // set PC register to LOOP_CALL_ 0xfffc
     cpu.initialJAL(address_to_setup); // set CPU to run this instruction
     logger << std::hex << cpu.PC << std::endl;
     

@@ -37,7 +37,6 @@ enum shift{
     top_of_stack = 0x3400
 };
 
-
 class OS;
 class CPU {
 public:
@@ -106,7 +105,6 @@ private:
     static constexpr bool logStdout = false;
     static constexpr bool logStderr = false;
     static constexpr bool logStdin = false;
-    
 
     // debug helper functions:
     void logRegisters(bool reg_a=false, bool reg_b=false, bool reg_c=false, bool reg_pc=false);
