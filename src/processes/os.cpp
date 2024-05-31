@@ -41,7 +41,7 @@ void OS::resetSequence() {
     file.read(read_rom.get(), rom_size_);
 
     // load ROM into memory
-    memory.loadROM(read_rom.get(), rom_size_); // put ROM into memory (at address 0x8000);
+    memory.loadROM(read_rom.get(), rom_size_); // put ROM into memory (at address SLUG_ROM_SIZE_);
 
     // get relevant info from ROM
     address_to_setup = readInt32(ADDRESS_TO_SETUP_);
@@ -86,7 +86,7 @@ void OS::loop() {
         cpu.PerformInstruction(instruction);
         // reset to start of loop()
 
-        if (cpu.PC <= 0x0000) {
+        if (cpu.PC <= ZERO_) {
             auto startTime = std::chrono::high_resolution_clock::now();
             gpu.loopIter();
             logger << "\n=== reset loop ===" << std::endl;
@@ -188,7 +188,7 @@ void OS::setup() {
     logger << std::hex << cpu.PC << std::endl;
     
     // runs instructions until PC hits 0x0000
-    while (cpu.PC != 0x0000) {
+    while (cpu.PC != ZERO_) {
         uint32_t instruction = readInt32(cpu.PC);
         
         if (logInstruction) logger << "PC address: " <<std::hex << cpu.PC << std::endl;
@@ -197,7 +197,7 @@ void OS::setup() {
         cpu.PerformInstruction(instruction);
         
         // stop conditions
-        if (cpu.PC < 0x8000 || cpu.PC == 0x0000) break;
+        if (cpu.PC < SLUG_ROM_SIZE_ || cpu.PC == ZERO_) break;
         if (exitCondition) exit(EXIT_SUCCESS);
     }
     logger <<"======= end startup() =======\n";

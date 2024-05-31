@@ -25,6 +25,7 @@
 #define PROGRAM_DATA_ADDRESS_ 0x81ec
 #define DATA_SIZE_ 0x81f0
 #define LOOP_CALL_ 0xfffc
+#define ZERO_ 0x0000
 
 #define WINDOW_WIDTH 128
 #define WINDOW_HEIGHT 120

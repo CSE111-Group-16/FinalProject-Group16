@@ -10,6 +10,12 @@
 #include <any>
 #include <cassert>
 
+#define CONTROLLER_DATA_ 0x7000
+#define STDIN_DATA_ 0x7100
+#define STDOUT_DATA_ 0x7110
+#define STDERR_DATA_ 0x7120
+#define STOP_EXECUTION_ 0x7200
+
 enum shift{
     opcode_shift = 26,
     reg_a_shift = 21,
@@ -79,7 +85,6 @@ public:
     OS* os;
     Register registerFile[32];
     uint16_t PC; // program counter
-
 
     //CPU(Register* registerFile, Register PC); // Parameterized constructor
     void resetStackPointer();

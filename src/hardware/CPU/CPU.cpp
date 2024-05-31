@@ -219,7 +219,7 @@ void CPU::storeWord(){
     (*os).memory.setByte(registerFile[reg_a_].getValue()+(immediate_value_), byte1); //byte_shift
     (*os).memory.setByte(registerFile[reg_a_].getValue()+(immediate_value_)+1, byte2);//byte_shift removed
     
-    if (registerFile[reg_a_].getValue()+(immediate_value_) == 0x7110) {
+    if (registerFile[reg_a_].getValue()+(immediate_value_) == STDOUT_DATA_) {
         (*os).logger << "WROTE FROM storeWord (?)" << std::endl;
         std::cout << byte1 << byte2;
     }
@@ -249,13 +249,13 @@ void CPU::LoadByteUnsigned(){
     }
     if (logInstructionName) (*os).logger << __func__ << ":" << std::endl;
 
-    if (registerFile[reg_a_].getValue()+immediate_value_ == 0x7100) {
+    if (registerFile[reg_a_].getValue()+immediate_value_ == STDIN_DATA_) {
         // load from stdin
         uint8_t byte;
         std::cin >> byte;
         if (logStdin) (*os).logger << "read byte from stdin: " << byte <<std::endl;
         registerFile[reg_b_].setValue(byte);
-    } else if (registerFile[reg_a_].getValue()+immediate_value_ == 0x7000) {
+    } else if (registerFile[reg_a_].getValue()+immediate_value_ == CONTROLLER_DATA_) {
         // load input from controller
         uint8_t byte = (*os).controllerByte & eight_bitmask;
         registerFile[reg_b_].setValue(byte);
@@ -328,17 +328,17 @@ void CPU::StoreByte(){
     (*os).memory.setByte(value, byte);
     
     // write to stdout
-    if (value == 0x7110) {
+    if (value == STDOUT_DATA_) {
         std::cout << byte;
         if (logStdout) (*os).logger << "stdout: " << byte << std::endl;
     }
     // write to stderr
-    if (value == 0x7120) {
+    if (value == STDERR_DATA_) {
         std::cerr << byte;
         if (logStderr) (*os).logger << "stderr: " << byte << std::endl;
     }
     // exit condition
-    if (value == 0x7200) {
+    if (value == STOP_EXECUTION_) {
         (*os).logger << "\n\nEnd Condition Triggered!" << std::endl;
         os->exitCondition = true;
     }

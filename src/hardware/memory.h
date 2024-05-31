@@ -5,16 +5,20 @@
 #include <memory>
 #include <array>
 
+#define SLUG_ROM_SIZE_ 0x8000
+#define SLUG_RAM_SIZE_ 0x7000
+#define SLUG_IO_SIZE_ 0x1000
+
 class OS;
 class Memory {
 private:
     // address spaces
-    const size_t ram_size_ = 0x7000;
-    const size_t io_size_ = 0x1000;
-    const size_t rom_size_ = 0x8000;
-    std::array<uint8_t,0x7000> address_space_ram_;
-    std::array<uint8_t,0x1000> address_space_io_; // not sure if right
-    std::array<uint8_t,0x8000> address_space_rom_;
+    const size_t ram_size_ = SLUG_RAM_SIZE_;
+    const size_t io_size_ = SLUG_IO_SIZE_;
+    const size_t rom_size_ = SLUG_ROM_SIZE_;
+    std::array<uint8_t,SLUG_RAM_SIZE_> address_space_ram_;
+    std::array<uint8_t,SLUG_IO_SIZE_> address_space_io_;
+    std::array<uint8_t,SLUG_ROM_SIZE_> address_space_rom_;
     
     // helper functions
     size_t adjustAddress(size_t address) const;
@@ -26,5 +30,4 @@ public:
     uint8_t readByte(size_t address) const;
 	void clearRAM();
     void loadROM(char* contents, size_t size);
-    std::string to_string();
 };
