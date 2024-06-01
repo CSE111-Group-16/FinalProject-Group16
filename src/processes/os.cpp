@@ -224,3 +224,23 @@ uint16_t OS::readInt16(const size_t& address) const {
 uint8_t OS::readInt8(const size_t& address) const {
     return (uint8_t)memory.readByte(address);
 }
+
+SDL_Event OS::getEventHandler() {
+	return eventHandler;
+}
+
+bool OS::setExitCondition(bool cond) {
+	return exitCondition = cond;
+}
+
+int OS::getControllerByte() {
+	return controllerByte;
+}
+
+SDL_Renderer* OS::getRenderer() {
+	return renderer;
+}
+
+SDL_Texture* OS::getTexturer() {
+	return texture;
+}

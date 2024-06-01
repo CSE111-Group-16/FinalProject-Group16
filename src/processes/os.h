@@ -58,14 +58,15 @@ public:
     	SDL_DestroyWindow(win);
         SDL_Quit();
         }
-	// move these into private, and add Get and/or Set functions to access these
-	SDL_Event eventHandler;
-	std::ofstream logger;
-	Memory memory;
-	SDL_Renderer* renderer;
-    SDL_Texture* texture;
-	bool exitCondition = false;
-	int controllerByte = 0;
+
+    SDL_Event getEventHandler();
+    bool setExitCondition(bool cond);
+    int getControllerByte();
+    SDL_Renderer* getRenderer();
+    SDL_Texture* getTexturer();
+
+    std::ofstream logger;
+    Memory memory;
 
 private:
     // file info
@@ -79,12 +80,17 @@ private:
     void eventLoop();
     bool logInstruction = false;
     bool logPCLocation = false;
+    int controllerByte = 0;
+    bool exitCondition = false;
 	
 	// hardware
     CPU cpu;
     GPU gpu;
     SDL_Window* win;
     SDL_Surface* screen;
+    SDL_Event eventHandler;
+    SDL_Renderer* renderer;
+	SDL_Texture* texture;
 
 	// values
     uint32_t address_to_setup;

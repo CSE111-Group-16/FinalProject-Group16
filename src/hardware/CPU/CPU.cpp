@@ -257,7 +257,7 @@ void CPU::LoadByteUnsigned(){
         registerFile[reg_b_].setValue(byte);
     } else if (registerFile[reg_a_].getValue()+immediate_value_ == CONTROLLER_DATA_) {
         // load input from controller
-        uint8_t byte = (*os).controllerByte & eight_bitmask;
+        uint8_t byte = (*os).getControllerByte() & eight_bitmask;
         registerFile[reg_b_].setValue(byte);
     } else {
         // load from memory
@@ -340,7 +340,7 @@ void CPU::StoreByte(){
     // exit condition
     if (value == STOP_EXECUTION_) {
         (*os).logger << "\n\nEnd Condition Triggered!" << std::endl;
-        os->exitCondition = true;
+        (*os).setExitCondition(true);
     }
 
     if (logPostInstructionReg) logRegisters(true, true, true, false);
@@ -423,9 +423,9 @@ void CPU::r_typeBreakdown(uint32_t opcode) {
 
 uint8_t CPU::readController() {
     uint8_t byte = 0x00;
-    if ((*os).eventHandler.type == SDL_KEYDOWN) {
+    if ((*os).getEventHandler().type == SDL_KEYDOWN) {
         //Select surfaces based on key press
-        switch( (*os).eventHandler.key.keysym.sym )
+        switch( (*os).getEventHandler().key.keysym.sym )
         {
             case SDLK_UP:
                 byte = byte | CONTROLLER_UP_MASK;
@@ -441,9 +441,9 @@ uint8_t CPU::readController() {
                 break;
         }
     }
-	else if((*os).eventHandler.type == SDL_KEYUP)
+	else if((*os).getEventHandler().type == SDL_KEYUP)
 	{
-		switch( (*os).eventHandler.key.keysym.sym )
+		switch( (*os).getEventHandler().key.keysym.sym )
 		{
 			case SDLK_UP:
 				byte = byte & ~CONTROLLER_UP_MASK;

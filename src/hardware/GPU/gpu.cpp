@@ -23,7 +23,7 @@ size_t GPU::getPixelAddress(int width, int height) const {
 
 bool GPU::readPixel(int width, int height) const {
     size_t pixel_address = getPixelAddress(width, height);
-    uint8_t pixel_byte = os->memory.readByte(pixel_address); // unset is black, set is white
+    uint8_t pixel_byte = (*os).memory.readByte(pixel_address); // unset is black, set is white
     bool pixel_state = decodePixel(pixel_byte);
     return pixel_state;
 }
@@ -34,13 +34,12 @@ void GPU::setPixel(int width, int height, bool state) {
     (*os).memory.setByte(pixel_address, pixel_state);
 }
 
-
 /// @brief uses the renderer and the texture to update the frame buffer
 void GPU::displayFrameBuffer() {
     // Lock texture for manipulation
     int pitch;
     void* mPixels;
-    if (SDL_LockTexture(os->texture, NULL, &mPixels, &pitch) != 0) {
+    if (SDL_LockTexture((*os).getTexturer(), NULL, &mPixels, &pitch) != 0) {
         (*os).logger << "SDL_LockTexture error: " << SDL_GetError() << std::endl;
         return;
     }
@@ -52,14 +51,14 @@ void GPU::displayFrameBuffer() {
         }
     }
 
-    SDL_UnlockTexture(os->texture);
-    SDL_RenderClear(os->renderer);
+    SDL_UnlockTexture((*os).getTexturer());
+    SDL_RenderClear((*os).getRenderer());
 
     SDL_Rect srcRect = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
     SDL_Rect dstRect = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
-    SDL_RenderCopy(os->renderer, os->texture, &srcRect, &dstRect);
+    SDL_RenderCopy((*os).getRenderer(), (*os).getTexturer(), &srcRect, &dstRect);
 
-    SDL_RenderPresent(os->renderer);
+    SDL_RenderPresent((*os).getRenderer());
 }
 
 
