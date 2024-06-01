@@ -58,34 +58,14 @@ public:
     	SDL_DestroyWindow(win);
         SDL_Quit();
         }
-    // hardware
-    CPU cpu;
-    Memory memory;
-    GPU gpu;
-    std::ofstream logger;
-    SDL_Window* win;
-    SDL_Surface* screen;
-    SDL_Event eventHandler;
-    SDL_Renderer* renderer;
+	// move these into private, and add Get and/or Set functions to access these
+	SDL_Event eventHandler;
+	std::ofstream logger;
+	Memory memory;
+	SDL_Renderer* renderer;
     SDL_Texture* texture;
-
-
-    // ROM contents (might remove if we can get it in memory)
-    // std::unique_ptr<char[]> rom_contents_; // maybe remove later if storing ROM in memory
-    
-    // values
-    uint32_t address_to_setup;
-    uint32_t address_to_loop;
-    uint32_t load_data_address;
-    uint32_t program_data_address;
-    uint32_t data_size;
-    int controllerByte;
-    bool exitCondition = false;
-
-    // memory accessors (? idk if needed in os)
-    uint32_t readInt32(const size_t& address) const;
-    uint16_t readInt16(const size_t& address) const;
-    uint8_t readInt8(const size_t& address) const;
+	bool exitCondition = false;
+	int controllerByte = 0;
 
 private:
     // file info
@@ -99,4 +79,22 @@ private:
     void eventLoop();
     bool logInstruction = false;
     bool logPCLocation = false;
+	
+	// hardware
+    CPU cpu;
+    GPU gpu;
+    SDL_Window* win;
+    SDL_Surface* screen;
+
+	// values
+    uint32_t address_to_setup;
+    uint32_t address_to_loop;
+    uint32_t load_data_address;
+    uint32_t program_data_address;
+    uint32_t data_size;
+
+    // memory accessors (? idk if needed in os)
+    uint32_t readInt32(const size_t& address) const;
+    uint16_t readInt16(const size_t& address) const;
+    uint8_t readInt8(const size_t& address) const;
 };
