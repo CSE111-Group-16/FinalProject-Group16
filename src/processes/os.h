@@ -52,7 +52,6 @@ public:
 
     // accessable to user
     void startup(std::string ROM_file); 
-    void shutDown(); // not sure if needed
     ~OS() {
         logger.close();
     	SDL_DestroyWindow(win);
@@ -64,9 +63,8 @@ public:
     int getControllerByte();
     SDL_Renderer* getRenderer();
     SDL_Texture* getTexturer();
-
-    std::ofstream logger;
-    Memory memory;
+    Memory* getMemory();
+	std::ofstream* getLogger();
 
 private:
     // file info
@@ -80,8 +78,8 @@ private:
     void eventLoop();
     bool logInstruction = false;
     bool logPCLocation = false;
-    int controllerByte = 0;
     bool exitCondition = false;
+    int controllerByte = 0;
 	
 	// hardware
     CPU cpu;
@@ -91,6 +89,10 @@ private:
     SDL_Event eventHandler;
     SDL_Renderer* renderer;
 	SDL_Texture* texture;
+    std::ofstream logger;
+    std::ofstream* loggerP = &logger;
+	Memory memory;
+	Memory* memoryP = &memory;
 
 	// values
     uint32_t address_to_setup;

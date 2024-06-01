@@ -23,7 +23,7 @@ size_t GPU::getPixelAddress(int width, int height) const {
 
 bool GPU::readPixel(int width, int height) const {
     size_t pixel_address = getPixelAddress(width, height);
-    uint8_t pixel_byte = (*os).memory.readByte(pixel_address); // unset is black, set is white
+    uint8_t pixel_byte = (*(*os).getMemory()).readByte(pixel_address); // unset is black, set is white
     bool pixel_state = decodePixel(pixel_byte);
     return pixel_state;
 }
@@ -31,7 +31,7 @@ bool GPU::readPixel(int width, int height) const {
 void GPU::setPixel(int width, int height, bool state) {
     uint8_t pixel_state = encodePixel(state);
     size_t pixel_address = getPixelAddress(width, height);
-    (*os).memory.setByte(pixel_address, pixel_state);
+    (*(*os).getMemory()).setByte(pixel_address, pixel_state);
 }
 
 /// @brief uses the renderer and the texture to update the frame buffer
@@ -40,7 +40,7 @@ void GPU::displayFrameBuffer() {
     int pitch;
     void* mPixels;
     if (SDL_LockTexture((*os).getTexturer(), NULL, &mPixels, &pitch) != 0) {
-        (*os).logger << "SDL_LockTexture error: " << SDL_GetError() << std::endl;
+        (*(*os).getLogger()) << "SDL_LockTexture error: " << SDL_GetError() << std::endl;
         return;
     }
     Uint32* pixels = static_cast<Uint32*>(mPixels);

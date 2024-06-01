@@ -244,3 +244,11 @@ SDL_Renderer* OS::getRenderer() {
 SDL_Texture* OS::getTexturer() {
 	return texture;
 }
+
+std::ofstream* OS::getLogger() {
+	return loggerP;
+}
+
+Memory* OS::getMemory() {
+	return memoryP;
+}

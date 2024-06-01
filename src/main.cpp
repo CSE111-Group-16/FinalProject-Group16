@@ -1,7 +1,7 @@
 #include <iostream>
 #include <filesystem>
 #include <SDL2/SDL.h>
-#include "console.h"
+#include "processes/os.h"
 
 int main(int argc, char* argv[]) {
 	if (argc != 2) {
@@ -21,9 +21,8 @@ int main(int argc, char* argv[]) {
         std::cout << "Provide only a path to a valid slug file" << std::endl;
         return 1;
     }
-    
-    Console console;
-    console.start(path);
+    OS os;
+	os.startup(path);
 	SDL_Init(SDL_INIT_VIDEO);
 
 	return 0;
