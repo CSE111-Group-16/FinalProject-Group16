@@ -30,10 +30,10 @@
 #define WINDOW_WIDTH 128
 #define WINDOW_HEIGHT 120
 
-class OS {
+class Console {
 public:
     // default constructor
-    OS() : memory(this), cpu(this), gpu(this) {
+    Console() : memory(this), cpu(this), gpu(this) {
         // initialize sdl
         if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
             printf("error initializing SDL: %s\n", SDL_GetError());
@@ -52,7 +52,7 @@ public:
 
     // accessable to user
     void startup(std::string ROM_file); 
-    ~OS() {
+    ~Console() {
         logger.close();
     	SDL_DestroyWindow(win);
         SDL_Quit();
@@ -101,7 +101,7 @@ private:
     uint32_t program_data_address;
     uint32_t data_size;
 
-    // memory accessors (? idk if needed in os)
+    // memory accessors
     uint32_t readInt32(const size_t& address) const;
     uint16_t readInt16(const size_t& address) const;
     uint8_t readInt8(const size_t& address) const;

@@ -43,11 +43,11 @@ enum shift{
     top_of_stack = 0x3400
 };
 
-class OS;
+class Console;
 class CPU {
 public:
     // Constructors
-    CPU(OS* set_os) : os(set_os) {
+    CPU(Console* set_os) : console(set_os) {
         std::string names[32] = {
             "$0", "at", "v0", "v1", "a0", "a1", "a2", "a3",
             "t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7",
@@ -82,7 +82,7 @@ public:
         r_type_instructions_.emplace(35, &CPU::ShiftRightLogical); //[35] = &ShiftRightLogical;
         r_type_instructions_.emplace(40, &CPU::ShiftLeftLogical); //[40] = &ShiftLeftLogical;
     }; 
-    OS* os;
+    Console* console;
     Register registerFile[32];
     uint16_t PC; // program counter
 

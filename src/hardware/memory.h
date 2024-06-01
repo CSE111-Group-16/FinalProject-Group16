@@ -9,7 +9,7 @@
 #define SLUG_RAM_SIZE_ 0x7000
 #define SLUG_IO_SIZE_ 0x1000
 
-class OS;
+class Console;
 class Memory {
 private:
     // address spaces
@@ -23,8 +23,8 @@ private:
     // helper functions
     size_t adjustAddress(size_t address) const;
 public:
-    Memory(OS* set_os) : os(set_os) { }
-    OS* os;
+    Memory(Console* set_os) : console(set_os) { }
+    Console* console;
     uint8_t* getByte(size_t address);
     void setByte(size_t address, uint8_t byte);
     uint8_t readByte(size_t address) const;

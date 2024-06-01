@@ -1,9 +1,9 @@
-#include "os.h"
+#include "console.h"
 #include <chrono>
 #include <thread>
 #include <iomanip>
 
-void OS::startup(std::string filename) {
+void Console::startup(std::string filename) {
     filename_ = filename;
     logger.open("log.txt", std::ios::trunc | std::ios::binary);
     if (!logger.is_open()) {
@@ -13,7 +13,7 @@ void OS::startup(std::string filename) {
     resetSequence();
 }
 
-void OS::resetSequence() {
+void Console::resetSequence() {
     // clearing RAM with zeros;
     memory.clearRAM();
     
@@ -70,7 +70,7 @@ void OS::resetSequence() {
     file.close();
 }
 
-void OS::loop() {
+void Console::loop() {
     logger << "======= loop() ======= \n";
     cpu.PC = LOOP_CALL_; 
     cpu.initialJAL(address_to_loop);
@@ -108,7 +108,7 @@ void OS::loop() {
     logger << "\n======= end loop() =======\n";
 }
 
-void OS::eventLoop() {
+void Console::eventLoop() {
     while( SDL_PollEvent( &eventHandler ) != 0 ) {
         if( eventHandler.type == SDL_QUIT )
         {
@@ -181,7 +181,7 @@ void OS::eventLoop() {
     }
 }
 
-void OS::setup() {
+void Console::setup() {
     logger <<"======= startup() =======\n";
     cpu.PC = LOOP_CALL_; // set PC register to LOOP_CALL_ 0xfffc
     cpu.initialJAL(address_to_setup); // set CPU to run this instruction
@@ -203,7 +203,7 @@ void OS::setup() {
     logger <<"======= end startup() =======\n";
 }
 
-uint32_t OS::readInt32(const size_t& address) const {
+uint32_t Console::readInt32(const size_t& address) const {
     uint32_t out = 0;
     for (int i = 0; i < 4; i++) {
         out <<= 8;
@@ -212,7 +212,7 @@ uint32_t OS::readInt32(const size_t& address) const {
     return out;
 }
 
-uint16_t OS::readInt16(const size_t& address) const {
+uint16_t Console::readInt16(const size_t& address) const {
     uint32_t out = 0;
     for (int i = 0; i < 2; i++) {
         out <<= 8;
@@ -221,34 +221,34 @@ uint16_t OS::readInt16(const size_t& address) const {
     return out;
 }
 
-uint8_t OS::readInt8(const size_t& address) const {
+uint8_t Console::readInt8(const size_t& address) const {
     return (uint8_t)memory.readByte(address);
 }
 
-SDL_Event OS::getEventHandler() {
+SDL_Event Console::getEventHandler() {
 	return eventHandler;
 }
 
-bool OS::setExitCondition(bool cond) {
+bool Console::setExitCondition(bool cond) {
 	return exitCondition = cond;
 }
 
-int OS::getControllerByte() {
+int Console::getControllerByte() {
 	return controllerByte;
 }
 
-SDL_Renderer* OS::getRenderer() {
+SDL_Renderer* Console::getRenderer() {
 	return renderer;
 }
 
-SDL_Texture* OS::getTexturer() {
+SDL_Texture* Console::getTexturer() {
 	return texture;
 }
 
-std::ofstream* OS::getLogger() {
+std::ofstream* Console::getLogger() {
 	return loggerP;
 }
 
-Memory* OS::getMemory() {
+Memory* Console::getMemory() {
 	return memoryP;
 }

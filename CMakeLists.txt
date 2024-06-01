@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD 17)
 # executables
 add_executable(${PROJECT_NAME}
     src/main.cpp
-    src/processes/os.cpp
+    src/processes/console.cpp
     src/hardware/CPU/CPU.cpp
     src/hardware/GPU/gpu.cpp
     src/hardware/CPU/register.cpp

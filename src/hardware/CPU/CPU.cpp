@@ -1,5 +1,5 @@
 #include "CPU.h"
-#include "../../processes/os.h"
+#include "../../processes/console.h"
 #include <bitset>
 
 void CPU::resetStackPointer() {
@@ -56,23 +56,23 @@ void CPU::initialJAL(uint32_t address_to_jump) {
 //rtype instructions:
 void CPU::ShiftRightArithmetic(){
     if (logPreInstructionReg) {
-        (*(*os).getLogger()) << "Pre instruction: " << std::endl;
+        (*(*console).getLogger()) << "Pre instruction: " << std::endl;
         logRegisters(false, true, true, false);
     }
-    if (logInstructionName) (*(*os).getLogger()) << __func__ << ":" << std::endl;
+    if (logInstructionName) (*(*console).getLogger()) << __func__ << ":" << std::endl;
     if (logInstructionOperation) {
-        (*(*os).getLogger()) << "\tSRA: R[reg_c] = (signed) R[reg_b] >> shift_value" << std::endl;
-        (*(*os).getLogger()) << "\tR[" << registerFile[reg_c_].getName() << "] = (signed) R[" << registerFile[reg_b_].getName() << "] >> " << shift_value_ <<  std::endl;
-        (*(*os).getLogger()) << "\t" << registerFile[reg_c_].getValue() << " = " << registerFile[reg_b_].getValue() << " >> " << shift_value_ <<  std::endl;
-        (*(*os).getLogger()) << "\tR[" << registerFile[reg_c_].getName() << "]: " << registerFile[reg_c_].getValue() << " => ";
+        (*(*console).getLogger()) << "\tSRA: R[reg_c] = (signed) R[reg_b] >> shift_value" << std::endl;
+        (*(*console).getLogger()) << "\tR[" << registerFile[reg_c_].getName() << "] = (signed) R[" << registerFile[reg_b_].getName() << "] >> " << shift_value_ <<  std::endl;
+        (*(*console).getLogger()) << "\t" << registerFile[reg_c_].getValue() << " = " << registerFile[reg_b_].getValue() << " >> " << shift_value_ <<  std::endl;
+        (*(*console).getLogger()) << "\tR[" << registerFile[reg_c_].getName() << "]: " << registerFile[reg_c_].getValue() << " => ";
     }
 
     // operation
     registerFile[reg_c_].setValue((int16_t)((registerFile[reg_b_].getValue()) >> shift_value_)); // Sign extend after the logical shift
     
-    if (logInstructionOperation) (*(*os).getLogger()) << registerFile[reg_c_].getValue() << std::endl;
+    if (logInstructionOperation) (*(*console).getLogger()) << registerFile[reg_c_].getValue() << std::endl;
     if (logPostInstructionReg) {
-        (*(*os).getLogger()) << "Pre instruction: " << std::endl;
+        (*(*console).getLogger()) << "Pre instruction: " << std::endl;
         logRegisters(false, true, true, false);
     }
     PC +=4;
@@ -80,10 +80,10 @@ void CPU::ShiftRightArithmetic(){
 
 void CPU::ShiftRightLogical(){
     if (logPreInstructionReg) {
-        (*(*os).getLogger()) << "Pre instruction: " << std::endl;
+        (*(*console).getLogger()) << "Pre instruction: " << std::endl;
         logRegisters(false, true, true, false);
     }
-    if (logInstructionName) (*(*os).getLogger()) << __func__ << ":" << std::endl;
+    if (logInstructionName) (*(*console).getLogger()) << __func__ << ":" << std::endl;
 
     // operation
     registerFile[reg_c_].setValue(registerFile[reg_b_].getValue() >> shift_value_); //must be unsigned
@@ -94,10 +94,10 @@ void CPU::ShiftRightLogical(){
 
 void CPU::ShiftLeftLogical(){
     if (logPreInstructionReg) {
-        (*(*os).getLogger()) << "Pre instruction: " << std::endl;
+        (*(*console).getLogger()) << "Pre instruction: " << std::endl;
         logRegisters(false, true, true, false);
     }
-    if (logInstructionName) (*(*os).getLogger()) << __func__ << ":" << std::endl;
+    if (logInstructionName) (*(*console).getLogger()) << __func__ << ":" << std::endl;
 
     // operation
     registerFile[reg_c_].setValue(registerFile[reg_b_].getValue() << shift_value_);
@@ -108,10 +108,10 @@ void CPU::ShiftLeftLogical(){
 
 void CPU::Subtract(){
     if (logPreInstructionReg) {
-        (*(*os).getLogger()) << "Pre instruction: " << std::endl;
+        (*(*console).getLogger()) << "Pre instruction: " << std::endl;
         logRegisters(true, true, true, false);
     }
-    if (logInstructionName) (*(*os).getLogger()) << __func__ << ":" << std::endl;
+    if (logInstructionName) (*(*console).getLogger()) << __func__ << ":" << std::endl;
     // operation
     registerFile[reg_c_].setValue(registerFile[reg_a_].getValue() - registerFile[reg_b_].getValue());
     
@@ -121,10 +121,10 @@ void CPU::Subtract(){
 
 void CPU::Add(){
     if (logPreInstructionReg) {
-        (*(*os).getLogger()) << "Pre instruction: " << std::endl;
+        (*(*console).getLogger()) << "Pre instruction: " << std::endl;
         logRegisters(false, true, true, false);
     }
-    if (logInstructionName) (*(*os).getLogger()) << __func__ << ":" << std::endl;
+    if (logInstructionName) (*(*console).getLogger()) << __func__ << ":" << std::endl;
 
     // operation
     int16_t add = registerFile[reg_a_].getValue() + registerFile[reg_b_].getValue();
@@ -137,10 +137,10 @@ void CPU::Add(){
 
 void CPU::SetLessThan(){
     if (logPreInstructionReg) {
-        (*(*os).getLogger()) << "Pre instruction: " << std::endl;
+        (*(*console).getLogger()) << "Pre instruction: " << std::endl;
         logRegisters(true, true, true, false);
     }
-    if (logInstructionName) (*(*os).getLogger()) << __func__ << ":" << std::endl;
+    if (logInstructionName) (*(*console).getLogger()) << __func__ << ":" << std::endl;
 
     // operation
     registerFile[reg_c_].setValue(registerFile[reg_a_].getValue() < registerFile[reg_b_].getValue());
@@ -151,10 +151,10 @@ void CPU::SetLessThan(){
 
 void CPU::Or_(){
     if (logPreInstructionReg) {
-        (*(*os).getLogger()) << "Pre instruction: " << std::endl;
+        (*(*console).getLogger()) << "Pre instruction: " << std::endl;
         logRegisters(true, true, true, false);
     }
-    if (logInstructionName) (*(*os).getLogger()) << __func__ << ":" << std::endl;
+    if (logInstructionName) (*(*console).getLogger()) << __func__ << ":" << std::endl;
 
     // operation
     registerFile[reg_c_].setValue(registerFile[reg_a_].getValue() | registerFile[reg_b_].getValue());
@@ -165,10 +165,10 @@ void CPU::Or_(){
 
 void CPU::Nor_(){
     if (logPreInstructionReg) {
-        (*(*os).getLogger()) << "Pre instruction: " << std::endl;
+        (*(*console).getLogger()) << "Pre instruction: " << std::endl;
         logRegisters(true, true, true, false);
     }
-    if (logInstructionName) (*(*os).getLogger()) << __func__ << ":" << std::endl;
+    if (logInstructionName) (*(*console).getLogger()) << __func__ << ":" << std::endl;
     
     // operation
     registerFile[reg_c_].setValue(~(registerFile[reg_a_].getValue() | registerFile[reg_b_].getValue()));
@@ -179,10 +179,10 @@ void CPU::Nor_(){
 
 void CPU::And_(){
     if (logPreInstructionReg) {
-        (*(*os).getLogger()) << "Pre instruction: " << std::endl;
+        (*(*console).getLogger()) << "Pre instruction: " << std::endl;
         logRegisters(true, true, true, false);
     }
-    if (logInstructionName) (*(*os).getLogger()) << __func__ << ":" << std::endl;
+    if (logInstructionName) (*(*console).getLogger()) << __func__ << ":" << std::endl;
 
     // operation
     registerFile[reg_c_].setValue(registerFile[reg_a_].getValue() & registerFile[reg_b_].getValue());
@@ -193,10 +193,10 @@ void CPU::And_(){
 
 void CPU::JumpRegister(){
     if (logPreInstructionReg) {
-        (*(*os).getLogger()) << "Pre instruction: " << std::endl;
+        (*(*console).getLogger()) << "Pre instruction: " << std::endl;
         logRegisters(true, false, false, true);
     }
-    if (logInstructionName) (*(*os).getLogger()) << __func__ << ":" << std::endl;
+    if (logInstructionName) (*(*console).getLogger()) << __func__ << ":" << std::endl;
 
     // operation
     PC= registerFile[reg_a_].getValue();
@@ -208,19 +208,19 @@ void CPU::JumpRegister(){
 //
 void CPU::storeWord(){
     if (logPreInstructionReg) {
-        (*(*os).getLogger()) << "Pre instruction: " << std::endl;
+        (*(*console).getLogger()) << "Pre instruction: " << std::endl;
         logRegisters(true, true, true, false);
     }
-    if (logInstructionName) (*(*os).getLogger()) << __func__ << ":" << std::endl;
+    if (logInstructionName) (*(*console).getLogger()) << __func__ << ":" << std::endl;
 
     // operation
     uint8_t byte1 = ((registerFile[reg_b_].getValue() >> byte_shift) & eight_bitmask); 
     uint8_t byte2 = registerFile[reg_b_].getValue() & eight_bitmask;
-    (*(*os).getMemory()).setByte(registerFile[reg_a_].getValue()+(immediate_value_), byte1); //byte_shift
-    (*(*os).getMemory()).setByte(registerFile[reg_a_].getValue()+(immediate_value_)+1, byte2);//byte_shift removed
+    (*(*console).getMemory()).setByte(registerFile[reg_a_].getValue()+(immediate_value_), byte1); //byte_shift
+    (*(*console).getMemory()).setByte(registerFile[reg_a_].getValue()+(immediate_value_)+1, byte2);//byte_shift removed
     
     if (registerFile[reg_a_].getValue()+(immediate_value_) == STDOUT_DATA_) {
-        (*(*os).getLogger()) << "WROTE FROM storeWord (?)" << std::endl;
+        (*(*console).getLogger()) << "WROTE FROM storeWord (?)" << std::endl;
         std::cout << byte1 << byte2;
     }
     
@@ -230,10 +230,10 @@ void CPU::storeWord(){
 
 void CPU::addImm(){
     if (logPreInstructionReg) {
-        (*(*os).getLogger()) << "Pre instruction: " << std::endl;
+        (*(*console).getLogger()) << "Pre instruction: " << std::endl;
         logRegisters(true, true, true, false);
     }
-    if (logInstructionName) (*(*os).getLogger()) << __func__ << ":" << std::endl;
+    if (logInstructionName) (*(*console).getLogger()) << __func__ << ":" << std::endl;
 
     registerFile[reg_b_].setValue(registerFile[reg_a_].getValue() + immediate_value_);
     
@@ -244,24 +244,24 @@ void CPU::addImm(){
 
 void CPU::LoadByteUnsigned(){
     if (logPreInstructionReg) {
-        (*(*os).getLogger()) << "Pre instruction: " << std::endl;
+        (*(*console).getLogger()) << "Pre instruction: " << std::endl;
         logRegisters(true, true, true, false);
     }
-    if (logInstructionName) (*(*os).getLogger()) << __func__ << ":" << std::endl;
+    if (logInstructionName) (*(*console).getLogger()) << __func__ << ":" << std::endl;
 
     if (registerFile[reg_a_].getValue()+immediate_value_ == STDIN_DATA_) {
         // load from stdin
         uint8_t byte;
         std::cin >> byte;
-        if (logStdin) (*(*os).getLogger()) << "read byte from stdin: " << byte <<std::endl;
+        if (logStdin) (*(*console).getLogger()) << "read byte from stdin: " << byte <<std::endl;
         registerFile[reg_b_].setValue(byte);
     } else if (registerFile[reg_a_].getValue()+immediate_value_ == CONTROLLER_DATA_) {
         // load input from controller
-        uint8_t byte = (*os).getControllerByte() & eight_bitmask;
+        uint8_t byte = (*console).getControllerByte() & eight_bitmask;
         registerFile[reg_b_].setValue(byte);
     } else {
         // load from memory
-        registerFile[reg_b_].setValue((*(*os).getMemory()).readByte(registerFile[reg_a_].getValue()+immediate_value_));
+        registerFile[reg_b_].setValue((*(*console).getMemory()).readByte(registerFile[reg_a_].getValue()+immediate_value_));
     }
     if (logPostInstructionReg) logRegisters(true, true, true, false);
     PC +=4;
@@ -269,10 +269,10 @@ void CPU::LoadByteUnsigned(){
 
 void CPU::Jump(){
     if (logPreInstructionReg) {
-        (*(*os).getLogger()) << "Pre instruction: " << std::endl;
+        (*(*console).getLogger()) << "Pre instruction: " << std::endl;
         logRegisters(true, true, true, true);
     }
-    if (logInstructionName) (*(*os).getLogger()) << __func__ << ":" << std::endl;
+    if (logInstructionName) (*(*console).getLogger()) << __func__ << ":" << std::endl;
 
     PC+= 4*immediate_value_; // removed /8, also changed + to *
     if (logPostInstructionReg) logRegisters(true, true, true, true);
@@ -280,19 +280,19 @@ void CPU::Jump(){
 
 void CPU::BranchNotEqual(){
     if (logPreInstructionReg) {
-        (*(*os).getLogger()) << "Pre instruction: " << std::endl;
+        (*(*console).getLogger()) << "Pre instruction: " << std::endl;
         logRegisters(true, true, true, true);
     }
-    if (logInstructionName) (*(*os).getLogger()) << __func__ << ":" << std::endl;
+    if (logInstructionName) (*(*console).getLogger()) << __func__ << ":" << std::endl;
 
     
    if(registerFile[reg_a_].getValue()!=registerFile[reg_b_].getValue()){
         PC += 4+4*(immediate_value_); //PC is incremented after the instruction anyways
-        if (logStderr) (*(*os).getLogger()) << "not equal" << std::endl;
+        if (logStderr) (*(*console).getLogger()) << "not equal" << std::endl;
         if (logPostInstructionReg) logRegisters(true, true, true, true);
    }
    else{
-        if (logStderr) (*(*os).getLogger()) << "equal" << std::endl;
+        if (logStderr) (*(*console).getLogger()) << "equal" << std::endl;
         if (logPostInstructionReg) logRegisters(true, true, true, true);
         PC+=4;
    }
@@ -300,15 +300,15 @@ void CPU::BranchNotEqual(){
 
 void CPU::BranchEqual(){
     if (logPreInstructionReg) {
-        (*(*os).getLogger()) << "Pre instruction: " << std::endl;
+        (*(*console).getLogger()) << "Pre instruction: " << std::endl;
         logRegisters(true, true, true, true);
     }
-    if (logInstructionName) (*(*os).getLogger()) << __func__ << ":" << std::endl;
+    if (logInstructionName) (*(*console).getLogger()) << __func__ << ":" << std::endl;
 
     if(registerFile[reg_a_].getValue()==registerFile[reg_b_].getValue()){
         PC += 4+4*(immediate_value_); 
         if (logPostInstructionReg) logRegisters(true, true, true, false);
-        //(*(*os).getLogger()) << "equal" << std::endl;
+        //(*(*console).getLogger()) << "equal" << std::endl;
    }
    else{
         if (logPostInstructionReg) logRegisters(true, true, true, false);
@@ -318,29 +318,29 @@ void CPU::BranchEqual(){
 
 void CPU::StoreByte(){ 
     if (logPreInstructionReg) {
-        (*(*os).getLogger()) << "Pre instruction: " << std::endl;
+        (*(*console).getLogger()) << "Pre instruction: " << std::endl;
         logRegisters(true, true, true, false);
     }
-    if (logInstructionName) (*(*os).getLogger()) << __func__ << ":" << std::endl;
+    if (logInstructionName) (*(*console).getLogger()) << __func__ << ":" << std::endl;
 
     int8_t byte = registerFile[reg_b_].getValue() & eight_bitmask;
     size_t value = registerFile[reg_a_].getValue()+(immediate_value_);
-    (*(*os).getMemory()).setByte(value, byte);
+    (*(*console).getMemory()).setByte(value, byte);
     
     // write to stdout
     if (value == STDOUT_DATA_) {
         std::cout << byte;
-        if (logStdout) (*(*os).getLogger()) << "stdout: " << byte << std::endl;
+        if (logStdout) (*(*console).getLogger()) << "stdout: " << byte << std::endl;
     }
     // write to stderr
     if (value == STDERR_DATA_) {
         std::cerr << byte;
-        if (logStderr) (*(*os).getLogger()) << "stderr: " << byte << std::endl;
+        if (logStderr) (*(*console).getLogger()) << "stderr: " << byte << std::endl;
     }
     // exit condition
     if (value == STOP_EXECUTION_) {
-        (*(*os).getLogger()) << "\n\nEnd Condition Triggered!" << std::endl;
-        (*os).setExitCondition(true);
+        (*(*console).getLogger()) << "\n\nEnd Condition Triggered!" << std::endl;
+        (*console).setExitCondition(true);
     }
 
     if (logPostInstructionReg) logRegisters(true, true, true, false);
@@ -349,10 +349,10 @@ void CPU::StoreByte(){
 
 void CPU::JumpAndLink(){
     if (logPreInstructionReg) {
-        (*(*os).getLogger()) << "Pre instruction: " << std::endl;
+        (*(*console).getLogger()) << "Pre instruction: " << std::endl;
         logRegisters(true, true, true, true);
     }
-    if (logInstructionName) (*(*os).getLogger()) << __func__ << ":" << std::endl;
+    if (logInstructionName) (*(*console).getLogger()) << __func__ << ":" << std::endl;
 
     registerFile[register_ra].setValue(PC + 4);
     PC = 4* (immediate_value_);
@@ -362,16 +362,16 @@ void CPU::JumpAndLink(){
 
 void CPU::LoadWord(){
     if (logPreInstructionReg) {
-        (*(*os).getLogger()) << "Pre instruction: " << std::endl;
+        (*(*console).getLogger()) << "Pre instruction: " << std::endl;
         logRegisters(true, true, true, false);
     }
-    if (logInstructionName) (*(*os).getLogger()) << __func__ << ":" << std::endl;
+    if (logInstructionName) (*(*console).getLogger()) << __func__ << ":" << std::endl;
     if(registerFile[reg_b_].getName() == "x0"){
         registerFile[reg_b_].setValue(0);
         return;
     }
-    uint16_t high_byte = *(*(*os).getMemory()).getByte(registerFile[reg_a_].getValue()+immediate_value_); // Get the low byte
-    uint16_t low_byte = *(*(*os).getMemory()).getByte((registerFile[reg_a_].getValue()+immediate_value_)+1); // Get the high byte
+    uint16_t high_byte = *(*(*console).getMemory()).getByte(registerFile[reg_a_].getValue()+immediate_value_); // Get the low byte
+    uint16_t low_byte = *(*(*console).getMemory()).getByte((registerFile[reg_a_].getValue()+immediate_value_)+1); // Get the high byte
     registerFile[reg_b_].setValue((high_byte << byte_shift) | low_byte); // Combine bytes into a word
     
     if (logPostInstructionReg) logRegisters(true, true, true, false);
@@ -384,48 +384,48 @@ void CPU::LoadWord(){
 /// @param reg_c 
 /// @param reg_pc 
 void CPU::logRegisters(bool reg_a, bool reg_b, bool reg_c, bool reg_pc) {
-    if (reg_a)  (*(*os).getLogger()) << "  reg a: " << registerFile[reg_a_].getName() << " = " << registerFile[reg_a_].getValue() << std::endl;
-    if (reg_b)  (*(*os).getLogger()) << "  reg b: " << registerFile[reg_b_].getName() << " = " << registerFile[reg_b_].getValue() << std::endl;
-    if (reg_c)  (*(*os).getLogger()) << "  reg c: " << registerFile[reg_c_].getName() << " = " << registerFile[reg_c_].getValue() << std::endl;
-    if (reg_pc) (*(*os).getLogger()) << "  PC at: " << PC << std::endl;
+    if (reg_a)  (*(*console).getLogger()) << "  reg a: " << registerFile[reg_a_].getName() << " = " << registerFile[reg_a_].getValue() << std::endl;
+    if (reg_b)  (*(*console).getLogger()) << "  reg b: " << registerFile[reg_b_].getName() << " = " << registerFile[reg_b_].getValue() << std::endl;
+    if (reg_c)  (*(*console).getLogger()) << "  reg c: " << registerFile[reg_c_].getName() << " = " << registerFile[reg_c_].getValue() << std::endl;
+    if (reg_pc) (*(*console).getLogger()) << "  PC at: " << PC << std::endl;
 }
 
 /// @brief Logs ALL register values
 void CPU::logAllRegisters() {
-    (*(*os).getLogger()) << "All Registers:" << std::endl;
-        for (int i = 0; i < 32; i+=4) {
-            (*(*os).getLogger()) << std::setw(2) << registerFile[i].getName()   << "(" << std::setw(2) << i  << "): "<< std::setw(4) << registerFile[i].getValue() << ", ";
-            (*(*os).getLogger()) << std::setw(2) << registerFile[i+1].getName() << "(" << std::setw(2) << i+1<<"): " << std::setw(4) << registerFile[i+1].getValue() << ", ";
-            (*(*os).getLogger()) << std::setw(2) << registerFile[i+2].getName() << "(" << std::setw(2) << i+2<<"): " << std::setw(4) << registerFile[i+2].getValue() << ", ";
-            (*(*os).getLogger()) << std::setw(2) << registerFile[i+3].getName() << "(" << std::setw(2) << i+3<<"): " << std::setw(4) << registerFile[i+3].getValue() << std::endl;
-        }
+    (*(*console).getLogger()) << "All Registers:" << std::endl;
+    for (int i = 0; i < 32; i+=4) {
+        (*(*console).getLogger()) << std::setw(2) << registerFile[i].getName()   << "(" << std::setw(2) << i  << "): "<< std::setw(4) << registerFile[i].getValue() << ", ";
+        (*(*console).getLogger()) << std::setw(2) << registerFile[i+1].getName() << "(" << std::setw(2) << i+1<<"): " << std::setw(4) << registerFile[i+1].getValue() << ", ";
+        (*(*console).getLogger()) << std::setw(2) << registerFile[i+2].getName() << "(" << std::setw(2) << i+2<<"): " << std::setw(4) << registerFile[i+2].getValue() << ", ";
+        (*(*console).getLogger()) << std::setw(2) << registerFile[i+3].getName() << "(" << std::setw(2) << i+3<<"): " << std::setw(4) << registerFile[i+3].getValue() << std::endl;
+    }
 }
 
 void CPU::i_typeBreakdown(uint32_t opcode) {
-    (*(*os).getLogger()) << "Instruction breakdown:" << std::endl;
-    (*(*os).getLogger()) << "  Opcode   : " << opcode << std::endl;
-    (*(*os).getLogger()) << "  reg_a    : " << reg_a_ << std::endl;
-    (*(*os).getLogger()) << "  reg_b    : " << reg_b_ << std::endl;
-    (*(*os).getLogger()) << "  immediate: " << immediate_value_ << std::endl;
+    (*(*console).getLogger()) << "Instruction breakdown:" << std::endl;
+    (*(*console).getLogger()) << "  Opcode   : " << opcode << std::endl;
+    (*(*console).getLogger()) << "  reg_a    : " << reg_a_ << std::endl;
+    (*(*console).getLogger()) << "  reg_b    : " << reg_b_ << std::endl;
+    (*(*console).getLogger()) << "  immediate: " << immediate_value_ << std::endl;
     
 }
 
 void CPU::r_typeBreakdown(uint32_t opcode) {
-    (*(*os).getLogger()) << "Instruction breakdown:" << std::endl;
-    (*(*os).getLogger()) << "  Opcode: " << opcode << std::endl;
-    (*(*os).getLogger()) << "  reg_a : " << reg_a_ << std::endl;
-    (*(*os).getLogger()) << "  reg_b : " << reg_b_ << std::endl;
-    (*(*os).getLogger()) << "  reg_c : " << reg_c_ << std::endl;
-    (*(*os).getLogger()) << "  shift : " << shift_value_ << std::endl;
-    (*(*os).getLogger()) << "  func  : " << function_value_ << std::endl;
+    (*(*console).getLogger()) << "Instruction breakdown:" << std::endl;
+    (*(*console).getLogger()) << "  Opcode: " << opcode << std::endl;
+    (*(*console).getLogger()) << "  reg_a : " << reg_a_ << std::endl;
+    (*(*console).getLogger()) << "  reg_b : " << reg_b_ << std::endl;
+    (*(*console).getLogger()) << "  reg_c : " << reg_c_ << std::endl;
+    (*(*console).getLogger()) << "  shift : " << shift_value_ << std::endl;
+    (*(*console).getLogger()) << "  func  : " << function_value_ << std::endl;
 }
 
 
 uint8_t CPU::readController() {
     uint8_t byte = 0x00;
-    if ((*os).getEventHandler().type == SDL_KEYDOWN) {
+    if ((*console).getEventHandler().type == SDL_KEYDOWN) {
         //Select surfaces based on key press
-        switch( (*os).getEventHandler().key.keysym.sym )
+        switch( (*console).getEventHandler().key.keysym.sym )
         {
             case SDLK_UP:
                 byte = byte | CONTROLLER_UP_MASK;
@@ -441,9 +441,9 @@ uint8_t CPU::readController() {
                 break;
         }
     }
-	else if((*os).getEventHandler().type == SDL_KEYUP)
+	else if((*console).getEventHandler().type == SDL_KEYUP)
 	{
-		switch( (*os).getEventHandler().key.keysym.sym )
+		switch( (*console).getEventHandler().key.keysym.sym )
 		{
 			case SDLK_UP:
 				byte = byte & ~CONTROLLER_UP_MASK;

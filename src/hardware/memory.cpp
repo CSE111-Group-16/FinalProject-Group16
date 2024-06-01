@@ -1,5 +1,5 @@
 #include "memory.h"
-#include "../processes/os.h"
+#include "../processes/console.h"
 #include <iostream>
 #include <stdexcept>
 #include <cassert>
