@@ -1,12 +1,9 @@
 #include "memory.h"
-#include "../processes/os.h"
-
+#include "../processes/console.h"
 #include <iostream>
 #include <stdexcept>
 #include <cassert>
 #include <array>
-
-
 
 /// @brief returns a POINTER to the byte stored at address
 /// @param address refers to the FULL address, not adjusted
@@ -106,7 +103,7 @@ void Memory::clearRAM() {
 }
 
 void Memory::loadROM(char* contents, size_t size) {
-    size_t offset = 0x8000;
+    size_t offset = SLUG_ROM_SIZE_;
     for (size_t i=0; i<size; i++) {
         setByte(offset+i, (uint8_t)contents[i]);
     }

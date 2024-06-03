@@ -10,6 +10,12 @@
 #include <any>
 #include <cassert>
 
+#define CONTROLLER_DATA_ 0x7000
+#define STDIN_DATA_ 0x7100
+#define STDOUT_DATA_ 0x7110
+#define STDERR_DATA_ 0x7120
+#define STOP_EXECUTION_ 0x7200
+
 enum shift{
     opcode_shift = 26,
     reg_a_shift = 21,
@@ -37,12 +43,11 @@ enum shift{
     top_of_stack = 0x3400
 };
 
-
-class OS;
+class Console;
 class CPU {
 public:
     // Constructors
-    CPU(OS* set_os) : os(set_os) {
+    CPU(Console* set_os) : console(set_os) {
         std::string names[32] = {
             "$0", "at", "v0", "v1", "a0", "a1", "a2", "a3",
             "t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7",
@@ -77,10 +82,9 @@ public:
         r_type_instructions_.emplace(35, &CPU::ShiftRightLogical); //[35] = &ShiftRightLogical;
         r_type_instructions_.emplace(40, &CPU::ShiftLeftLogical); //[40] = &ShiftLeftLogical;
     }; 
-    OS* os;
+    Console* console;
     Register registerFile[32];
     uint16_t PC; // program counter
-
 
     //CPU(Register* registerFile, Register PC); // Parameterized constructor
     void resetStackPointer();
@@ -106,7 +110,6 @@ private:
     static constexpr bool logStdout = false;
     static constexpr bool logStderr = false;
     static constexpr bool logStdin = false;
-    
 
     // debug helper functions:
     void logRegisters(bool reg_a=false, bool reg_b=false, bool reg_c=false, bool reg_pc=false);

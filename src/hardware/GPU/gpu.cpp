@@ -1,5 +1,5 @@
 #include "gpu.h"
-#include "../../processes/os.h"
+#include "../../processes/console.h"
 
 /// @brief gets the boolean value of the specified pixel
 /// @param pixel_byte refers to the byte representing the pixel
@@ -23,7 +23,7 @@ size_t GPU::getPixelAddress(int width, int height) const {
 
 bool GPU::readPixel(int width, int height) const {
     size_t pixel_address = getPixelAddress(width, height);
-    uint8_t pixel_byte = os->memory.readByte(pixel_address); // unset is black, set is white
+    uint8_t pixel_byte = (*(*console).getMemory()).readByte(pixel_address); // unset is black, set is white
     bool pixel_state = decodePixel(pixel_byte);
     return pixel_state;
 }
@@ -31,17 +31,16 @@ bool GPU::readPixel(int width, int height) const {
 void GPU::setPixel(int width, int height, bool state) {
     uint8_t pixel_state = encodePixel(state);
     size_t pixel_address = getPixelAddress(width, height);
-    (*os).memory.setByte(pixel_address, pixel_state);
+    (*(*console).getMemory()).setByte(pixel_address, pixel_state);
 }
-
 
 /// @brief uses the renderer and the texture to update the frame buffer
 void GPU::displayFrameBuffer() {
     // Lock texture for manipulation
     int pitch;
     void* mPixels;
-    if (SDL_LockTexture(os->texture, NULL, &mPixels, &pitch) != 0) {
-        (*os).logger << "SDL_LockTexture error: " << SDL_GetError() << std::endl;
+    if (SDL_LockTexture((*console).getTexturer(), NULL, &mPixels, &pitch) != 0) {
+        (*(*console).getLogger()) << "SDL_LockTexture error: " << SDL_GetError() << std::endl;
         return;
     }
     Uint32* pixels = static_cast<Uint32*>(mPixels);
@@ -52,14 +51,14 @@ void GPU::displayFrameBuffer() {
         }
     }
 
-    SDL_UnlockTexture(os->texture);
-    SDL_RenderClear(os->renderer);
+    SDL_UnlockTexture((*console).getTexturer());
+    SDL_RenderClear((*console).getRenderer());
 
     SDL_Rect srcRect = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
     SDL_Rect dstRect = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
-    SDL_RenderCopy(os->renderer, os->texture, &srcRect, &dstRect);
+    SDL_RenderCopy((*console).getRenderer(), (*console).getTexturer(), &srcRect, &dstRect);
 
-    SDL_RenderPresent(os->renderer);
+    SDL_RenderPresent((*console).getRenderer());
 }
 
 
