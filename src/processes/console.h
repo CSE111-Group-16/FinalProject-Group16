@@ -9,6 +9,7 @@
 #include <iostream>
 #include <iomanip>
 #include <SDL2/SDL.h>
+#include <cstdio> 
 
 #define CONTROLLER_A_MASK ((uint8_t)0x80)
 #define CONTROLLER_B_MASK ((uint8_t)0x40)
@@ -53,6 +54,7 @@ public:
     // accessable to user
     void startup(std::string ROM_file); 
     ~Console() {
+        stopRecording();
         logger.close();
     	SDL_DestroyWindow(win);
         SDL_Quit();
@@ -65,6 +67,9 @@ public:
     SDL_Texture* getTexturer();
     Memory* getMemory();
 	std::ofstream* getLogger();
+
+    void startRecording(const std::string& outputFile);
+    void stopRecording();
 
 private:
     // file info
@@ -105,4 +110,7 @@ private:
     uint32_t readInt32(const size_t& address) const;
     uint16_t readInt16(const size_t& address) const;
     uint8_t readInt8(const size_t& address) const;
+
+    std::string ffmpegCommand;
+    FILE* ffmpegPipe = nullptr;
 };
